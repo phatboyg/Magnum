@@ -13,29 +13,29 @@
 namespace Magnum.Pipeline
 {
 	using System;
-	using Segments;
+	using System.Runtime.Serialization;
 
-	public static class ExtensionMethods
-    {
-        public static ISubscriptionScope NewSubscriptionScope(this Pipe pipe)
-        {
-            return new SubscriptionScope(pipe);
-        }
-
-		public static ISubscriptionScope Subscribe(this Pipe pipe, Action<ISubscriptionConfigurator> configuratorAction)
+	[Serializable]
+	public class PipelineConfigurationException :
+		Exception
+	{
+		public PipelineConfigurationException()
 		{
-			var configurator = new SubscriptionConfigurator(pipe);
-
-			configuratorAction(configurator);
-
-			configurator.Validate();
-
-			return configurator.Bind();
 		}
 
-		public static Pipe New(this Pipe ignored)
+		public PipelineConfigurationException(string message)
+			: base(message)
 		{
-			return PipeSegment.Input(PipeSegment.End());
 		}
-    }
+
+		public PipelineConfigurationException(string message, Exception innerException)
+			: base(message, innerException)
+		{
+		}
+
+		protected PipelineConfigurationException(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+		}
+	}
 }

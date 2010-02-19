@@ -12,30 +12,24 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Pipeline
 {
-	using System;
-	using Segments;
+	public class ConsumeAllConfigurator<T> :
+		IConsumerConfigurator
+		where T : class
+	{
+		private readonly T _consumer;
 
-	public static class ExtensionMethods
-    {
-        public static ISubscriptionScope NewSubscriptionScope(this Pipe pipe)
-        {
-            return new SubscriptionScope(pipe);
-        }
-
-		public static ISubscriptionScope Subscribe(this Pipe pipe, Action<ISubscriptionConfigurator> configuratorAction)
+		public ConsumeAllConfigurator(T consumer)
 		{
-			var configurator = new SubscriptionConfigurator(pipe);
-
-			configuratorAction(configurator);
-
-			configurator.Validate();
-
-			return configurator.Bind();
+			_consumer = consumer;
 		}
 
-		public static Pipe New(this Pipe ignored)
+		public void Bind(ISubscriptionScope scope)
 		{
-			return PipeSegment.Input(PipeSegment.End());
+			scope.Subscribe(_consumer);
 		}
-    }
+
+		public void Validate()
+		{
+		}
+	}
 }
