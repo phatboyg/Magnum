@@ -10,15 +10,10 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Specs.Pipeline.Messages
+namespace Magnum.Workflow.Configuration
 {
-	using System;
-
-	public class ClaimModified :
-        IDomainEvent
-    {
-        public string Text { get; set; }
-
-		public Guid ClaimId { get; set; }
-    }
+	public interface SendActivityConfigurator<TWorkflow, TOutput>
+	{
+		PropertyMapper<TWorkflow, TOutput> Map();
+	}
 }

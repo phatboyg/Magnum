@@ -94,6 +94,7 @@
     <Compile Include="Invoker\FastInvoker_Specs.cs" />
     <Compile Include="Invoker\Performance_Specs.cs" />
     <Compile Include="Logging\Logging_Specs.cs" />
+    <Compile Include="Pipeline\Messages\ClaimChangeAudit.cs" />
     <Compile Include="Policies\ExceptionPolicy_Specs.cs" />
     <Compile Include="CommandLineParser\EchoCommand.cs" />
     <Compile Include="CommandLineParser\Executor_Specs.cs" />
@@ -178,6 +179,7 @@
     <Compile Include="Threading\LamdbaIsTheNewDisposable_Specs.cs" />
     <Compile Include="Threading\UpgradeableLock_Specs.cs" />
     <Compile Include="Threading\WrappedObjectLocking_Specs.cs" />
+    <Compile Include="Workflow\CreateWorkflowInstance_Specs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Magnum.TestFramework\Magnum.TestFramework.csproj">

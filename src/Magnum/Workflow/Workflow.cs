@@ -10,15 +10,36 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Specs.Pipeline.Messages
+namespace Magnum.Workflow
 {
-	using System;
+	public interface Workflow
+	{
+	}
 
-	public class ClaimModified :
-        IDomainEvent
-    {
-        public string Text { get; set; }
+	public interface Workflow<T> :
+		Workflow
+		where T : class
 
-		public Guid ClaimId { get; set; }
-    }
+	{
+	}
+
+	public interface WorkflowInstance
+	{
+	}
+
+	public interface WorkflowInstance<TWorkflow> :
+		WorkflowInstance
+		where TWorkflow : class
+	{
+	}
+
+	public interface WorkflowActivity
+	{
+	}
+
+	public interface WorkflowActivity<TWorkflow> :
+		WorkflowActivity
+		where TWorkflow : class
+	{
+	}
 }

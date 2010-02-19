@@ -358,6 +358,16 @@
     <Compile Include="ThreadUtil.cs" />
     <Compile Include="Context\TypedKey.cs" />
     <Compile Include="WeakReference.cs" />
+    <Compile Include="Workflow\Activities\ReceiveActivity.cs" />
+    <Compile Include="Workflow\Configuration\PropertyMapper.cs" />
+    <Compile Include="Workflow\Configuration\ReceiveActivity.cs" />
+    <Compile Include="Workflow\Configuration\ReceiveActivityConfigurator.cs" />
+    <Compile Include="Workflow\Configuration\SendActivity.cs" />
+    <Compile Include="Workflow\Configuration\IWorkflowConfigurator.cs" />
+    <Compile Include="Workflow\Configuration\SendActivityConfigurator.cs" />
+    <Compile Include="Workflow\Configuration\ToPropertyMapper.cs" />
+    <Compile Include="Workflow\Configuration\WorkflowConfigurator.cs" />
+    <Compile Include="Workflow\Workflow.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Collections\A Note About This Folder.txt" />

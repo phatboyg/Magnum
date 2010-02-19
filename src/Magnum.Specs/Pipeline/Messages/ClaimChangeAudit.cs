@@ -14,11 +14,11 @@ namespace Magnum.Specs.Pipeline.Messages
 {
 	using System;
 
-	public class ClaimModified :
-        IDomainEvent
-    {
-        public string Text { get; set; }
+	public class ClaimChangeAudit :
+		IDomainEvent
+	{
+		public string User { get; set; }
 
-		public Guid ClaimId { get; set; }
-    }
+		public Guid OriginalClaimId { get; set; }
+	}
 }
