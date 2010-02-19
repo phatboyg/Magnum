@@ -14,6 +14,7 @@ namespace Magnum.Pipeline
 {
 	using System;
 	using System.Collections.Generic;
+	using Configuration;
 
 	/// <summary>
 	/// Provides an interface for adding consumers and interceptors to the pipeline

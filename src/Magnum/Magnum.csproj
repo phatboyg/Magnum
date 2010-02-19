@@ -198,12 +198,12 @@
     <Compile Include="Logging\TraceLogger.cs" />
     <Compile Include="Logging\TraceLogWriter.cs" />
     <Compile Include="Logging\TraceLogProvider.cs" />
-    <Compile Include="Pipeline\ConsumeAllConfigurator.cs" />
-    <Compile Include="Pipeline\ConsumerConfigurator.cs" />
-    <Compile Include="Pipeline\IConsumerConfigurator.cs" />
-    <Compile Include="Pipeline\ISubscriptionConfigurator.cs" />
+    <Compile Include="Pipeline\Configuration\ConsumeAllConfigurator.cs" />
+    <Compile Include="Pipeline\Configuration\ConsumerConfigurator.cs" />
+    <Compile Include="Pipeline\Configuration\IConsumerConfigurator.cs" />
+    <Compile Include="Pipeline\Configuration\ISubscriptionConfigurator.cs" />
     <Compile Include="Pipeline\PipelineConfigurationException.cs" />
-    <Compile Include="Pipeline\SubscriptionConfigurator.cs" />
+    <Compile Include="Pipeline\Configuration\SubscriptionConfigurator.cs" />
     <Compile Include="Pipeline\Visitors\GraphPipelineVisitor.cs" />
     <Compile Include="Reflection\ExpressionExtensions.cs" />
     <Compile Include="Reflection\GenericFastActivator.cs" />
@@ -266,7 +266,7 @@
     <Compile Include="Pipeline\IAsyncConsumer.cs" />
     <Compile Include="Pipeline\IConsumer.cs" />
     <Compile Include="Pipeline\ExtensionMethods.cs" />
-    <Compile Include="Pipeline\IInterceptorConfigurator.cs" />
+    <Compile Include="Pipeline\Configuration\IInterceptorConfigurator.cs" />
     <Compile Include="Pipeline\InterceptionBinder.cs" />
     <Compile Include="Pipeline\ISubscriptionScope.cs" />
     <Compile Include="Pipeline\Roles\ISubscriberEvent.cs" />
@@ -276,7 +276,7 @@
     <Compile Include="Pipeline\Segments\AsyncMessageConsumerSegment.cs" />
     <Compile Include="Pipeline\Segments\IntervalMessageConsumerSegment.cs" />
     <Compile Include="Pipeline\SubscriberBinder.cs" />
-    <Compile Include="Pipeline\Segments\InterceptorConfigurator.cs" />
+    <Compile Include="Pipeline\Configuration\InterceptorConfigurator.cs" />
     <Compile Include="Pipeline\Segments\InterceptorSegment.cs" />
     <Compile Include="Pipeline\Segments\MessageConsumerSegment.cs" />
     <Compile Include="Pipeline\SegmentUnbinder.cs" />

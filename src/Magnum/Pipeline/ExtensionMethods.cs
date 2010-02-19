@@ -13,6 +13,7 @@
 namespace Magnum.Pipeline
 {
 	using System;
+	using Configuration;
 	using Segments;
 
 	public static class ExtensionMethods

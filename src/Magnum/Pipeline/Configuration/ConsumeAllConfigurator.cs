@@ -10,14 +10,26 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Pipeline
+namespace Magnum.Pipeline.Configuration
 {
-	public interface ISubscriptionConfigurator
+	public class ConsumeAllConfigurator<T> :
+		IConsumerConfigurator
+		where T : class
 	{
-		IConsumerConfigurator<T> Consume<T>()
-			where T : class;
+		private readonly T _consumer;
 
-		void ConsumeAll<TConsumer>(TConsumer consumer)
-			where TConsumer : class;
+		public ConsumeAllConfigurator(T consumer)
+		{
+			_consumer = consumer;
+		}
+
+		public void Bind(ISubscriptionScope scope)
+		{
+			scope.Subscribe(_consumer);
+		}
+
+		public void Validate()
+		{
+		}
 	}
 }
