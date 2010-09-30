@@ -17,7 +17,7 @@ namespace Magnum.Channels
 	using Reflection;
 
 
-	public class FastActivatorInstanceProvider<TInstance, TChannel> :
+	internal class FastActivatorInstanceProvider<TInstance, TChannel> :
 		InstanceProvider<TInstance, TChannel>
 		where TInstance : class
 	{

@@ -22,7 +22,7 @@ namespace Magnum.Channels
 	/// </summary>
 	/// <typeparam name="TInstance">The instance type</typeparam>
 	/// <typeparam name="TChannel">The channel type</typeparam>
-	public class InstanceChannelProvider<TInstance, TChannel> :
+	internal class InstanceChannelProvider<TInstance, TChannel> :
 		ChannelProvider<TChannel>
 		where TInstance : class
 	{

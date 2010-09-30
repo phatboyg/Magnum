@@ -16,7 +16,7 @@ namespace Magnum.Channels.Configuration.Internal
 	using Extensions;
 
 
-	public class InstanceChannelProviderConfiguratorImpl<TInstance, TChannel> :
+	internal class InstanceChannelProviderConfiguratorImpl<TInstance, TChannel> :
 		InstanceChannelProviderConfigurator<TInstance, TChannel>
 		where TInstance : class
 	{

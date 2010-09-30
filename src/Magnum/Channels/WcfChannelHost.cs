@@ -23,7 +23,7 @@ namespace Magnum.Channels
 	/// are first serialized to a wire type that is already WCF compliant, making it unnecessary to decorate
 	/// your message objects with WCF data contract serializer attributes.
 	/// </summary>
-	public class WcfChannelHost :
+	internal class WcfChannelHost :
 		IDisposable
 	{
 		private WcfChannelService<WcfMessageEnvelope> _service;
@@ -86,7 +86,7 @@ namespace Magnum.Channels
 	/// requires that classes are appropriately decorated.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class WcfChannelHost<T> :
+	internal class WcfChannelHost<T> :
 		IDisposable
 	{
 		private readonly WcfChannelService<T> _service;

@@ -16,7 +16,7 @@ namespace Magnum.Fibers.Configuration
 	using Channels.Configuration.Internal;
 
 
-	public class FiberProviderConfiguratorImpl<T, TKey> :
+	internal class FiberProviderConfiguratorImpl<T, TKey> :
 		FiberProviderConfigurator<T, TKey>
 		where T : class
 	{

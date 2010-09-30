@@ -12,7 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Channels.Internal
 {
-	public class RequestImpl<T> :
+	internal class RequestImpl<T> :
 		MessageImpl<T>,
 		Request<T>
 	{

@@ -23,7 +23,7 @@ namespace Magnum.Channels
 	/// after which the message object is sent to the untyped output channel.
 	/// </summary>
 	/// <typeparam name="T">The input message type, which must implement MessageEnvelope</typeparam>
-	public class DeserializeMessageEnvelopeChannel<T> :
+	internal class DeserializeMessageEnvelopeChannel<T> :
 		Channel<T>
 		where T : MessageEnvelope
 	{

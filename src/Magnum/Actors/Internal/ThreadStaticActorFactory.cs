@@ -19,7 +19,7 @@ namespace Magnum.Actors.Internal
 	///   Maintains only one instance of an actor per thread
 	/// </summary>
 	/// <typeparam name = "TActor">The actor type</typeparam>
-	public class ThreadStaticActorFactory<TActor> :
+	internal class ThreadStaticActorFactory<TActor> :
 		ActorFactory<TActor>
 		where TActor : class, Actor
 	{

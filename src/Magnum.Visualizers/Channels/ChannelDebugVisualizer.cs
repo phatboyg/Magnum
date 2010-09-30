@@ -19,7 +19,7 @@ namespace Magnum.Visualizers.Channels
 	using Microsoft.VisualStudio.DebuggerVisualizers;
 
 
-	public class ChannelDebugVisualizer :
+	internal class ChannelDebugVisualizer :
 		DialogDebuggerVisualizer
 	{
 		protected override void Show(IDialogVisualizerService windowService, IVisualizerObjectProvider objectProvider)

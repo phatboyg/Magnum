@@ -20,7 +20,7 @@ namespace Magnum.ForNHibernate.Auditing.Internal
 	using Magnum.Channels.Visitors;
 
 
-	public class AuditEventConsumerChannelVisitor :
+	class AuditEventConsumerChannelVisitor :
 		ChannelVisitor
 	{
 		readonly IEnumerable<EventListenerConfigurator> _configurators;

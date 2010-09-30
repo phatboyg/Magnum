@@ -19,7 +19,7 @@ namespace Magnum.Fibers
 	/// A synchronous fiber will execute an action immediately on the calling thread
 	/// without any protection from an exception
 	/// </summary>
-	public class SynchronousFiber :
+	internal class SynchronousFiber :
 		Fiber
 	{
 		private bool _stopping;

@@ -19,7 +19,7 @@ namespace Magnum.Actors.Internal
 	using Fibers;
 
 
-	public class BufferedInbox<T> :
+	internal class BufferedInbox<T> :
 		Inbox<T>
 	{
 		readonly Fiber _fiber;

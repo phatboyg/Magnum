@@ -20,7 +20,7 @@ namespace Magnum.Channels
 	/// Thrown when an invalid configuration is supplied when configuring a channel
 	/// </summary>
 	[Serializable]
-	public class ChannelConfigurationException :
+	internal class ChannelConfigurationException :
 		Exception
 	{
 		public ChannelConfigurationException()

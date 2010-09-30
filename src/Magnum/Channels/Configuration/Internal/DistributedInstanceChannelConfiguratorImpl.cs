@@ -25,7 +25,7 @@ namespace Magnum.Channels.Configuration.Internal
 	/// <typeparam name="TChannel"></typeparam>
 	/// <typeparam name="TKey"></typeparam>
 	/// <typeparam name="TInstance"></typeparam>
-	public class DistributedInstanceChannelConfiguratorImpl<TInstance, TChannel, TKey> :
+	internal class DistributedInstanceChannelConfiguratorImpl<TInstance, TChannel, TKey> :
 		FiberProviderConfiguratorImpl<DistributedInstanceChannelConfigurator<TInstance, TChannel, TKey>, TKey>,
 		DistributedInstanceChannelConfigurator<TInstance, TChannel, TKey>
 		where TInstance : class

@@ -18,7 +18,7 @@ namespace Magnum.Channels.Configuration.Internal
 	using Fibers.Configuration;
 
 
-	public class DistinctChannelConfiguratorImpl<TChannel, TKey> :
+	internal class DistinctChannelConfiguratorImpl<TChannel, TKey> :
 		FiberConfiguratorImpl<DistinctChannelConfigurator<TChannel, TKey>>,
 		DistinctChannelConfigurator<TChannel, TKey>,
 		ChannelConfigurator<ICollection<TChannel>>

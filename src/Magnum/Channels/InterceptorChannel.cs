@@ -22,7 +22,7 @@ namespace Magnum.Channels
 	/// the wrapped channel
 	/// </summary>
 	/// <typeparam name="T">The channel type</typeparam>
-	public class InterceptorChannel<T> :
+	internal class InterceptorChannel<T> :
 		Channel<T>
 	{
 		private readonly Fiber _fiber;

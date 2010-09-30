@@ -15,7 +15,7 @@ namespace Magnum.StateMachine.Channels
 	using Magnum.Channels;
 
 
-	public class StateMachineEventChannel<T, TChannel> :
+	internal class StateMachineEventChannel<T, TChannel> :
 		Channel<TChannel>
 		where T : StateMachine<T>
 	{

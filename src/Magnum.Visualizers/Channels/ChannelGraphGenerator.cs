@@ -26,7 +26,7 @@ namespace Magnum.Visualizers.Channels
 	using QuickGraph.Glee;
 
 
-	public class ChannelGraphGenerator
+	internal class ChannelGraphGenerator
 	{
 		public Graph CreateGraph(ChannelGraphData data)
 		{

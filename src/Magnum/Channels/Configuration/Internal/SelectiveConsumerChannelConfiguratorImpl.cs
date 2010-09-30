@@ -16,7 +16,7 @@ namespace Magnum.Channels.Configuration.Internal
 	using Fibers.Configuration;
 
 
-	public class SelectiveConsumerChannelConfiguratorImpl<TChannel> :
+	internal class SelectiveConsumerChannelConfiguratorImpl<TChannel> :
 		FiberConfiguratorImpl<ConsumerChannelConfigurator<TChannel>>,
 		ConsumerChannelConfigurator<TChannel>,
 		ChannelConfigurator<TChannel>,

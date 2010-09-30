@@ -22,7 +22,7 @@ namespace Magnum.Channels
 	/// A channel that accepts messages and sends them to the channel at regular intervals
 	/// </summary>
 	/// <typeparam name="T">The type of message delivered on the channel</typeparam>
-	public class IntervalChannel<T> :
+	internal class IntervalChannel<T> :
 		Channel<T>,
 		IDisposable
 	{

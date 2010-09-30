@@ -22,7 +22,7 @@ namespace Magnum.Channels
 	/// 
 	/// This particular version handles untyped channels
 	/// </summary>
-	public class ChannelAdapter :
+	internal class ChannelAdapter :
 		UntypedChannel
 	{
 		private UntypedChannel _output;
@@ -62,7 +62,7 @@ namespace Magnum.Channels
 	/// 
 	/// This particular version handles typed channels
 	/// </summary>
-	public class ChannelAdapter<T> :
+	internal class ChannelAdapter<T> :
 		Channel<T>
 	{
 		private Channel<T> _output;

@@ -25,7 +25,7 @@ namespace Magnum.Fibers
 	/// actions.
 	/// </summary>
 	[DebuggerDisplay("{GetType().Name} ( Count: {Count} )")]
-	public class ThreadPoolFiber :
+	internal class ThreadPoolFiber :
 		Fiber
 	{
 		static readonly ILogger _log = Logger.GetLogger<ThreadPoolFiber>();

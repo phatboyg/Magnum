@@ -20,7 +20,7 @@ namespace Magnum.Channels
 	/// based on the information in the message being sent on the channel
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class InstanceChannel<T> :
+	internal class InstanceChannel<T> :
 		Channel<T>
 	{
 		readonly Fiber _fiber;

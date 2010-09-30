@@ -24,7 +24,7 @@ namespace Magnum.Channels.Configuration.Internal
 	using Reflection;
 
 
-	public class PropertyChannelConnectionConfiguratorImpl<T> :
+	internal class PropertyChannelConnectionConfiguratorImpl<T> :
 		FiberConfiguratorImpl<PropertyChannelConnectionConfigurator<T>>,
 		PropertyChannelConnectionConfigurator<T>,
 		ChannelConfigurator

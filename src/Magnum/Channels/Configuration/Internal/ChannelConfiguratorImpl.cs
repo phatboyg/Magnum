@@ -16,7 +16,7 @@ namespace Magnum.Channels.Configuration.Internal
 	using Fibers;
 
 
-	public class ChannelConfiguratorImpl :
+	internal class ChannelConfiguratorImpl :
 		ChannelConfigurator
 	{
 		readonly UntypedChannel _channel;
@@ -39,7 +39,7 @@ namespace Magnum.Channels.Configuration.Internal
 	}
 
 
-	public class ChannelConfiguratorImpl<TChannel> :
+	internal class ChannelConfiguratorImpl<TChannel> :
 		ChannelConfigurator,
 		ChannelConfigurator<TChannel>
 	{
@@ -68,7 +68,7 @@ namespace Magnum.Channels.Configuration.Internal
 	}
 
 
-	public class ChannelConfiguratorImpl<T, TChannel> :
+	internal class ChannelConfiguratorImpl<T, TChannel> :
 		ChannelConfigurator<T>
 	{
 		readonly Channel<TChannel> _channel;

@@ -17,7 +17,7 @@ namespace Magnum.Channels.Configuration.Internal
 	using Fibers.Configuration;
 
 
-	public class InstanceChannelConfiguratorImpl<TChannel> :
+	internal class InstanceChannelConfiguratorImpl<TChannel> :
 		InstanceChannelConfigurator<TChannel>,
 		ChannelConfigurator<TChannel>
 	{
@@ -53,7 +53,7 @@ namespace Magnum.Channels.Configuration.Internal
 	}
 
 
-	public class InstanceChannelConfiguratorImpl<TInstance, TChannel> :
+	internal class InstanceChannelConfiguratorImpl<TInstance, TChannel> :
 		FiberConfiguratorImpl<InstanceChannelConfigurator<TInstance, TChannel>>,
 		InstanceChannelConfigurator<TInstance, TChannel>,
 		ChannelConfigurator<TChannel>

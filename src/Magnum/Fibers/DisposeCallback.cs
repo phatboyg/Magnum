@@ -18,7 +18,7 @@ namespace Magnum.Fibers
 	/// <summary>
 	/// Wraps a callback as an IDisposable to allow it to be called when the object is disposed.
 	/// </summary>
-	public class DisposeCallback :
+	internal class DisposeCallback :
 		IDisposable
 	{
 		readonly Action _disposeCallback;

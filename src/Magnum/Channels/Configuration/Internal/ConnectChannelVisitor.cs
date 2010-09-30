@@ -20,7 +20,7 @@ namespace Magnum.Channels.Configuration.Internal
 	using Visitors;
 
 
-	public class ConnectChannelVisitor :
+	internal class ConnectChannelVisitor :
 		ChannelVisitor
 	{
 		readonly UntypedChannel _newChannel;
@@ -94,7 +94,7 @@ namespace Magnum.Channels.Configuration.Internal
 	}
 
 
-	public class ConnectChannelVisitor<TChannel> :
+	internal class ConnectChannelVisitor<TChannel> :
 		ChannelVisitor
 	{
 		readonly Channel<TChannel> _newChannel;

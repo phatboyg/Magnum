@@ -23,7 +23,7 @@ namespace Magnum.Actors.Internal
 	/// </summary>
 	/// <typeparam name = "TActor">The actor type</typeparam>
 	/// <typeparam name = "TChannel">The channel type</typeparam>
-	public class ActorChannelProvider<TActor, TChannel> :
+	internal class ActorChannelProvider<TActor, TChannel> :
 		ChannelProvider<TChannel>
 		where TActor : class, Actor
 	{

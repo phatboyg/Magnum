@@ -19,7 +19,7 @@ namespace Magnum.Channels.Visitors
 	using Graphing;
 
 
-	public class GraphChannelVisitor :
+	internal class GraphChannelVisitor :
 		ChannelVisitor
 	{
 		readonly List<Edge> _edges = new List<Edge>();
@@ -303,7 +303,7 @@ namespace Magnum.Channels.Visitors
 
 
 //
-//	public class GraphChannkkelVisitor :
+//	internal class GraphChannkkelVisitor :
 //		ChannelVisitor
 //		{
 //

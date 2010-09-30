@@ -15,7 +15,7 @@ namespace Magnum.Channels
 	using Collections;
 
 
-	public class KeyedChannelProvider<TChannel, TKey> :
+	internal class KeyedChannelProvider<TChannel, TKey> :
 		ChannelProvider<TChannel>
 	{
 		readonly Cache<TKey, Channel<TChannel>> _dictionary;

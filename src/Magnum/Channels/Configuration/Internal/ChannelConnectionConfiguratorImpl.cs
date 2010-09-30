@@ -16,7 +16,7 @@ namespace Magnum.Channels.Configuration.Internal
 	using Fibers;
 
 
-	public class ChannelConnectionConfiguratorImpl<TChannel> :
+	internal class ChannelConnectionConfiguratorImpl<TChannel> :
 		ChannelConnectionConfigurator<TChannel>,
 		ChannelConfigurator
 	{

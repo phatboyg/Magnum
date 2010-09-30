@@ -20,7 +20,7 @@ namespace Magnum.Actors.Internal
 	/// A decorator for sent requests that enables method chaining
 	/// </summary>
 	/// <typeparam name="TRequest"></typeparam>
-	public class SentRequestImpl<TRequest> :
+	internal class SentRequestImpl<TRequest> :
 		SentRequest<TRequest>
 	{
 		readonly TRequest _body;

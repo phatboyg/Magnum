@@ -21,7 +21,7 @@ namespace Magnum.Channels.Configuration.Internal
 	using Visitors;
 
 
-	public class DisconnectChannelVisitor :
+	internal class DisconnectChannelVisitor :
 		ChannelVisitor
 	{
 		readonly HashSet<Channel> _channels;

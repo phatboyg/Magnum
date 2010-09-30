@@ -20,7 +20,7 @@ namespace Magnum.Channels
 	/// <summary>
 	/// A BroadcastChannel sends a message to zero or more listeners
 	/// </summary>
-	public class BroadcastChannel :
+	internal class BroadcastChannel :
 		UntypedChannel
 	{
 		private static readonly ILogger _log = Logger.GetLogger<BroadcastChannel>();
@@ -66,7 +66,7 @@ namespace Magnum.Channels
 	/// A BroadcastChannel sends a message to zero or more listeners
 	/// </summary>
 	/// <typeparam name = "T">Channel type</typeparam>
-	public class BroadcastChannel<T> :
+	internal class BroadcastChannel<T> :
 		Channel<T>
 	{
 		private static readonly ILogger _log = Logger.GetLogger<BroadcastChannel<T>>();

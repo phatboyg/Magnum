@@ -17,7 +17,7 @@ namespace Magnum.Actors
 	using Collections;
 
 
-	public class ActorCache<TActor, TKey> :
+	internal class ActorCache<TActor, TKey> :
 		ActorRepository<TActor, TKey>
 		where TActor : Actor
 	{

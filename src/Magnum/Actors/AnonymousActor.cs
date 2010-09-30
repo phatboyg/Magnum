@@ -16,7 +16,7 @@ namespace Magnum.Actors
 	using Fibers;
 
 
-	public class AnonymousActor :
+	internal class AnonymousActor :
 		Actor
 	{
 		static readonly AnonymousActorFactory _factory;

@@ -17,7 +17,7 @@ namespace Magnum.Channels.Visitors
 	using Extensions;
 
 
-	public class FlattenChannelVisitor :
+	internal class FlattenChannelVisitor :
 		ChannelVisitor
 	{
 		private readonly IList<Channel> _channels = new List<Channel>();

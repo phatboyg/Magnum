@@ -18,7 +18,7 @@ namespace Magnum.Channels.Visitors
 	using Reflection;
 
 
-	public class ChannelVisitor
+	internal class ChannelVisitor
 	{
 		readonly ILogger _log = Logger.GetLogger<ChannelVisitor>();
 

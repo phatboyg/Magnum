@@ -17,7 +17,7 @@ namespace Magnum.Fibers.Internal
 	using System.Linq;
 	using Extensions;
 
-	public class ScheduledActionList
+	internal class ScheduledActionList
 	{
 		private readonly SortedList<DateTime, List<ExecuteScheduledAction>> _actions;
 		private readonly object _lock = new object();

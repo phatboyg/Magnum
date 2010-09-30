@@ -15,7 +15,7 @@ namespace Magnum.Channels
 	using Fibers;
 	using Serialization;
 
-	public class DeserializeChannel<T> :
+	internal class DeserializeChannel<T> :
 		Channel<string>
 	{
 		private readonly Fiber _fiber;

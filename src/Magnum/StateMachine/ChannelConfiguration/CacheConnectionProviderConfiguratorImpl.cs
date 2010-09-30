@@ -18,7 +18,7 @@ namespace Magnum.StateMachine.ChannelConfiguration
 	using Fibers;
 
 
-	public class CacheConnectionProviderConfiguratorImpl<T, TKey, TBinding> :
+	internal class CacheConnectionProviderConfiguratorImpl<T, TKey, TBinding> :
 		CacheConnectionProviderConfigurator<T, TKey>,
 		ChannelProviderFactory<T, TKey>
 		where T : StateMachine<T>

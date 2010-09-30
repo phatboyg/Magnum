@@ -17,7 +17,7 @@ namespace Magnum.Actors.Internal
 	using Fibers;
 
 
-	public class DelegateActorFactory<TActor> :
+	internal class DelegateActorFactory<TActor> :
 		ActorFactory<TActor>
 		where TActor : class, Actor
 	{

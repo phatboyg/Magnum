@@ -20,7 +20,7 @@ namespace Magnum.Channels.Configuration.Internal
 	/// <summary>
 	/// Exposes the configuration options for a WcfProxy
 	/// </summary>
-	public class WcfChannelConnectionConfiguratorImpl :
+	internal class WcfChannelConnectionConfiguratorImpl :
 		FiberConfiguratorImpl<WcfChannelConnectionConfigurator>,
 		WcfChannelConnectionConfigurator,
 		ChannelConfigurator

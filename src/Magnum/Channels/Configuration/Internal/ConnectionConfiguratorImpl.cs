@@ -16,7 +16,7 @@ namespace Magnum.Channels.Configuration.Internal
 	using Extensions;
 
 
-	public class ConnectionConfiguratorImpl :
+	internal class ConnectionConfiguratorImpl :
 		ConnectionConfigurator
 	{
 		readonly UntypedChannel _channel;
@@ -60,7 +60,7 @@ namespace Magnum.Channels.Configuration.Internal
 	}
 
 
-	public class ConnectionConfiguratorImpl<T> :
+	internal class ConnectionConfiguratorImpl<T> :
 		ConnectionConfigurator<T>
 	{
 		readonly Channel<T> _channel;

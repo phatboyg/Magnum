@@ -21,7 +21,7 @@ namespace Magnum.ForNHibernate.Channels.Configuration
 	using NHibernate;
 
 
-	public class NHibernateConnectionProviderConfiguratorImpl<T, TKey, TBinding> :
+	internal class NHibernateConnectionProviderConfiguratorImpl<T, TKey, TBinding> :
 		NHibernateConnectionProviderConfigurator<T, TKey>,
 		ChannelProviderFactory<T, TKey>
 		where T : StateMachine<T>

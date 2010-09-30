@@ -16,7 +16,7 @@ namespace Magnum.Channels
 	using Fibers;
 
 
-	public class FutureChannel<T> :
+	internal class FutureChannel<T> :
 		Future<T>,
 		Channel<T>
 	{

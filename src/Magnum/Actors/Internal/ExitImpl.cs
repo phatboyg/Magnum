@@ -15,7 +15,7 @@ namespace Magnum.Actors.Internal
 	using Messages;
 
 
-	public class ExitImpl :
+	internal class ExitImpl :
 		Exit
 	{
 	}

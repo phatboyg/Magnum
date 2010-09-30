@@ -20,7 +20,7 @@ namespace Magnum.Fibers.Configuration
 	/// Thrown when an invalid configuration is supplied when configuring a channel
 	/// </summary>
 	[Serializable]
-	public class FiberConfigurationException :
+	internal class FiberConfigurationException :
 		Exception
 	{
 		public FiberConfigurationException()

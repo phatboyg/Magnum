@@ -18,7 +18,7 @@ namespace Magnum.StateMachine.ChannelConfiguration
 	using Reflection;
 
 
-	public class StateMachineEventInspector<TStateMachine> :
+	internal class StateMachineEventInspector<TStateMachine> :
 		ReflectiveVisitorBase<StateMachineEventInspector<TStateMachine>>,
 		IStateMachineInspector
 		where TStateMachine : StateMachine<TStateMachine>
@@ -95,7 +95,7 @@ namespace Magnum.StateMachine.ChannelConfiguration
 		}
 
 
-		public class StateMachineEvent<T, V> :
+		internal class StateMachineEvent<T, V> :
 			StateMachineEvent<T>
 			where T : StateMachine<T>
 		{

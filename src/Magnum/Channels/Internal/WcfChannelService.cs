@@ -19,7 +19,7 @@ namespace Magnum.Channels.Internal
 	/// </summary>
 	/// <typeparam name = "T">The channel type</typeparam>
 	[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Reentrant)]
-	public class WcfChannelService<T> :
+	internal class WcfChannelService<T> :
 		WcfChannel<T>
 	{
 		public WcfChannelService(Channel<T> output)

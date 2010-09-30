@@ -27,7 +27,7 @@ namespace Magnum.Actors.Internal
 	/// a property channel has the same message type. Calling Receive on the inbox will 
 	/// </summary>
 	/// <typeparam name="TActor">The actor type for this inbox</typeparam>
-	public class ActorInbox<TActor> :
+	internal class ActorInbox<TActor> :
 		ActorInstance,
 		Inbox
 		where TActor : class, Actor

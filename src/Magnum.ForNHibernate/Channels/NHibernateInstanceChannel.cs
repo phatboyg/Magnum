@@ -24,7 +24,7 @@ namespace Magnum.ForNHibernate.Channels
 	/// <typeparam name="TInstance">The class type stored in the database</typeparam>
 	/// <typeparam name="TChannel">The channel type of the message</typeparam>
 	/// <typeparam name="TKey">The key type used by the message and the class</typeparam>
-	public class NHibernateInstanceChannel<TInstance, TChannel, TKey> :
+	internal class NHibernateInstanceChannel<TInstance, TChannel, TKey> :
 		Channel<TChannel>
 		where TInstance : class
 	{

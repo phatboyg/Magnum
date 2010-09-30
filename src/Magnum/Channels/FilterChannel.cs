@@ -21,7 +21,7 @@ namespace Magnum.Channels
 	///   is not an issue.
 	/// </summary>
 	/// <typeparam name = "T">The type of message delivered on the channel</typeparam>
-	public class FilterChannel<T> :
+	internal class FilterChannel<T> :
 		Channel<T>
 	{
 		private readonly Fiber _fiber;

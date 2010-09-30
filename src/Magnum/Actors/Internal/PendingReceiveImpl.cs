@@ -17,7 +17,7 @@ namespace Magnum.Actors.Internal
 	using Fibers;
 
 
-	public class PendingReceiveImpl<T> :
+	internal class PendingReceiveImpl<T> :
 		PendingReceive
 	{
 		readonly Action<PendingReceiveImpl<T>> _onComplete;

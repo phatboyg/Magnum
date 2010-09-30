@@ -18,7 +18,7 @@ namespace Magnum.Actors.Internal
 	using Extensions;
 
 
-	public class WithinSentRequestImpl<TRequest> :
+	internal class WithinSentRequestImpl<TRequest> :
 		WithinSentRequest<TRequest>
 	{
 		readonly Inbox _inbox;

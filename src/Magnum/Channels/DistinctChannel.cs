@@ -24,7 +24,7 @@ namespace Magnum.Channels
 	/// </summary>
 	/// <typeparam name="T">The type of message delivered on the channel</typeparam>
 	/// <typeparam name="TKey">The type of the key for the message</typeparam>
-	public class DistinctChannel<T, TKey> :
+	internal class DistinctChannel<T, TKey> :
 		Channel<ICollection<T>>
 	{
 		readonly Fiber _fiber;

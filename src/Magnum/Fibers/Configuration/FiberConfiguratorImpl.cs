@@ -17,7 +17,7 @@ namespace Magnum.Fibers.Configuration
 	using Extensions;
 
 
-	public class FiberConfiguratorImpl<T> :
+	internal class FiberConfiguratorImpl<T> :
 		FiberConfigurator<T>
 		where T : class
 	{
