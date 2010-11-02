@@ -25,6 +25,7 @@
         <include name="**/Magnum.FileSystem.*" />
         <include name="**/System.Threading.*" />
         <include name="**/Ionic.Zip.*" />
+        <include name="**/Newtonsoft.Json.*" />
       </fileset>
     </delete>
   </target>
