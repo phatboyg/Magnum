@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 //  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -20,23 +20,20 @@ namespace Magnum.Reflection
 	using Collections;
 	using Extensions;
 
+
 	public abstract class ReflectiveVisitorBase<TVisitor>
 		where TVisitor : class
 	{
-		private const BindingFlags _methodBindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
-		private static readonly Expression<Func<ReflectiveVisitorBase<TVisitor>, bool>> _defaultMemberName = x => x.Visit(null);
-		private static readonly Dictionary<int, Func<TVisitor, object, bool>> _withArgs;
-		private static readonly MultiDictionary<string, MethodInfo> MethodNameCache;
-		private readonly string _methodName;
+		const BindingFlags _methodBindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+		static readonly Expression<Func<ReflectiveVisitorBase<TVisitor>, bool>> _defaultMemberName = x => x.Visit(null);
 
-		static ReflectiveVisitorBase()
-		{
-			_withArgs = new Dictionary<int, Func<TVisitor, object, bool>>();
+		[ThreadStatic]
+		static Dictionary<int, Func<TVisitor, object, bool>> _argCache;
 
-			MethodNameCache = new MultiDictionary<string, MethodInfo>(false);
+		[ThreadStatic]
+		static MultiDictionary<string, MethodInfo> _methodNameCache;
 
-			typeof (TVisitor).GetMethods(_methodBindingFlags).Each(method => MethodNameCache.Add(method.Name, method));
-		}
+		readonly string _methodName;
 
 		protected ReflectiveVisitorBase()
 			: this("Visit")
@@ -51,6 +48,18 @@ namespace Magnum.Reflection
 		protected ReflectiveVisitorBase(string methodName)
 		{
 			_methodName = methodName;
+		}
+
+		static IEnumerable<MethodInfo> GetMethod(string name)
+		{
+			if (_methodNameCache == null)
+			{
+				_methodNameCache = new MultiDictionary<string, MethodInfo>(false);
+
+				typeof(TVisitor).GetMethods(_methodBindingFlags).Each(method => _methodNameCache.Add(method.Name, method));
+			}
+
+			return _methodNameCache[name];
 		}
 
 		public virtual bool Visit(object obj)
@@ -89,15 +98,15 @@ namespace Magnum.Reflection
 				{
 					var args = new[] {obj};
 
-					MethodInfo method = MethodNameCache[_methodName]
-						.Where(x => x.ReturnType == typeof (bool))
+					MethodInfo method = GetMethod(_methodName)
+						.Where(x => x.ReturnType == typeof(bool))
 						.MatchingArguments(args)
 						.FirstOrDefault();
 
 					if (method == null)
 						return null;
 
-					if (method.GetParameters().First().ParameterType == typeof (object))
+					if (method.GetParameters().First().ParameterType == typeof(object))
 						return null;
 
 					return method.ToSpecializedMethod(args);
@@ -106,16 +115,19 @@ namespace Magnum.Reflection
 			return invoker(target, obj);
 		}
 
-		private static Func<TVisitor, object, bool> GetInvoker(int key, Func<MethodInfo> getMethodInfo)
+		static Func<TVisitor, object, bool> GetInvoker(int key, Func<MethodInfo> getMethodInfo)
 		{
-			return _withArgs.Retrieve(key, () =>
+			if (_argCache == null)
+				_argCache = new Dictionary<int, Func<TVisitor, object, bool>>();
+
+			return _argCache.Retrieve(key, () =>
 				{
 					MethodInfo method = getMethodInfo();
 					if (method == null)
 						return (x, y) => true;
 
-					ParameterExpression instanceParameter = Expression.Parameter(typeof (TVisitor), "target");
-					ParameterExpression argParameter = Expression.Parameter(typeof (object), "arg");
+					ParameterExpression instanceParameter = Expression.Parameter(typeof(TVisitor), "target");
+					ParameterExpression argParameter = Expression.Parameter(typeof(object), "arg");
 
 					ParameterInfo parameter = method.GetParameters().First();
 
