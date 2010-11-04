@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 //  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -16,8 +16,6 @@ namespace Magnum.Fibers
 	using System.Collections.Generic;
 	using System.Diagnostics;
 	using System.Threading;
-	using Concurrency;
-	using Logging;
 
 
 	/// <summary>
@@ -28,33 +26,57 @@ namespace Magnum.Fibers
 	public class ThreadPoolFiber :
 		Fiber
 	{
-		static readonly ILogger _log = Logger.GetLogger<ThreadPoolFiber>();
-
 		readonly object _lock = new object();
 
-		Atomic<ImmutableList<Action>> _actions = Atomic.Create(ImmutableList<Action>.EmptyList);
-
 		bool _executorQueued;
+		IList<Action> _operations = new List<Action>();
 		bool _shuttingDown;
 		bool _stopping;
 
 		protected int Count
 		{
-			get { return _actions.Value.Count; }
+			get { return _operations.Count; }
 		}
 
-		public void Add(Action action)
+		public void Add(Action operation)
 		{
-			Add(x => x.Add(action));
+			if (_shuttingDown)
+				throw new FiberException("The fiber is no longer accepting actions");
+
+			lock (_lock)
+			{
+				_operations.Add(operation);
+				if (!_executorQueued)
+					QueueWorkItem();
+			}
 		}
 
-		public void AddMany(params Action[] actions)
+		public void AddMany(Action[] operation)
 		{
-			Add(x => x.AddMany(actions));
+			if (_shuttingDown)
+				throw new FiberException("The fiber is no longer accepting actions");
+
+			lock (_lock)
+			{
+				for (int i = 0; i < operation.Length; i++)
+					_operations.Add(operation[i]);
+				if (!_executorQueued)
+					QueueWorkItem();
+			}
 		}
 
-		public virtual void Shutdown(TimeSpan timeout)
+		public void Shutdown(TimeSpan timeout)
 		{
+			if (timeout == TimeSpan.Zero)
+			{
+				lock (_lock)
+				{
+					_shuttingDown = true;
+				}
+
+				return;
+			}
+
 			DateTime waitUntil = SystemUtil.Now + timeout;
 
 			lock (_lock)
@@ -62,7 +84,7 @@ namespace Magnum.Fibers
 				_shuttingDown = true;
 				Monitor.PulseAll(_lock);
 
-				while (_actions.Value.Count > 0 || _executorQueued)
+				while (_operations.Count > 0 || _executorQueued)
 				{
 					timeout = waitUntil - SystemUtil.Now;
 					if (timeout < TimeSpan.Zero)
@@ -79,23 +101,6 @@ namespace Magnum.Fibers
 			_stopping = true;
 		}
 
-		void Add(Func<ImmutableList<Action>, ImmutableList<Action>> mutator)
-		{
-			if (_shuttingDown)
-				throw new FiberException("The fiber is no longer accepting actions");
-
-			ImmutableList<Action> previous = _actions.Set(mutator);
-
-			if (previous.Count == 0)
-			{
-				lock (_lock)
-				{
-					if (!_executorQueued)
-						QueueWorkItem();
-				}
-			}
-		}
-
 		void QueueWorkItem()
 		{
 			if (!ThreadPool.QueueUserWorkItem(x => Execute()))
@@ -106,41 +111,46 @@ namespace Magnum.Fibers
 
 		bool Execute()
 		{
-			IEnumerable<Action> actions = RemoveAll();
+			IList<Action> operations = RemoveAll();
 
-			ExecuteActions(actions);
+			ExecuteActions(operations);
 
 			lock (_lock)
 			{
-				if (_actions.Value.Count > 0)
-					QueueWorkItem();
-				else
+				if (_operations.Count == 0)
 				{
 					_executorQueued = false;
 
 					Monitor.PulseAll(_lock);
 				}
+				else
+					QueueWorkItem();
 			}
 
 			return true;
 		}
 
-		void ExecuteActions(IEnumerable<Action> actions)
+		void ExecuteActions(IList<Action> operations)
 		{
-			foreach (Action action in actions)
+			for (int i = 0; i < operations.Count; i++)
 			{
 				if (_stopping)
 					break;
 
-				action();
+				operations[i]();
 			}
 		}
 
-		IEnumerable<Action> RemoveAll()
+		IList<Action> RemoveAll()
 		{
-			ImmutableList<Action> runActions = _actions.Set(x => ImmutableList<Action>.EmptyList);
+			lock (_lock)
+			{
+				IList<Action> operations = _operations;
 
-			return runActions;
+				_operations = new List<Action>();
+
+				return operations;
+			}
 		}
 	}
 }
