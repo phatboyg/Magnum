@@ -17,7 +17,7 @@ namespace Magnum.Channels.Configuration.Internal
 	using Fibers.Configuration;
 
 
-	public class WcfChannelHostConnectionConfiguratorImpl :
+	internal class WcfChannelHostConnectionConfiguratorImpl :
 		FiberConfiguratorImpl<WcfChannelHostConnectionConfigurator>,
 		WcfChannelHostConnectionConfigurator,
 		ChannelConfigurator

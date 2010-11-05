@@ -20,7 +20,7 @@ namespace Magnum.Channels
 	/// which can be assigned to the channel type and discarding all others
 	/// </summary>
 	/// <typeparam name="TOutput">The output channel type</typeparam>
-	public class TypedChannelAdapter<TOutput> :
+	internal class TypedChannelAdapter<TOutput> :
 		UntypedChannel
 	{
 		public TypedChannelAdapter(Channel<TOutput> output)

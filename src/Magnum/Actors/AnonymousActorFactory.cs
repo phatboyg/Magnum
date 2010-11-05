@@ -17,7 +17,7 @@ namespace Magnum.Actors
 	using Internal;
 
 
-	public class AnonymousActorFactory
+	internal class AnonymousActorFactory
 	{
 		readonly Func<Fiber, Scheduler, Inbox, AnonymousActor> _factory;
 		readonly Func<Fiber> _fiberFactory;

@@ -14,7 +14,7 @@ namespace Magnum.Fibers.Internal
 {
 	using System;
 
-	public class SingleScheduledAction :
+	internal class SingleScheduledAction :
 		ExecuteScheduledAction
 	{
 		private readonly Action _action;

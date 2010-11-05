@@ -12,7 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Channels.Internal
 {
-	public class CreateOrUseExistingInstanceChannelPolicy<T, TChannel> :
+	internal class CreateOrUseExistingInstanceChannelPolicy<T, TChannel> :
 		InstanceChannelPolicy<T, TChannel>
 		where T : class
 	{

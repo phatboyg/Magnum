@@ -21,7 +21,7 @@ namespace Magnum.Fibers
 	using Logging;
 
 	[DebuggerDisplay("{GetType().Name} ( Count: {Count}, Next: {NextActionTime} )")]
-	public class TimerScheduler :
+	internal class TimerScheduler :
 		Scheduler
 	{
 		private static readonly ILogger _log = Logger.GetLogger<TimerScheduler>();

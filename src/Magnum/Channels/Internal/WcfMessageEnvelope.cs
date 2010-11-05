@@ -15,7 +15,7 @@ namespace Magnum.Channels.Internal
 	using System.Runtime.Serialization;
 
 	[DataContract]
-	public class WcfMessageEnvelope :
+	internal class WcfMessageEnvelope :
 		MessageEnvelope
 	{
 		[DataMember]

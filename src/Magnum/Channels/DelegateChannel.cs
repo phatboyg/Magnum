@@ -19,7 +19,7 @@ namespace Magnum.Channels
 	/// A direct delegate invocation on send, no fiber used
 	/// </summary>
 	/// <typeparam name="TChannel"></typeparam>
-	public class DelegateChannel<TChannel> :
+	internal class DelegateChannel<TChannel> :
 		Channel<TChannel>
 	{
 		Action<TChannel> _handler;

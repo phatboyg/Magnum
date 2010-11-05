@@ -16,7 +16,7 @@ namespace Magnum.ForNHibernate.Channels
 	using NHibernate;
 
 
-	public class DelegateSessionProvider :
+	internal class DelegateSessionProvider :
 		LateBoundSessionProvider
 	{
 		Func<ISession> _sessionFactory;

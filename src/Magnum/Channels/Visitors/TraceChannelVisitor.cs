@@ -17,7 +17,7 @@ namespace Magnum.Channels.Visitors
 	using System.Linq;
 	using Extensions;
 
-	public class TraceChannelVisitor :
+	internal class TraceChannelVisitor :
 		ChannelVisitor
 	{
 		protected override Channel<T> Visitor<T>(ConsumerChannel<T> channel)

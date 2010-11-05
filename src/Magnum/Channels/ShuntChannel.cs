@@ -15,7 +15,7 @@ namespace Magnum.Channels
 	/// <summary>
 	/// Implements a channel shunt, discarding any message that is send without action
 	/// </summary>
-	public class ShuntChannel :
+	internal class ShuntChannel :
 		UntypedChannel
 	{
 		public void Send<T>(T message)
@@ -27,7 +27,7 @@ namespace Magnum.Channels
 	/// Implements a channel shunt, discarding any message that is send without action
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class ShuntChannel<T> :
+	internal class ShuntChannel<T> :
 		Channel<T>
 	{
 		public void Send(T message)

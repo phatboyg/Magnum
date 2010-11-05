@@ -22,7 +22,7 @@ namespace Magnum.Fibers
 
 
 	[DebuggerDisplay("{GetType().Name} ( Count: {Count}, ThreadId: {ThreadId} )")]
-	public class ThreadFiber :
+	internal class ThreadFiber :
 		Fiber
 	{
 		readonly object _lock = new object();

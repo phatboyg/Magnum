@@ -21,7 +21,7 @@ namespace Magnum.Channels
 	/// Forwards the last message in the set of messages to the next channel
 	/// </summary>
 	/// <typeparam name="T">The type of message delivered on the channel</typeparam>
-	public class LastChannel<T> :
+	internal class LastChannel<T> :
 		Channel<ICollection<T>>
 	{
 		readonly Fiber _fiber;

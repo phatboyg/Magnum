@@ -14,7 +14,7 @@ namespace Magnum.Channels.Internal
 {
 	using System.Collections.Generic;
 
-	public class MessageDictionaryImpl<TKey, TValue> :
+	internal class MessageDictionaryImpl<TKey, TValue> :
 		MessageDictionary<TKey, TValue>
 	{
 		private readonly KeyAccessor<TValue, TKey> _keyAccessor;

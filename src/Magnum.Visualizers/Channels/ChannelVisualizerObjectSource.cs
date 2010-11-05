@@ -23,7 +23,7 @@ namespace Magnum.Visualizers.Channels
 	/// provides the channel data necessary to visualize the channel network outside
 	/// of the process
 	/// </summary>
-	public class ChannelVisualizerObjectSource :
+	internal class ChannelVisualizerObjectSource :
 		VisualizerObjectSource
 	{
 		public override void GetData(object target, Stream outgoingData)

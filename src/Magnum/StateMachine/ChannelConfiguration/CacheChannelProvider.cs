@@ -22,7 +22,7 @@ namespace Magnum.StateMachine.ChannelConfiguration
 	/// </summary>
 	/// <typeparam name="TChannel">The channel type</typeparam>
 	/// <typeparam name="TKey"></typeparam>
-	public class CacheChannelProvider<TChannel, TKey> :
+	internal class CacheChannelProvider<TChannel, TKey> :
 		ChannelProvider<TChannel>
 	{
 		readonly ChannelProvider<TChannel> _channelProvider;

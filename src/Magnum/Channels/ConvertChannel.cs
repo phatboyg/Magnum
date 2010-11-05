@@ -21,7 +21,7 @@ namespace Magnum.Channels
 	/// </summary>
 	/// <typeparam name = "TInput">Input message type</typeparam>
 	/// <typeparam name = "TOutput">Output message type</typeparam>
-	public class ConvertChannel<TInput, TOutput> :
+	internal class ConvertChannel<TInput, TOutput> :
 		Channel<TInput>
 	{
 		private readonly Fiber _fiber;

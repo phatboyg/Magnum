@@ -19,7 +19,7 @@ namespace Magnum.Channels
 	/// specified Fiber
 	/// </summary>
 	/// <typeparam name="T">The type of message delivered on the channel</typeparam>
-	public class SelectiveConsumerChannel<T> :
+	internal class SelectiveConsumerChannel<T> :
 		Channel<T>
 	{
 		private readonly Fiber _fiber;

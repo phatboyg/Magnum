@@ -15,7 +15,7 @@ namespace Magnum.Channels.Internal
 	using System;
 
 
-	public class MessageImpl<T> :
+	internal class MessageImpl<T> :
 		Message<T>
 	{
 		public MessageImpl(T message)

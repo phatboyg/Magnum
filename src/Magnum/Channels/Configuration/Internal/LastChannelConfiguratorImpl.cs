@@ -18,7 +18,7 @@ namespace Magnum.Channels.Configuration.Internal
 	using Fibers.Configuration;
 
 
-	public class LastChannelConfiguratorImpl<TChannel> :
+	internal class LastChannelConfiguratorImpl<TChannel> :
 		FiberConfiguratorImpl<LastChannelConfigurator<TChannel>>,
 		LastChannelConfigurator<TChannel>,
 		ChannelConfigurator<ICollection<TChannel>>

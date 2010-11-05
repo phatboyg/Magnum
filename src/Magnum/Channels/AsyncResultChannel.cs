@@ -21,7 +21,7 @@ namespace Magnum.Channels
 	/// frameworks that support asynchronous callbacks
 	/// </summary>
 	/// <typeparam name="T">The channel type supported</typeparam>
-	public class AsyncResultChannel :
+	internal class AsyncResultChannel :
 		AsyncResult,
 		UntypedChannel
 	{
@@ -49,7 +49,7 @@ namespace Magnum.Channels
 	/// frameworks that support asynchronous callbacks
 	/// </summary>
 	/// <typeparam name="T">The channel type supported</typeparam>
-	public class AsyncResultChannel<T> :
+	internal class AsyncResultChannel<T> :
 		AsyncResult,
 		Channel<T>
 	{

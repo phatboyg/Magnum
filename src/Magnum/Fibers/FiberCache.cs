@@ -21,7 +21,7 @@ namespace Magnum.Fibers
 	/// Keeps track of a keyed fiber collection
 	/// </summary>
 	/// <typeparam name="TKey"></typeparam>
-	public class FiberCache<TKey> :
+	internal class FiberCache<TKey> :
 		FiberProvider<TKey>
 	{
 		readonly Cache<TKey, Fiber> _cache;

@@ -17,7 +17,7 @@ namespace Magnum.Channels.Configuration.Internal
 	using Fibers;
 
 
-	public class IntervalChannelConfiguratorImpl<TChannel> :
+	internal class IntervalChannelConfiguratorImpl<TChannel> :
 		IntervalModelConfigurator<IntervalChannelConfigurator<TChannel>>,
 		IntervalChannelConfigurator<TChannel>,
 		ChannelConfigurator<TChannel>

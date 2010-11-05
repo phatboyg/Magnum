@@ -17,7 +17,7 @@ namespace Magnum.Channels.Configuration.Internal
 	using Fibers.Configuration;
 
 
-	public class IntervalModelConfigurator<T> :
+	internal class IntervalModelConfigurator<T> :
 		FiberConfiguratorImpl<T>
 		where T : class
 	{

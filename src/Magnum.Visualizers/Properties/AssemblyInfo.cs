@@ -11,6 +11,7 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using Magnum.Channels;
 using Magnum.Pipeline.Segments;
 using Magnum.RulesEngine;
@@ -19,6 +20,8 @@ using Magnum.Visualizers.Channels;
 using Magnum.Visualizers.Pipeline;
 using Magnum.Visualizers.RulesEngine;
 using Magnum.Visualizers.StateMachine;
+
+[assembly: InternalsVisibleTo("Magnum.RulesEngine.Specs")]
 
 [assembly: DebuggerVisualizer(typeof(RulesEngineDebugVisualizer), typeof(RulesEngineVisualizerObjectSource),
 	Target = typeof(MagnumRulesEngine),

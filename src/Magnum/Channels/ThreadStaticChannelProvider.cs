@@ -22,7 +22,7 @@ namespace Magnum.Channels
 	/// between calls since threads may change and ordering cannot be guaranteed
 	/// </summary>
 	/// <typeparam name="T">The message type of the channel</typeparam>
-	public class ThreadStaticChannelProvider<T> :
+	internal class ThreadStaticChannelProvider<T> :
 		ChannelProvider<T>
 	{
 		[ThreadStatic]

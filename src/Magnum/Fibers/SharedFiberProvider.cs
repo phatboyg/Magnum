@@ -15,7 +15,7 @@ namespace Magnum.Fibers
 	using Extensions;
 
 
-	public class SharedFiberProvider<TKey> :
+	internal class SharedFiberProvider<TKey> :
 		FiberProvider<TKey>
 	{
 		readonly Fiber _fiber;

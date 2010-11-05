@@ -14,7 +14,7 @@ namespace Magnum.Channels.Internal
 {
 	using System.Collections.Generic;
 
-	public class MessageListImpl<T> :
+	internal class MessageListImpl<T> :
 		MessageList<T>
 	{
 		private List<T> _messages = new List<T>();

@@ -15,7 +15,7 @@ namespace Magnum.Fibers
 	using System;
 	using System.Runtime.Serialization;
 
-	public class FiberException :
+	internal class FiberException :
 		Exception
 	{
 		public FiberException()

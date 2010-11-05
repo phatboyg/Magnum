@@ -18,7 +18,7 @@ namespace Magnum.Channels.Configuration.Internal
 	/// <summary>
 	/// The channel connection implementation
 	/// </summary>
-	public class ChannelConnectionImpl :
+	internal class ChannelConnectionImpl :
 		AbstractChannelConnection,
 		ChannelConnection,
 		CreateChannelConnection
@@ -35,7 +35,7 @@ namespace Magnum.Channels.Configuration.Internal
 	}
 
 
-	public class ChannelConnectionImpl<T> :
+	internal class ChannelConnectionImpl<T> :
 		AbstractChannelConnection,
 		ChannelConnection,
 		CreateChannelConnection

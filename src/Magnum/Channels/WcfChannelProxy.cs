@@ -20,7 +20,7 @@ namespace Magnum.Channels
 	using Serialization;
 
 
-	public class WcfChannelProxy :
+	internal class WcfChannelProxy :
 		UntypedChannel
 	{
 		readonly EndpointAddress _address;
@@ -61,7 +61,7 @@ namespace Magnum.Channels
 	}
 
 
-	public class WcfChannelProxy<T> :
+	internal class WcfChannelProxy<T> :
 		Channel<T>
 	{
 		readonly EndpointAddress _address;

@@ -21,7 +21,7 @@ namespace Magnum.StateMachine.ChannelConfiguration
 	using Magnum.Channels.Configuration.Internal;
 
 
-	public class StateMachineInstanceConnectionConfiguratorImpl<T> :
+	internal class StateMachineInstanceConnectionConfiguratorImpl<T> :
 		FiberConfiguratorImpl<StateMachineInstanceConnectionConfigurator<T>>,
 		ChannelConfigurator,
 		StateMachineInstanceConnectionConfigurator<T>

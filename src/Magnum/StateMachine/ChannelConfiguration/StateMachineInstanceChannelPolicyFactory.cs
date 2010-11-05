@@ -17,7 +17,7 @@ namespace Magnum.StateMachine.ChannelConfiguration
 	using Magnum.StateMachine;
 
 
-	public class StateMachineInstanceChannelPolicyFactory<T>
+	internal class StateMachineInstanceChannelPolicyFactory<T>
 		where T : StateMachine<T>
 	{
 		

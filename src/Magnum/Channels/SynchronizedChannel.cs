@@ -22,7 +22,7 @@ namespace Magnum.Channels
 	/// writing to the UI
 	/// </summary>
 	/// <typeparam name="T">The channel type</typeparam>
-	public class SynchronizedChannel :
+	internal class SynchronizedChannel :
 		UntypedChannel
 	{
 		readonly Fiber _fiber;
@@ -58,7 +58,7 @@ namespace Magnum.Channels
 	/// writing to the UI
 	/// </summary>
 	/// <typeparam name="T">The channel type</typeparam>
-	public class SynchronizedChannel<T> :
+	internal class SynchronizedChannel<T> :
 		Channel<T>
 	{
 		readonly Fiber _fiber;

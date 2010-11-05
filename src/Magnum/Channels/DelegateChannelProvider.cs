@@ -18,7 +18,7 @@ namespace Magnum.Channels
 	/// Wraps an anonymous method in a ChannelProvider
 	/// </summary>
 	/// <typeparam name="T">The channel type</typeparam>
-	public class DelegateChannelProvider<T> :
+	internal class DelegateChannelProvider<T> :
 		ChannelProvider<T>
 	{
 		private readonly Func<T, Channel<T>> _provider;

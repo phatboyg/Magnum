@@ -16,7 +16,7 @@ namespace Magnum.Channels
 	using Extensions;
 
 
-	public class DelegateInstanceProvider<TInstance, TChannel> :
+	internal class DelegateInstanceProvider<TInstance, TChannel> :
 		InstanceProvider<TInstance, TChannel>
 		where TInstance : class
 	{

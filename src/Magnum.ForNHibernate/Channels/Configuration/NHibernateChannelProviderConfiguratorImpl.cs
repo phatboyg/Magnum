@@ -19,7 +19,7 @@ namespace Magnum.ForNHibernate.Channels.Configuration
 	using Magnum.Channels.Configuration.Internal;
 
 
-	public class NHibernateChannelProviderConfiguratorImpl<TInstance, TChannel, TKey> :
+	internal class NHibernateChannelProviderConfiguratorImpl<TInstance, TChannel, TKey> :
 		NHibernateChannelProviderConfigurator<TInstance, TChannel, TKey>
 		where TInstance : class
 	{

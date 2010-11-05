@@ -36,7 +36,7 @@ namespace Magnum.StateMachine.ChannelConfiguration
 	/// Describes an event, received by a state machine, and the in which that event is valid
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class StateMachineEventInspectorResult<T, V> :
+	internal class StateMachineEventInspectorResult<T, V> :
 		StateMachineEventInspectorResult<T>
 		where T : StateMachine<T>
 	{

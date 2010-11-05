@@ -19,7 +19,7 @@ namespace Magnum.Channels
 	/// of messages, to avoid too many consumers running at the same time
 	/// </summary>
 	/// <typeparam name="T">The channel type</typeparam>
-	public class ThreadPoolChannel<T> :
+	internal class ThreadPoolChannel<T> :
 		Channel<T>
 	{
 		private readonly int _channelLimit;

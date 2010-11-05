@@ -12,7 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Channels.Internal
 {
-	public class ResponseImpl<TResponse> :
+	internal class ResponseImpl<TResponse> :
 		MessageImpl<TResponse>,
 		Response<TResponse>
 	{
@@ -23,7 +23,7 @@ namespace Magnum.Channels.Internal
 	}
 
 
-	public class ResponseImpl<TRequest, TResponse> :
+	internal class ResponseImpl<TRequest, TResponse> :
 		MessageImpl<TResponse>,
 		Response<TRequest, TResponse>
 	{

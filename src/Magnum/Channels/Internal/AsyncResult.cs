@@ -19,7 +19,7 @@ namespace Magnum.Channels.Internal
 	/// <summary>
 	/// A callback-only version of the AsyncResult callback
 	/// </summary>
-	public class AsyncResult :
+	internal class AsyncResult :
 		IAsyncResult
 	{
 		readonly AsyncCallback _callback;

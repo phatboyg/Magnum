@@ -23,7 +23,7 @@ namespace Magnum.StateMachine.ChannelConfiguration
 	using Reflection;
 
 
-	public class StateMachineConnectionConfiguratorImpl<T> :
+	internal class StateMachineConnectionConfiguratorImpl<T> :
 		StateMachineConnectionConfigurator<T>,
 		ChannelConfigurator
 		where T : StateMachine<T>
@@ -64,7 +64,7 @@ namespace Magnum.StateMachine.ChannelConfiguration
 	}
 
 
-	public class StateMachineConnectionConfiguratorImpl<T, TKey, TBinding> :
+	internal class StateMachineConnectionConfiguratorImpl<T, TKey, TBinding> :
 		FiberProviderConfiguratorImpl<StateMachineConnectionConfigurator<T, TKey, TBinding>, TKey>,
 		StateMachineConnectionConfigurator<T, TKey, TBinding>,
 		ChannelConfigurator
