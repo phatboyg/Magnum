@@ -12,10 +12,13 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.PerformanceCounters
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Reflection;
     using Collections;
+    using Extensions;
+    using TypeScanning;
 
 
     public class WindowsCounterConfiguration :
@@ -28,9 +31,15 @@ namespace Magnum.PerformanceCounters
 
         public void Register<TCounterCategory>() where TCounterCategory : CounterCategory
         {
-            var category = new CategoryConfiguration();
-            category.Name = typeof(TCounterCategory).Name;
-            PropertyInfo[] props = typeof(TCounterCategory).GetProperties();
+            Register(typeof(TCounterCategory));
+        }
+        void Register(Type counterCategoryType)
+        {
+            var category = new CategoryConfiguration
+                {
+                    Name = counterCategoryType.Name
+                };
+            var props = counterCategoryType.GetProperties();
             foreach (var propertyInfo in props)
             {
                 var counter = new PerformanceCounterConfiguration(propertyInfo.Name, "no-counter-help-yet",
@@ -38,6 +47,15 @@ namespace Magnum.PerformanceCounters
                 category.Counters.Add(counter);
             }
             _categoryConfigurations.Add(category);
+            
+        }
+        public void ScanForCounters()
+        {
+            var scan = new ScanInstruction();
+            scan.AssembliesFromApplicationBaseDirectory();
+            scan.AddAllTypesOf<CounterCategory>();
+            var types = scan.Execute();
+            types.Each(Register);
         }
 
 

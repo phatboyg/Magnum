@@ -16,7 +16,6 @@ namespace Magnum.Specs.PerformanceCounters
     using Magnum.Extensions;
     using Magnum.PerformanceCounters;
     using NUnit.Framework;
-    using TestFramework;
 
 
     public abstract class PerformanceCounterBase
@@ -27,7 +26,7 @@ namespace Magnum.Specs.PerformanceCounters
                           "Performance Counter '{0}\\{1}' doesn't exist".FormatWith(counterName, categoryName));
         }
 
-        public void PerformaneCategoryExists(string categoryName)
+        public void PerformanceCategoryExists(string categoryName)
         {
             Assert.IsTrue(PerformanceCounterCategory.Exists(categoryName),
                           "Performance Category '{0}' doesn't exist".FormatWith(categoryName));
@@ -36,14 +35,28 @@ namespace Magnum.Specs.PerformanceCounters
 
 
     [TestFixture]
-    public class CreatingCountersSpecs
+    public class CreatingCountersSpecs :
+        PerformanceCounterBase
     {
         [Test]
         public void CanCreateCategoryAndCounter()
         {
-            CounterRepository cr = CounterRepositoryConfigurator.New(cfg => { cfg.Register<MagnumTestCounters>(); });
-            var counters = cr.GetCounter<MagnumTestCounters>("_default");
-            cr.Dispose();
+            using (CounterRepository cr = CounterRepositoryConfigurator.New(cfg => { cfg.Register<MagnumTestCounters>(); }))
+            {
+                PerformanceCategoryExists("MagnumTestCounters");
+                PerformanceCounterExists("MagnumTestCounters","ConsumerThreadCount");
+
+                var counters = cr.GetCounter<MagnumTestCounters>("_default");
+            }
+        }
+
+        [Test]
+        public void RegisterWithTypeScanning()
+        {
+            using(var cr = CounterRepositoryConfigurator.New( cfg=> cfg.ScanForCounters()))
+            {
+                
+            }
         }
     }
 }

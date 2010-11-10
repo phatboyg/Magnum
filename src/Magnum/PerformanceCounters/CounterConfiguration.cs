@@ -15,5 +15,6 @@ namespace Magnum.PerformanceCounters
     public interface CounterConfiguration
     {
         void Register<TCounterCategory>() where TCounterCategory : CounterCategory;
+        void ScanForCounters();
     }
 }

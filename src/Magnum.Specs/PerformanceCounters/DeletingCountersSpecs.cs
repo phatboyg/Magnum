@@ -1,6 +1,5 @@
 namespace Magnum.Specs.PerformanceCounters
 {
-    using System.Diagnostics;
     using Magnum.PerformanceCounters;
     using NUnit.Framework;
 
@@ -8,16 +7,31 @@ namespace Magnum.Specs.PerformanceCounters
     public class DeletingCountersSpecs
     {
         [Test]
-        public void DeleteCatagory()
+        public void DeleteCatagoryViaString()
         {
-            var cr = new CounterRepository();
-            var ccfg = new CategoryConfiguration();
-            ccfg.Name = "MagnumTest";
-            ccfg.Help = "Help Me Rhonda";
-            ccfg.Counters.Add(new PerformanceCounterConfiguration("Test Counter", "Test Help", PerformanceCounterType.NumberOfItems32));
-            cr.RegisterCategory(ccfg);
+            using (CounterRepository cr = CounterRepositoryConfigurator.New(cfg => { cfg.Register<MagnumTestCounters>(); }))
+            {
+                var counters = cr.GetCounter<MagnumTestCounters>("_default");
+            }
 
-            cr.RemoveCatagory("MagnumTest");
+            using (var cr = new CounterRepository())
+            {
+                cr.RemoveCategory("MagnumTestCounters");
+            }
+        }
+
+        [Test]
+        public void DeleteCategoryViaType()
+        {
+            using (CounterRepository cr = CounterRepositoryConfigurator.New(cfg => { cfg.Register<MagnumTestCounters>(); }))
+            {
+                var counters = cr.GetCounter<MagnumTestCounters>("_default");
+            }
+
+            using (var cr = new CounterRepository())
+            {
+                cr.RemoveCategory<MagnumTestCounters>();
+            }
         }
     }
 }

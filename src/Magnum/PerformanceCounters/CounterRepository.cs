@@ -72,12 +72,16 @@ namespace Magnum.PerformanceCounters
                 }
         }
 
-        public void RemoveCatagory(string categoryName)
+        public void RemoveCategory<TCategory>() where TCategory : CounterCategory
+        {
+            RemoveCategory(typeof(TCategory).Name);
+        }
+
+        public void RemoveCategory(string categoryName)
         {
             try
             {
                 PerformanceCounterCategory.Delete(categoryName);
-
             }
             catch (SecurityException ex)
             {
