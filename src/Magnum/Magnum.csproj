@@ -122,6 +122,17 @@
     <Compile Include="Actors\Messages\Exit.cs" />
     <Compile Include="Actors\Messages\Kill.cs" />
     <Compile Include="Actors\PendingReceive.cs" />
+    <Compile Include="PerformanceCounters\CategoryConfiguration.cs" />
+    <Compile Include="PerformanceCounters\Counter.cs" />
+    <Compile Include="PerformanceCounters\CounterCategory.cs" />
+    <Compile Include="PerformanceCounters\CounterConfiguration.cs" />
+    <Compile Include="PerformanceCounters\CounterRegistry.cs" />
+    <Compile Include="PerformanceCounters\CounterRepository.cs" />
+    <Compile Include="PerformanceCounters\CounterRepositoryConfigurator.cs" />
+    <Compile Include="PerformanceCounters\InstancePerformanceCounter.cs" />
+    <Compile Include="PerformanceCounters\NullPerformanceCounter.cs" />
+    <Compile Include="PerformanceCounters\PerformanceCounterConfiguration.cs" />
+    <Compile Include="PerformanceCounters\WindowsCounterConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Binding\BinderContext.cs" />
     <Compile Include="Binding\FastModelBinder.cs" />
@@ -759,6 +770,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Collections\A Note About This Folder.txt" />
+    <Content Include="PerformanceCounters\README.txt" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -196,6 +196,10 @@
     <Compile Include="Logging\Logging_Specs.cs" />
     <Compile Include="Monads\Currying_Specs.cs" />
     <Compile Include="Monads\SetProperty_Specs.cs" />
+    <Compile Include="PerformanceCounters\CreatingCountersSpecs.cs" />
+    <Compile Include="PerformanceCounters\DeletingCountersSpecs.cs" />
+    <Compile Include="PerformanceCounters\MagnumTestCounters.cs" />
+    <Compile Include="PerformanceCounters\RawDotNetCreation.cs" />
     <Compile Include="Policies\ExceptionPolicy_Specs.cs" />
     <Compile Include="CommandLineParser\EchoCommand.cs" />
     <Compile Include="CommandLineParser\Executor_Specs.cs" />
