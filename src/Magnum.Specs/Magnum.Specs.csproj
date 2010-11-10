@@ -149,6 +149,7 @@
     <Compile Include="CommandLineParser\PlugInCommands\RemoveRemoteRepositoryCommand.cs" />
     <Compile Include="Concurrency\List_Specs.cs" />
     <Compile Include="Concurrency\Load_Specs.cs" />
+    <Compile Include="Configuration\ArrayValues_Specs.cs" />
     <Compile Include="Configuration\CommandLineConfigurationSpecs.cs" />
     <Compile Include="Configuration\ConfigurationBinder_Specs.cs" />
     <Compile Include="Configuration\ConfigurationOverridesSpecs.cs" />
