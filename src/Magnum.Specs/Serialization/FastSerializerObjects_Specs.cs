@@ -13,6 +13,7 @@
 namespace Magnum.Specs.Serialization
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Diagnostics;
 	using Magnum.Serialization;
 	using NUnit.Framework;
@@ -102,6 +103,22 @@ namespace Magnum.Specs.Serialization
 			string text = _serializer.Serialize(message);
 
 			text.ShouldEqual("{Boo:true,Dub:3.14159,Flt:1.234,Int:47,Long:8675309,Now:2010-03-01}");
+		}
+
+		[Test]
+		public void Should_properly_handle_dictionaries_with_fancy_keys()
+		{
+			var dict = new Dictionary<string, int>
+				{
+					{"a b", 0},
+					{"a::b", 1}
+				};
+
+			string test = _serializer.Serialize(dict);
+
+			var dict2 = _serializer.Deserialize<Dictionary<string, int>>(test);
+
+			dict2["a::b"].ShouldEqual(1);
 		}
 
 		private Serializer _serializer;

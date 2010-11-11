@@ -314,5 +314,6 @@ specific language governing permissions and limitations under the License.
     <PredefinedRule Inspect="True" Prefix="" Suffix="" Style="AaBb" ElementKind="PrivateStaticReadonly">
       <ExtraRule Prefix="_" Suffix="" Style="aaBb" />
     </PredefinedRule>
+    <Abbreviation Text="DB" />
   </Naming2>
 </CodeStyleSettings>
