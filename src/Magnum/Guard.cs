@@ -117,24 +117,24 @@ namespace Magnum
 		}
 
 
-		public static void LessThan<T>(T lowerLimit, T value)
+		public static void LessThan<T>(T upperLimit, T value)
 			where T : IComparable<T>
 		{
-			if (value.CompareTo(lowerLimit) >= 0)
+			if (value.CompareTo(upperLimit) >= 0)
 				throw new ArgumentOutOfRangeException();
 		}
 
-		public static void LessThan<T>(T lowerLimit, T value, string paramName)
+		public static void LessThan<T>(T upperLimit, T value, string paramName)
 			where T : IComparable<T>
 		{
-			if (value.CompareTo(lowerLimit) >= 0)
+			if (value.CompareTo(upperLimit) >= 0)
 				throw new ArgumentOutOfRangeException(paramName);
 		}
 
-		public static void LessThan<T>(T lowerLimit, T value, string paramName, string message)
+		public static void LessThan<T>(T upperLimit, T value, string paramName, string message)
 			where T : IComparable<T>
 		{
-			if (value.CompareTo(lowerLimit) >= 0)
+			if (value.CompareTo(upperLimit) >= 0)
 				throw new ArgumentOutOfRangeException(paramName, message);
 		}
 
