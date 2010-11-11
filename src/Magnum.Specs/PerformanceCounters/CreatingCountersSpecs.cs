@@ -35,6 +35,7 @@ namespace Magnum.Specs.PerformanceCounters
 
 
     [TestFixture]
+    [Explicit]
     public class CreatingCountersSpecs :
         PerformanceCounterBase
     {

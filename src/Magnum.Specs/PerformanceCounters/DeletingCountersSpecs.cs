@@ -4,6 +4,7 @@ namespace Magnum.Specs.PerformanceCounters
     using NUnit.Framework;
 
     [TestFixture]
+    [Explicit]
     public class DeletingCountersSpecs
     {
         [Test]
