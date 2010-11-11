@@ -755,10 +755,9 @@
     <Compile Include="ThreadUtil.cs" />
     <Compile Include="Context\TypedKey.cs" />
     <Compile Include="Tree\Tree.cs" />
-    <Compile Include="TypeScanning\IScanInstruction.cs" />
-    <Compile Include="TypeScanning\ScanInstruction.cs" />
-    <Compile Include="TypeScanning\ScannerExtensions.cs" />
     <Compile Include="TypeScanning\TypeScanner.cs" />
+    <Compile Include="TypeScanning\ScannerExtensions.cs" />
+    <Compile Include="TypeScanning\Scanner.cs" />
     <Compile Include="ValueProviders\AccessorValueProvider.cs" />
     <Compile Include="ValueProviders\CommandLineValueProvider.cs" />
     <Compile Include="ValueProviders\DictionaryValueProvider.cs" />

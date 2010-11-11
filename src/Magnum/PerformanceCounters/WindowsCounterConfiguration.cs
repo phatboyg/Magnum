@@ -51,10 +51,11 @@ namespace Magnum.PerformanceCounters
         }
         public void ScanForCounters()
         {
-            var scan = new ScanInstruction();
-            scan.AssembliesFromApplicationBaseDirectory();
-            scan.AddAllTypesOf<CounterCategory>();
-            var types = scan.Execute();
+            var types = TypeScanner.Scan(scan =>
+            {
+                scan.AssembliesFromApplicationBaseDirectory();
+                scan.AddAllTypesOf<CounterCategory>();
+            });
             types.Each(Register);
         }
 

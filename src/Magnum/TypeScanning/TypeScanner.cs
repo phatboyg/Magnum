@@ -13,144 +13,106 @@
 namespace Magnum.TypeScanning
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.IO;
-    using System.Linq;
     using System.Reflection;
-    using Extensions;
-
-#if SILVERLIGHT
-using System.Windows;
-#endif
+    using System.Linq;
 
 
-    public class TypeScanner
+    public class TypeScanner 
     {
-        public IList<Assembly> CandidateAssemblies { get; set; }
-        public IList<Predicate<Assembly>> AssemblyFilters { get; set; }
-        public IList<Predicate<Type>> TypeFilters { get; set; }
-
-        public TypeScanner()
+        public static Type[] Scan(Action<TypeScanner> cfg)
         {
-            CandidateAssemblies = new List<Assembly>();
-            AssemblyFilters = new List<Predicate<Assembly>>();
-            TypeFilters = new List<Predicate<Type>>();
+            var ts = new TypeScanner();
+            cfg(ts);
+            return ts.Execute();
         }
 
-        public void AddAssembly(Assembly assembly)
+        readonly Scanner _scanner;
+
+        TypeScanner()
         {
-            CandidateAssemblies.Add(assembly);
+            _scanner = new Scanner();
         }
 
-        public void AddAssemblyContaining<T>()
+        public void Assembly(Assembly assembly)
         {
-            AddAssembly(GetAssemblyContaining<T>());
+            _scanner.AddAssembly(assembly);
         }
 
-        public void AddAssemblyContaining(Type type)
+        public void TheCallingAssembly()
         {
-            AddAssembly(GetAssemblyContaining(type));
+            _scanner.AddCallingAssembly();
         }
 
-        public void AddAssembliesFromBaseDirectory()
+        public void AssemblyContainingType<T>()
         {
-            GetAssembliesFromBaseDirectory().Each(AddAssembly);
+            _scanner.AddAssemblyContaining<T>();
         }
 
-#if !SILVERLIGHT
-        public void AddAssembliesFromPath(string path)
+        public void AssemblyContainingType(Type type)
         {
-            GetAssembliesFromPath(path).Each(AddAssembly);
-        }
-#endif
-
-
-        public void AddCallingAssembly()
-        {
-            AddAssembly(GetCallingAssembly());
-        }
-
-        public Assembly GetAssemblyContaining<T>()
-        {
-            return GetAssemblyContaining(typeof(T));
-        }
-
-        public Assembly GetAssemblyContaining(Type type)
-        {
-            return type.Assembly;
-        }
-
-        public IEnumerable<Assembly> GetAssembliesFromBaseDirectory()
-        {
-#if !SILVERLIGHT
-            string basePath = AppDomain.CurrentDomain.BaseDirectory;
-            string binPath = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
-            IEnumerable<Assembly> assembliesFromBase = GetAssembliesFromPath(basePath);
-            IEnumerable<Assembly> assembliesFromBin = GetAssembliesFromPath(binPath);
-            return assembliesFromBase.Concat(assembliesFromBin);
-#endif
-#if SILVERLIGHT
-            return Deployment
-                .Current
-                .Parts
-                .Select(x => Application.GetResourceStream(new Uri(x.Source, UriKind.Relative)))
-                .Select(x => new AssemblyPart().Load(x.Stream));
-#endif
+            _scanner.AddAssemblyContaining(type);
         }
 
 #if !SILVERLIGHT
-        public IEnumerable<Assembly> GetAssembliesFromPath(string path)
+        public void AssembliesFromPath(string path)
         {
-            if (!Directory.Exists(path))
-                return new Assembly[] {};
+            _scanner.AddAssembliesFromPath(path);
+        }
 
-            return Directory.GetFiles(path)
-                .Where(x => x.ToLower().EndsWith(".dll") || x.ToLower().EndsWith(".exe"))
-                .Select(x =>
-                    {
-                        Assembly assembly = null;
-                        try
-                        {
-                            assembly = Assembly.LoadFrom(x);
-                        }
-                        catch
-                        {
-                        }
-                        return assembly;
-                    })
-                .Where(x => x != null);
+        public void AssembliesFromPath(string path, Predicate<Assembly> assemblyFilter)
+        {
+            _scanner.AddAssembliesFromPath(path);
+            _scanner.AssemblyFilters.Add(assemblyFilter);
         }
 #endif
 
 
-        public Assembly GetCallingAssembly()
+        public void AssembliesFromApplicationBaseDirectory()
         {
-            Assembly executingAssembly = Assembly.GetExecutingAssembly();
-            Assembly callingAssembly = new StackTrace(false)
-                .GetFrames()
-                .Select(x => x.GetMethod().DeclaringType.Assembly)
-                .FirstOrDefault(x => x != executingAssembly);
-            return callingAssembly ?? executingAssembly;
+            _scanner.AddAssembliesFromBaseDirectory();
         }
 
-        public IEnumerable<Type> GetMatchingTypes()
+        public void AssembliesFromApplicationBaseDirectory(Predicate<Assembly> assemblyFilter)
         {
-            return
-                CandidateAssemblies
-                    .Where(x => AssemblyFilters.All(p => p(x)))
-                    .SelectMany(x =>
-                        {
-                            try
-                            {
-                                return x.GetTypes();
-                            }
-                            catch
-                            {
-                                return new Type[] {};
-                            }
-                        })
-                    .Where(x => !TypeFilters.Any(p => p(x)));
+            _scanner.AddAssembliesFromBaseDirectory();
+            _scanner.AssemblyFilters.Add(assemblyFilter);
+        }
+
+        public void AddAllTypesOf<TPlugin>()
+        {
+            _scanner.TypeFilters.Add(t=>!t.IsConcreteAndAssignableTo(typeof(TPlugin)));
+        }
+
+        public void AddAllTypesOf(Type pluginType)
+        {
+            _scanner.TypeFilters.Add(t=>!t.IsConcreteAndAssignableTo(pluginType));
+        }
+
+        public void Exclude(Predicate<Type> exclude)
+        {
+            _scanner.TypeFilters.Add(exclude);
+        }
+
+        public void ExcludeNamespace(string nameSpace)
+        {
+            _scanner.TypeFilters.Add(x => x.Namespace.Contains(nameSpace));
+        }
+
+        public void ExcludeNamespaceContainingType<T>()
+        {
+            _scanner.TypeFilters.Add(x => x.Namespace.Contains(x.Namespace));
+        }
+
+        public void ExcludeType<T>()
+        {
+            _scanner.TypeFilters.Add(x => x.Equals(typeof(T)));
+        }
+
+        public Type[] Execute()
+        {
+            var filteredTypes = _scanner.GetMatchingTypes();
+
+            return filteredTypes.ToArray();
         }
     }
 }
