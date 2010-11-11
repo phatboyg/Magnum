@@ -15,7 +15,7 @@ namespace Magnum.Specs.Configuration
         [When]
         public void A_configuration_object_is_bound()
         {
-            const string json = @"{ Value: [47,22] } }";
+            const string json = @"{ Value: [47,22] }";
 
             _binder = ConfigurationBinderFactory.New(x => { x.AddJson(json); });
 
