@@ -34,7 +34,7 @@ namespace Magnum.Serialization.FastText
 		public const string MapStartString = "{";
 		public const char Quote = '"';
 		public const string QuoteString = "\"";
-		public static readonly char[] EscapeChars = new[] {Quote, ItemSeparator, MapStart, MapEnd, ListStart, ListEnd};
+		public static readonly char[] EscapeChars = new[] {Quote, ItemSeparator, MapStart, MapSeparator, MapEnd, ListStart, ListEnd};
 
 		protected static string ReadToChar(string value, ref int index, char separator)
 		{
@@ -90,11 +90,12 @@ namespace Magnum.Serialization.FastText
 
 		protected static string ReadMapKey(string value, ref int index)
 		{
-			int start = index;
-			while (value[++index] != MapSeparator)
-			{
-			}
-			return value.Substring(start, index - start);
+			return ReadToChar(value, ref index, MapSeparator);
+//			int start = index;
+//			while (value[++index] != MapSeparator)
+//			{
+//			}
+//			return value.Substring(start, index - start);
 		}
 
 		protected static string ReadMapValue(string value, ref int index)

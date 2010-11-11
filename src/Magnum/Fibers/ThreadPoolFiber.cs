@@ -13,7 +13,7 @@
 namespace Magnum.Fibers
 {
 	using System;
-	using System.Collections.Concurrent;
+	using System.Collections.Generic;
 	using System.Diagnostics;
 	using System.Threading;
 
@@ -23,13 +23,13 @@ namespace Magnum.Fibers
 	/// actions.
 	/// </summary>
 	[DebuggerDisplay("{GetType().Name} ( Count: {Count} )")]
-	internal class ThreadPoolFiber :
+	public class ThreadPoolFiber :
 		Fiber
 	{
 		readonly object _lock = new object();
 
 		bool _executorQueued;
-		ConcurrentQueue<Action> _operations = new ConcurrentQueue<Action>();
+		IList<Action> _operations = new List<Action>();
 		bool _shuttingDown;
 		bool _stopping;
 
@@ -45,21 +45,21 @@ namespace Magnum.Fibers
 
 			lock (_lock)
 			{
-				_operations.Enqueue(operation);
+				_operations.Add(operation);
 				if (!_executorQueued)
 					QueueWorkItem();
 			}
 		}
 
-		public void AddMany(params Action[] operations)
+		public void AddMany(Action[] operation)
 		{
 			if (_shuttingDown)
 				throw new FiberException("The fiber is no longer accepting actions");
 
 			lock (_lock)
 			{
-				for (int i = 0; i < operations.Length; i++)
-					_operations.Enqueue(operations[i]);
+				for (int i = 0; i < operation.Length; i++)
+					_operations.Add(operation[i]);
 				if (!_executorQueued)
 					QueueWorkItem();
 			}
@@ -84,7 +84,7 @@ namespace Magnum.Fibers
 				_shuttingDown = true;
 				Monitor.PulseAll(_lock);
 
-				while (!_operations.IsEmpty || _executorQueued)
+				while (_operations.Count > 0 || _executorQueued)
 				{
 					timeout = waitUntil - SystemUtil.Now;
 					if (timeout < TimeSpan.Zero)
@@ -111,13 +111,13 @@ namespace Magnum.Fibers
 
 		bool Execute()
 		{
-			Action[] operations = RemoveAll();
+			IList<Action> operations = RemoveAll();
 
 			ExecuteActions(operations);
 
 			lock (_lock)
 			{
-				if (_operations.IsEmpty)
+				if (_operations.Count == 0)
 				{
 					_executorQueued = false;
 
@@ -130,9 +130,9 @@ namespace Magnum.Fibers
 			return true;
 		}
 
-		void ExecuteActions(Action[] operations)
+		void ExecuteActions(IList<Action> operations)
 		{
-			for (int i = 0; i < operations.Length; i++)
+			for (int i = 0; i < operations.Count; i++)
 			{
 				if (_stopping)
 					break;
@@ -141,12 +141,13 @@ namespace Magnum.Fibers
 			}
 		}
 
-		Action[] RemoveAll()
+		IList<Action> RemoveAll()
 		{
 			lock (_lock)
 			{
-				Action[] operations = _operations.ToArray();
-				_operations = new ConcurrentQueue<Action>();
+				IList<Action> operations = _operations;
+
+				_operations = new List<Action>();
 
 				return operations;
 			}
