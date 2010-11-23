@@ -486,6 +486,13 @@
     <Compile Include="Logging\TraceLogger.cs" />
     <Compile Include="Monads\CurryExpressionVisitor.cs" />
     <Compile Include="Monads\State.cs" />
+    <Compile Include="Reflection\ExtensionsToGet.cs" />
+    <Compile Include="Reflection\GetProperty.cs" />
+    <Compile Include="Reflection\GetValue.cs" />
+    <Compile Include="Reflection\SafeGetPropertyFactory.cs" />
+    <Compile Include="Reflection\SafeProperty.1.cs" />
+    <Compile Include="Reflection\SetProperty.cs" />
+    <Compile Include="Reflection\SetValue.cs" />
     <Compile Include="Serialization\Yaml\YamlSystemTypeSerializer.cs" />
     <Compile Include="Serialization\Yaml\YamlPropertySerializer.cs" />
     <Compile Include="Serialization\Yaml\YamlPropertyTypeSerializerCache.cs" />
