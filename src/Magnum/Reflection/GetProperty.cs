@@ -15,5 +15,5 @@ namespace Magnum.Reflection
 	using System;
 
 
-	public delegate void GetProperty<T, TProperty>(T obj, Action<TProperty> callback);
+	public delegate void GetProperty<in T, TProperty>(T obj, Action<TProperty> callback);
 }

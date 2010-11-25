@@ -66,7 +66,7 @@ namespace Magnum.Serialization.Yaml
 
 		protected static string RemoveListChars(string value)
 		{
-			if (value == null || value.Length == 0)
+			if (string.IsNullOrEmpty(value))
 				return null;
 
 			return value[0] == ListStart ? value.Substring(1, value.Length - 2) : value;
