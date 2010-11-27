@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 //  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -87,28 +87,6 @@ namespace Magnum.Pipeline.Visitors
 				_edges.Add(new Edge(_stack.Peek(), _lastNodeVertex, _lastNodeVertex.TargetType.Name));
 
 			return Recurse(() => base.VisitMessageConsumer(messageConsumer));
-		}
-
-		protected override Pipe VisitIntervalMessageConsumer(IntervalMessageConsumerSegment messageConsumer)
-		{
-			_lastNodeVertex = GetSink(messageConsumer.GetHashCode(), () => "Consumer", typeof(IntervalMessageConsumerSegment),
-			                          messageConsumer.MessageType);
-
-			if (_stack.Count > 0)
-				_edges.Add(new Edge(_stack.Peek(), _lastNodeVertex, _lastNodeVertex.TargetType.Name));
-
-			return Recurse(() => base.VisitIntervalMessageConsumer(messageConsumer));
-		}
-
-		protected override Pipe VisitAsyncMessageConsumer(AsyncMessageConsumerSegment messageConsumer)
-		{
-			_lastNodeVertex = GetSink(messageConsumer.GetHashCode(), () => "Consumer", typeof(AsyncMessageConsumerSegment),
-			                          messageConsumer.MessageType);
-
-			if (_stack.Count > 0)
-				_edges.Add(new Edge(_stack.Peek(), _lastNodeVertex, _lastNodeVertex.TargetType.Name));
-
-			return Recurse(() => base.VisitAsyncMessageConsumer(messageConsumer));
 		}
 
 		protected override Pipe VisitRecipientList(RecipientListSegment recipientList)

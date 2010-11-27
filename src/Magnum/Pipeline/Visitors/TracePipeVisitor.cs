@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 //  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -15,10 +15,11 @@ namespace Magnum.Pipeline.Visitors
 	using System;
 	using Segments;
 
+
 	public class TracePipeVisitor :
 		AbstractPipeVisitor
 	{
-		private int _depth;
+		int _depth;
 
 		public void Trace(Pipe pipe)
 		{
@@ -46,32 +47,18 @@ namespace Magnum.Pipeline.Visitors
 			return base.VisitFilter(filter);
 		}
 
-        protected override Pipe VisitInterceptor(InterceptorSegment interceptor)
-        {
-            WriteLine(interceptor);
-
-            return base.VisitInterceptor(interceptor);
-        }
-
-        protected override Pipe VisitMessageConsumer(MessageConsumerSegment messageConsumer)
-        {
-        	WriteLine(messageConsumer, "Consumer Type = " + messageConsumer.ConsumerType);
-
-            return base.VisitMessageConsumer(messageConsumer);
-        }
-
-		protected override Pipe VisitIntervalMessageConsumer(IntervalMessageConsumerSegment messageConsumer)
+		protected override Pipe VisitInterceptor(InterceptorSegment interceptor)
 		{
-			WriteLine(messageConsumer, "Consumer Type = " + messageConsumer.ConsumerType);
+			WriteLine(interceptor);
 
-			return base.VisitIntervalMessageConsumer(messageConsumer);
+			return base.VisitInterceptor(interceptor);
 		}
 
-		protected override Pipe VisitAsyncMessageConsumer(AsyncMessageConsumerSegment messageConsumer)
+		protected override Pipe VisitMessageConsumer(MessageConsumerSegment messageConsumer)
 		{
 			WriteLine(messageConsumer, "Consumer Type = " + messageConsumer.ConsumerType);
 
-			return base.VisitAsyncMessageConsumer(messageConsumer);
+			return base.VisitMessageConsumer(messageConsumer);
 		}
 
 		protected override Pipe VisitRecipientList(RecipientListSegment recipientList)
@@ -80,24 +67,24 @@ namespace Magnum.Pipeline.Visitors
 			return Indent(() => { return base.VisitRecipientList(recipientList); });
 		}
 
-		private void WriteLine(Pipe node)
+		void WriteLine(Pipe node)
 		{
 			WriteLine(node, "");
 		}
 
-		private void WriteLine(Pipe node, string message)
+		void WriteLine(Pipe node, string message)
 		{
 			string formatted = string.Format(Pad() + "{0}<{1}>: {2}", node.SegmentType, node.MessageType.Name, message);
 
 			System.Diagnostics.Trace.WriteLine(formatted);
 		}
 
-		private string Pad()
+		string Pad()
 		{
 			return new string('\t', _depth);
 		}
 
-		private void Indent(Action action)
+		void Indent(Action action)
 		{
 			_depth++;
 			try
@@ -110,7 +97,7 @@ namespace Magnum.Pipeline.Visitors
 			}
 		}
 
-		private T Indent<T>(Func<T> visitor)
+		T Indent<T>(Func<T> visitor)
 		{
 			_depth++;
 			try

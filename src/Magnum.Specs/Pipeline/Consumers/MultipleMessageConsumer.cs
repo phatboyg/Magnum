@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Specs.Pipeline.Consumers
 {
-	using Magnum.Channels;
 	using Magnum.Pipeline;
 	using Messages;
 

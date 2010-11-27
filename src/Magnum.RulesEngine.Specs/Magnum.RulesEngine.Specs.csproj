@@ -89,7 +89,6 @@
   <ItemGroup>
     <Compile Include="Agenda Specs\Agenda_Specs.cs" />
     <Compile Include="Agenda Specs\BetaMemory_Specs.cs" />
-    <Compile Include="Agenda Specs\ContextAgenda_Specs.cs" />
     <Compile Include="Conditions\CustomerIsPreferred.cs" />
     <Compile Include="Consequences\LogOrderDetails.cs" />
     <Compile Include="Consequences\RequestOrderApproval.cs" />
@@ -101,7 +100,6 @@
     <Compile Include="ExecutionModelTest\SingleInputNode_Specs.cs" />
     <Compile Include="Expression_Specs.cs" />
     <Compile Include="FluentRuleSyntax\DeclareRule_Specs.cs" />
-    <Compile Include="Graphing\GraphChannel_Specs.cs" />
     <Compile Include="Graphing\Graphing_Specs.cs" />
     <Compile Include="Graphing\PipelineGraphing_Specs.cs" />
     <Compile Include="Graphing\StateMachineGraph_Specs.cs" />

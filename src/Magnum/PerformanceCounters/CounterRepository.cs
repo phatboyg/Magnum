@@ -16,44 +16,33 @@ namespace Magnum.PerformanceCounters
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Security;
-    using Logging;
     using Reflection;
 
 
     public class CounterRepository :
         IDisposable
     {
-        static readonly ILogger _log = Logger.GetLogger<CounterRepository>();
         bool _disposed;
         readonly Dictionary<Type, CounterCategory> _counterCache = new Dictionary<Type, CounterCategory>();
 
         public void RegisterCategory(CategoryConfiguration categoryConfiguration)
         {
-            try
-            {
-                if (!PerformanceCounterCategory.Exists(categoryConfiguration.Name))
-                {
-                    PerformanceCounterCategory.Create(
-                                  categoryConfiguration.Name,
-                                  categoryConfiguration.Help,
-                                  PerformanceCounterCategoryType.MultiInstance,
-                                  new CounterCreationDataCollection(
-                                      categoryConfiguration.Counters.Select(x => (CounterCreationData)x).ToArray()));
-                    return;
-                }
-                    
+        	if (!PerformanceCounterCategory.Exists(categoryConfiguration.Name))
+        	{
+        		PerformanceCounterCategory.Create(
+        		                                  categoryConfiguration.Name,
+        		                                  categoryConfiguration.Help,
+        		                                  PerformanceCounterCategoryType.MultiInstance,
+        		                                  new CounterCreationDataCollection(
+        		                                  	categoryConfiguration.Counters.Select(x => (CounterCreationData)x).ToArray()));
+        		return;
+        	}
 
 
-               CleanUpCategory(categoryConfiguration); 
-            }
-            catch (SecurityException ex)
-            {
-                _log.Error(ex, "Unable to create performance counter category");
-            }
+        	CleanUpCategory(categoryConfiguration);
         }
 
-        static void CleanUpCategory(CategoryConfiguration categoryConfiguration)
+    	static void CleanUpCategory(CategoryConfiguration categoryConfiguration)
         {
             int missing = categoryConfiguration.Counters
                     .Where(counter => !PerformanceCounterCategory.CounterExists(counter.Name, categoryConfiguration.Name))
@@ -79,19 +68,10 @@ namespace Magnum.PerformanceCounters
 
         public void RemoveCategory(string categoryName)
         {
-            try
-            {
                 PerformanceCounterCategory.Delete(categoryName);
-            }
-            catch (SecurityException ex)
-            {
-                _log.Error(ex, "Unable to remove performance counter category");
-                throw;
-            }
         }
 
-        #region Dispose
-        public void Dispose()
+    	public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
@@ -123,11 +103,9 @@ namespace Magnum.PerformanceCounters
         {
             Dispose(false);
         }
-        #endregion
 
 
-
-        public TCounterCategory GetCounter<TCounterCategory>(string instance) where TCounterCategory : class, CounterCategory, new()
+    	public TCounterCategory GetCounter<TCounterCategory>(string instance) where TCounterCategory : class, CounterCategory, new()
         {
             Type t = typeof(TCounterCategory);
             CounterCategory value;
@@ -167,8 +145,6 @@ namespace Magnum.PerformanceCounters
             }
             catch (InvalidOperationException ex)
             {
-                _log.Error(ex, "Unable to create performance counter");
-
                 return new NullPerformanceCounter();
             }
         }

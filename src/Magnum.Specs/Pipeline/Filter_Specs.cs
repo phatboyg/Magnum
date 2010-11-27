@@ -13,7 +13,6 @@
 namespace Magnum.Specs.Pipeline
 {
     using System;
-    using Magnum.Channels;
     using Magnum.Pipeline;
     using Magnum.Pipeline.Segments;
     using NUnit.Framework;

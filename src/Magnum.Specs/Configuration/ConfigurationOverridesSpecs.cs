@@ -14,8 +14,6 @@ namespace Magnum.Specs.Configuration
 {
 	using System.IO;
 	using Magnum.Configuration;
-	using Magnum.Logging;
-	using NUnit.Framework;
 	using TestFramework;
 
 
@@ -27,8 +25,6 @@ namespace Magnum.Specs.Configuration
 		[When]
 		public void Configuration_values_are_read_from_a_series_of_json_files()
 		{
-			TraceLogger.Configure(LogLevel.Debug);
-
 			if (File.Exists("global.json"))
 				File.Delete("global.json");
 			if (File.Exists("local.json"))

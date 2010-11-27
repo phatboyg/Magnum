@@ -12,11 +12,9 @@
 // specific language governing permissions and limitations under the License.
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using Magnum.Channels;
 using Magnum.Pipeline.Segments;
 using Magnum.RulesEngine;
 using Magnum.StateMachine;
-using Magnum.Visualizers.Channels;
 using Magnum.Visualizers.Pipeline;
 using Magnum.Visualizers.RulesEngine;
 using Magnum.Visualizers.StateMachine;
@@ -29,9 +27,6 @@ using Magnum.Visualizers.StateMachine;
 [assembly: DebuggerVisualizer(typeof(PipelineDebugVisualizer), typeof(PipelineVisualizerObjectSource),
 	Description = "Pipeline Visualizer",
 	Target = typeof(InputSegment))]
-[assembly: DebuggerVisualizer(typeof(ChannelDebugVisualizer), typeof(ChannelVisualizerObjectSource),
-	Description = "Channel Visualizer",
-	Target = typeof(ChannelAdapter))]
 [assembly: DebuggerVisualizer(typeof(StateMachineDebugVisualizer), typeof(StateMachineVisualizerObjectSource),
 	Description = "State Machine Visualizer",
 	Target = typeof(StateMachine<>))]

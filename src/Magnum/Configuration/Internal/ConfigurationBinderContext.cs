@@ -1,4 +1,4 @@
-﻿// Copyright 2007-2008 The Apache Software Foundation.
+﻿// Copyright 2007-2010 The Apache Software Foundation.
 //  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -14,7 +14,6 @@ namespace Magnum.Configuration.Internal
 {
 	using System;
 	using Binding;
-	using Channels;
 	using ValueProviders;
 
 
@@ -41,11 +40,6 @@ namespace Magnum.Configuration.Internal
 		public void GetAll(Action<string, object> valueAction)
 		{
 			_provider.GetAll(valueAction);
-		}
-
-		public Channel<T> GetChannel<T>()
-		{
-			throw new NotImplementedException("We don't support channels in this situtation, maybe this is a bad thing to have");
 		}
 	}
 }

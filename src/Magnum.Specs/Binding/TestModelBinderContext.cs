@@ -14,9 +14,7 @@ namespace Magnum.Specs.Binding
 {
 	using System;
 	using Magnum.Binding;
-	using Magnum.Channels;
 	using Magnum.ValueProviders;
-	using Rhino.Mocks;
 
 
 	public class TestModelBinderContext :
@@ -44,9 +42,5 @@ namespace Magnum.Specs.Binding
 			_provider.GetAll(valueAction);
 		}
 
-		public Channel<T> GetChannel<T>()
-		{
-			return MockRepository.GenerateMock<Channel<T>>();
-		}
 	}
 }

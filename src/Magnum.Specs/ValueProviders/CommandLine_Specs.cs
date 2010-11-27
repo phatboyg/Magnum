@@ -15,7 +15,6 @@ namespace Magnum.Specs.ValueProviders
 	using System.Collections.Generic;
 	using System.Linq;
 	using Magnum.CommandLineParser;
-	using Magnum.Logging;
 	using Magnum.ValueProviders;
 	using NUnit.Framework;
 	using TestFramework;
@@ -30,8 +29,6 @@ namespace Magnum.Specs.ValueProviders
 		[Given]
 		public void A_command_line()
 		{
-			TraceLogger.Configure(LogLevel.Debug);
-
 			CommandLineText = "-name:phatboyg -password:really_long_one --secure";
 
 			Elements = new MonadicCommandLineParser().Parse(CommandLineText);

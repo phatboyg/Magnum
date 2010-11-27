@@ -34,7 +34,7 @@ namespace Magnum.Specs.Pipeline
 			base.EstablishContext();
 
 			_called = new Dictionary<Type, bool>();
-			_types = new[] {typeof (SingleMessageConsumer), typeof (MultipleMessageConsumer), typeof (LongRunningMessageConsumer)};
+			_types = new[] {typeof (SingleMessageConsumer), typeof (MultipleMessageConsumer)};
 
 			GetAllTypes().Each(type => { this.FastInvoke(new[] { type }, "SubscribeToScope"); });
 
@@ -57,13 +57,6 @@ namespace Magnum.Specs.Pipeline
 		public void The_multiple_consumer_should_be_called()
 		{
 			Assert.IsTrue(_called.ContainsKey(typeof(MultipleMessageConsumer)));
-		}
-
-		[Test]
-		public void The_long_running_consumer_should_be_called()
-		{
-			Thread.Sleep(1500);
-			Assert.IsTrue(_called.ContainsKey(typeof(LongRunningMessageConsumer)));
 		}
 
 		private void SubscribeToScope<T>() 

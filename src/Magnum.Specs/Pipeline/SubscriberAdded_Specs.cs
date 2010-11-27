@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Specs.Pipeline
 {
-	using Magnum.Channels;
 	using Magnum.Pipeline;
 	using Magnum.Pipeline.Messages;
 	using Magnum.Pipeline.Segments;
@@ -31,8 +30,16 @@ namespace Magnum.Specs.Pipeline
 			_input = PipeSegment.Input(PipeSegment.End());
 
 			_subscriberScope = _input.NewSubscriptionScope();
-			_subscriberScope.Subscribe<SubscriberAdded>(x => _addCalled.Complete(true));
-			_subscriberScope.Subscribe<SubscriberRemoved>(x => _removeCalled.Complete(true));
+			_subscriberScope.Subscribe<SubscriberAdded>(x =>
+				{
+					if(x.MessageType == typeof(ClaimModified))
+						_addCalled.Complete(true);
+				});
+			_subscriberScope.Subscribe<SubscriberRemoved>(x =>
+				{
+					if (x.MessageType == typeof(ClaimModified))
+						_removeCalled.Complete(true);
+				});
 
 			using (ISubscriptionScope scope = _input.NewSubscriptionScope())
 			{
