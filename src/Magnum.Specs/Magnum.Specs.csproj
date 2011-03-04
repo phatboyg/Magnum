@@ -249,6 +249,19 @@
     <Compile Include="Threading\LamdbaIsTheNewDisposable_Specs.cs" />
     <Compile Include="Threading\UpgradeableLock_Specs.cs" />
     <Compile Include="Threading\WrappedObjectLocking_Specs.cs" />
+    <Compile Include="Validation\Collection_Tests.cs" />
+    <Compile Include="Validation\DateTime_Specs.cs" />
+    <Compile Include="Validation\Exception_Tests.cs" />
+    <Compile Include="Validation\Matches_Tests.cs" />
+    <Compile Include="Validation\Model\Customer.cs" />
+    <Compile Include="Validation\Model\Order.cs" />
+    <Compile Include="Validation\Model\OrderItem.cs" />
+    <Compile Include="Validation\Model\Product.cs" />
+    <Compile Include="Validation\NestedValidator_Tests.cs" />
+    <Compile Include="Validation\NotNull_Specs.cs" />
+    <Compile Include="Validation\Property_Specs.cs" />
+    <Compile Include="Validation\String_Tests.cs" />
+    <Compile Include="Validation\Validation_Tests.cs" />
     <Compile Include="ValueProviders\CommandLine_Specs.cs" />
   </ItemGroup>
   <ItemGroup>
