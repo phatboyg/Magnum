@@ -100,6 +100,7 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
+    <Compile Include="Extensions\ExtensionsToAction.cs" />
     <Compile Include="PerformanceCounters\CategoryConfiguration.cs" />
     <Compile Include="PerformanceCounters\Counter.cs" />
     <Compile Include="PerformanceCounters\CounterCategory.cs" />
@@ -297,6 +298,7 @@
     <Compile Include="Reflection\GetValue.cs" />
     <Compile Include="Reflection\SafeGetPropertyFactory.cs" />
     <Compile Include="Reflection\SafeProperty.1.cs" />
+    <Compile Include="Reflection\SafePropertyVisitor.cs" />
     <Compile Include="Reflection\SetProperty.cs" />
     <Compile Include="Reflection\SetValue.cs" />
     <Compile Include="Pipeline\Visitors\GraphPipelineVisitor.cs" />
