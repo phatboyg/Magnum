@@ -97,6 +97,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Benchmarking\ConcatStringRunner.cs" />
+    <Compile Include="Benchmarking\StringAppendBenchmark.cs" />
+    <Compile Include="Benchmarking\StringAppendFormatBenchmark.cs" />
+    <Compile Include="Benchmarking\StringRunner.cs" />
+    <Compile Include="Benchmarking\StringBuilderRunner.cs" />
+    <Compile Include="Benchmarking\StringWriterRunner.cs" />
     <Compile Include="Binding\Binding_Specs.cs" />
     <Compile Include="Binding\TestModelBinderContext.cs" />
     <Compile Include="Cache_Specs.cs" />
@@ -159,6 +165,10 @@
     <Compile Include="PerformanceCounters\DeletingCountersSpecs.cs" />
     <Compile Include="PerformanceCounters\MagnumTestCounters.cs" />
     <Compile Include="PerformanceCounters\RawDotNetCreation.cs" />
+    <Compile Include="Pipeline\Benchmarks\MultithreadedPipelineBenchmark.cs" />
+    <Compile Include="Pipeline\Benchmarks\PipelineBenchmark.cs" />
+    <Compile Include="Pipeline\Benchmarks\PipelineRunner.cs" />
+    <Compile Include="Pipeline\Benchmarks\RecipientListPipelineRunner.cs" />
     <Compile Include="Policies\ExceptionPolicy_Specs.cs" />
     <Compile Include="CommandLineParser\EchoCommand.cs" />
     <Compile Include="CommandLineParser\Executor_Specs.cs" />
@@ -194,9 +204,14 @@
     <Compile Include="Pipeline\Pipeline_Specs.cs" />
     <Compile Include="Pipeline\Consumers\SingleMessageConsumer.cs" />
     <Compile Include="Pipeline\SubscriberAdded_Specs.cs" />
-    <Compile Include="Pipeline\Throughput_Specs.cs" />
     <Compile Include="Pipeline\Trace_Specs.cs" />
     <Compile Include="Pipeline\TypedPipeline_Specs.cs" />
+    <Compile Include="Reflection\Benchmarks\FastPropertyGetPropertyRunner.cs" />
+    <Compile Include="Reflection\Benchmarks\FastPropertyObjectGetPropertyRunner.cs" />
+    <Compile Include="Reflection\Benchmarks\GetPropertyBenchmark.cs" />
+    <Compile Include="Reflection\Benchmarks\GetPropertyRunner.cs" />
+    <Compile Include="Reflection\Benchmarks\GetPropertyRunnerBase.cs" />
+    <Compile Include="Reflection\Benchmarks\ReflectionGetPropertyRunner.cs" />
     <Compile Include="Reflection\ExtensionsToGenericTypes.cs" />
     <Compile Include="Reflection\FastProperty_Specs.cs" />
     <Compile Include="Reflection\GenericMethodInvoker_Specs.cs" />

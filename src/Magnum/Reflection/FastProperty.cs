@@ -15,6 +15,8 @@ namespace Magnum.Reflection
 	using System;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using Extensions;
+
 
 	public class FastProperty
 	{
@@ -91,6 +93,11 @@ namespace Magnum.Reflection
 		public Func<T, object> GetDelegate;
 		public Action<T, object> SetDelegate;
 
+		public FastProperty(Expression<Func<T, object>> propertyExpression)
+			: this(propertyExpression.GetMemberPropertyInfo())
+		{
+		}
+
 		public FastProperty(PropertyInfo property)
 		{
 			Property = property;
@@ -149,6 +156,11 @@ namespace Magnum.Reflection
 	{
 		public Func<T, P> GetDelegate;
 		public Action<T, P> SetDelegate;
+
+		public FastProperty(Expression<Func<T, P>> propertyExpression)
+			: this(propertyExpression.GetMemberPropertyInfo())
+		{
+		}
 
 		public FastProperty(PropertyInfo property)
 		{
