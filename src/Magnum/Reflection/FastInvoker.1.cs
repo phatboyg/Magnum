@@ -48,37 +48,47 @@ namespace Magnum.Reflection
 
 		public void FastInvoke(T target, string methodName)
 		{
+			Action<T> invoker = GetInvoker(methodName);
+
+			invoker(target);
+		}
+
+		public Action<T> GetInvoker(string methodName)
+		{
 			int key = 97*methodName.GetHashCode();
 
-			Action<T> invoker = GetInvoker(key, () =>
+			return GetInvoker(key, () =>
 				{
 					return MethodNameCache[methodName]
 						.MatchingArguments()
 						.First();
 				});
-
-			invoker(target);
 		}
 
 		public void FastInvoke(T target, string methodName, params object[] args)
 		{
+			Action<T, object[]> invoker = GetInvoker(methodName, args);
+
+			invoker(target, args);
+		}
+
+		public Action<T, object[]> GetInvoker(string methodName, object[] args)
+		{
 			if (args == null || args.Length == 0)
 			{
-				FastInvoke(target, methodName);
-				return;
+				var invoker = GetInvoker(methodName);
+				return (x, y) => invoker(x);
 			}
 
 			int key = GetArgumentHashCode(97*methodName.GetHashCode(), args);
 
-			Action<T, object[]> invoker = GetInvoker(key, () =>
+			return GetInvoker(key, () =>
 				{
 					return MethodNameCache[methodName]
 						.MatchingArguments(args)
 						.First()
 						.ToSpecializedMethod(args);
 				}, args);
-
-			invoker(target, args);
 		}
 
 		public void FastInvoke(T target, Type[] genericTypes, string methodName)

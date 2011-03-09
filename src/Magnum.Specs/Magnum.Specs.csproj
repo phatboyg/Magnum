@@ -97,6 +97,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activator\Benchmarks\ActivatorActivatorRunner.cs" />
+    <Compile Include="Activator\Benchmarks\DefaultConstructorBenchmark.cs" />
+    <Compile Include="Activator\Benchmarks\ActivatorRunner.cs" />
+    <Compile Include="Activator\Benchmarks\FastActivatorActivatorRunner.cs" />
+    <Compile Include="Activator\Benchmarks\GenericClassConstructorBenchmark.cs" />
+    <Compile Include="Activator\Benchmarks\MultipleArgumentConstructorBenchmark.cs" />
+    <Compile Include="Activator\Benchmarks\NewActivatorRunner.cs" />
+    <Compile Include="Activator\Benchmarks\SingleArgumentConstructorBenchmark.cs" />
+    <Compile Include="Activator\Benchmarks\TwoArgumentConstructorBenchmark.cs" />
     <Compile Include="Benchmarking\ConcatStringRunner.cs" />
     <Compile Include="Benchmarking\StringAppendBenchmark.cs" />
     <Compile Include="Benchmarking\StringAppendFormatBenchmark.cs" />
@@ -140,7 +149,6 @@
     <Compile Include="Activator\ComplexConstructor_Specs.cs" />
     <Compile Include="Activator\Generator_Specs.cs" />
     <Compile Include="Activator\GenericType_Specs.cs" />
-    <Compile Include="Activator\Performance_Specs.cs" />
     <Compile Include="Data\TransactionalWorker_Specs.cs" />
     <Compile Include="Extensions\GenericExtension_Specs.cs" />
     <Compile Include="Extensions\ObjectExtension_Specs.cs" />
@@ -155,10 +163,16 @@
     <Compile Include="Framework\AssertExtension_Specs.cs" />
     <Compile Include="Future.cs" />
     <Compile Include="Guard_Specs.cs" />
+    <Compile Include="Invoker\Benchmarks\DirectMethodRunner.cs" />
+    <Compile Include="Invoker\Benchmarks\FastInvokerMethodRunner.cs" />
+    <Compile Include="Invoker\Benchmarks\GenericMethodBenchmark.cs" />
+    <Compile Include="Invoker\Benchmarks\KnownFastInvokerMethodRunner.cs" />
+    <Compile Include="Invoker\Benchmarks\KnownReflectionMethodRunner.cs" />
+    <Compile Include="Invoker\Benchmarks\MethodRunner.cs" />
+    <Compile Include="Invoker\Benchmarks\ReflectionMethodRunner.cs" />
     <Compile Include="Invoker\Classes\ClassWithGenericMethods.cs" />
     <Compile Include="Invoker\Classes\ClassWithSimpleMethods.cs" />
     <Compile Include="Invoker\FastInvoker_Specs.cs" />
-    <Compile Include="Invoker\Performance_Specs.cs" />
     <Compile Include="Monads\Currying_Specs.cs" />
     <Compile Include="Monads\Maybe_Specs.cs" />
     <Compile Include="PerformanceCounters\CreatingCountersSpecs.cs" />
@@ -231,6 +245,10 @@
     <Compile Include="Reflection\SafePropertyVisitor_Specs.cs" />
     <Compile Include="Reflection\SafeProperty_Specs.cs" />
     <Compile Include="Serialization\Array_Specs.cs" />
+    <Compile Include="Serialization\Benchmarks\BinaryFormatterSerializationRunner.cs" />
+    <Compile Include="Serialization\Benchmarks\DeepObjectGraphSerializationBenchmark.cs" />
+    <Compile Include="Serialization\Benchmarks\FastTextSerializerSerializationRunner.cs" />
+    <Compile Include="Serialization\Benchmarks\SerializationRunner.cs" />
     <Compile Include="Serialization\Dictionary_Specs.cs" />
     <Compile Include="Serialization\Interface_Specs.cs" />
     <Compile Include="Serialization\Object_Specs.cs" />

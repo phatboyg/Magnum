@@ -48,35 +48,6 @@ namespace Magnum.Specs.Serialization
 			text.ShouldEqual("{Body:{Boo:true,Dub:3.14159,Flt:1.234,Int:47,Long:8675309,Now:2010-03-01}}");
 		}
 
-		[Test, Explicit]
-		public void Should_handle_serialization_quickly()
-		{
-			var message = new HeftyMessage
-				{
-					Int = 47,
-					Long = 8675309,
-					Dub = 3.14159,
-					Flt = 1.234f,
-					Boo = true,
-					Now = new DateTime(2010, 3, 1)
-				};
-
-			string text = _serializer.Serialize(message);
-
-			Stopwatch timer = Stopwatch.StartNew();
-
-			int limit = 500000;
-			for (int i = 0; i < limit; i++)
-			{
-				text = _serializer.Serialize(message);
-			}
-
-			timer.Stop();
-
-			Trace.WriteLine("elapsed time: " + timer.ElapsedMilliseconds + "ms");
-			Trace.WriteLine("messages/sec: " + (limit*1000)/timer.ElapsedMilliseconds);
-		}
-
 		[Test]
 		public void Should_property_handle_all_types()
 		{

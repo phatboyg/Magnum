@@ -31,6 +31,8 @@ namespace Magnum.Reflection
 		void FastInvoke(T target, string methodName, params object[] args);
 		void FastInvoke(T target, Type[] genericTypes, string methodName);
 		void FastInvoke(T target, Type[] genericTypes, string methodName, params object[] args);
+		Action<T> GetInvoker(string methodName);
+		Action<T, object[]> GetInvoker(string methodName, object[] args);
 	}
 
 	public interface IFastInvoker<T, TResult>

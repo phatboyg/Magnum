@@ -23,13 +23,18 @@ namespace Magnum.Benchmark
 
 	class Program
 	{
-		static void Main()
+		static void Main(string[] argv)
 		{
 			Assembly specs = Assembly.Load("Magnum.Specs");
+
+			string filter = null;
+			if (argv.Length >= 1)
+				filter = argv[0];
 
 			specs.GetTypes()
 				.Where(type => type.Implements(typeof(Benchmark<>)) && type.IsConcrete())
 				.Select(type => new { Type = type, InputType = type.GetDeclaredGenericArguments().Single() })
+				.Where(type => filter == null || type.InputType.Name.Contains(filter))
 				.OrderBy(x => x.InputType.Name)
 				.Each(benchmark => {
 
