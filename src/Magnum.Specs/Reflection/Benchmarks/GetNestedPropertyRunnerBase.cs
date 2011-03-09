@@ -10,30 +10,42 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Specs.Benchmarking
+namespace Magnum.Specs.Reflection.Benchmarks
 {
-	using System;
-	using System.Text;
-
-
-	public class StringBuilderRunner :
-		StringRunner
+	public abstract class GetNestedPropertyRunnerBase
 	{
-		StringBuilder _sb;
+		protected A Subject;
 
-		public StringBuilderRunner()
+		protected GetNestedPropertyRunnerBase()
 		{
-			_sb = new StringBuilder();
+			Subject = new A
+				{
+					TheB = new B
+						{
+							TheC = new C
+								{
+									Value = 47
+								}
+						}
+				};
 		}
 
-		public void Append(string value)
+
+		protected class A
 		{
-			_sb.Append(value);
+			public B TheB { get; set; }
 		}
 
-		public void AppendFormat(string format, params object[] args)
+
+		protected class B
 		{
-			_sb.AppendFormat(format, args);
+			public C TheC { get; set; }
+		}
+
+
+		protected class C
+		{
+			public int Value { get; set; }
 		}
 	}
 }

@@ -16,7 +16,6 @@ namespace Magnum.Benchmark
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
-	using Benchmarking;
 	using Extensions;
 	using Reflection;
 	using TypeScanning;
@@ -29,42 +28,61 @@ namespace Magnum.Benchmark
 			Assembly specs = Assembly.Load("Magnum.Specs");
 
 			specs.GetTypes()
-				.Where(type => type.Implements(typeof(Benchmark<>)))
-				.Each(benchmarkType =>
-					{
-						Type inputType = benchmarkType.GetDeclaredGenericArguments().Single();
+				.Where(type => type.Implements(typeof(Benchmark<>)) && type.IsConcrete())
+				.Select(type => new { Type = type, InputType = type.GetDeclaredGenericArguments().Single() })
+				.OrderBy(x => x.InputType.Name)
+				.Each(benchmark => {
 
 						Type[] subjectTypes = specs.GetTypes()
-							.Where(type => type.Implements(inputType))
+							.Where(type => type.Implements(benchmark.InputType))
 							.Where(type => type.IsConcrete())
+							.OrderBy(x => x.Name)
 							.ToArray();
 
 						var runner = (BenchmarkRunner)FastActivator.Create(typeof(BenchmarkRunner<>),
-						                                                   new[] {inputType},
-						                                                   new object[] {benchmarkType, subjectTypes});
+																		   new[] { benchmark.InputType },
+																		   new object[] { benchmark.Type, subjectTypes });
 
-						var results = runner.Run();
+						IEnumerable<RunResult> results = runner.Run();
 
-						DisplayResults(results);
+						Display(results);
 					});
 		}
 
-		static void DisplayResults(IEnumerable<RunResult> results)
+		static void Display(IEnumerable<RunResult> results)
 		{
 			results.GroupBy(x => x.Iterations)
-				.Each(group =>
-					{
-						Console.WriteLine("{0}, {1} iterations", group.First().BenchmarkType, group.Key);
-						Console.WriteLine(new string('=', 78));
+				.Each(DisplayGroupResults);
+		}
 
-						group.OrderBy(x => x.Duration).Each(result =>
-							{
-								Console.WriteLine("{0,-30} {1,-10}", result.SubjectType.Name, result.Duration.TotalMilliseconds);
-							});
+		static void DisplayGroupResults(IGrouping<int, RunResult> group)
+		{
+			Console.WriteLine("Benchmark {0}, Runner {1}, {2} iterations", group.First().BenchmarkType.Name,
+			                  group.First().RunnerType.Name, group.Key);
 
-						Console.WriteLine();
-					});
+			Console.WriteLine();
+			Console.WriteLine("{0,-30}{1,-14}{2,-12}{3,-10}{4}", "Implementation", "Duration", "Difference", "Each",
+			                  "Multiplier");
+			Console.WriteLine(new string('=', 78));
 
+			IOrderedEnumerable<RunResult> ordered = group.OrderBy(x => x.Duration);
+
+			RunResult best = ordered.First();
+
+
+			ordered.Select(x => new DisplayResult(x, best))
+				.Each(DisplayResult);
+
+			Console.WriteLine();
+		}
+
+		static void DisplayResult(DisplayResult result)
+		{
+			string testSubject = result.SubjectType.Name.Replace(result.RunnerType.Name, "");
+
+			Console.WriteLine("{0,-30}{1,-14}{2,-12}{3,-10}{4}", testSubject, result.TimeDuration.ToFriendlyString(),
+			                  result.TimeDifference.ToFriendlyString(), result.DurationPerIteration,
+			                  result.PercentageDifference > 1m ? result.PercentageDifference.ToString("F2") + "x" : "");
 		}
 	}
 }

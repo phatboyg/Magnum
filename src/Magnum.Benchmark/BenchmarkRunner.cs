@@ -16,7 +16,6 @@ namespace Magnum.Benchmark
 	using System.Collections.Generic;
 	using System.Diagnostics;
 	using System.Linq;
-	using Benchmarking;
 	using Reflection;
 
 
@@ -44,8 +43,6 @@ namespace Magnum.Benchmark
 
 		public IEnumerable<RunResult> Run()
 		{
-			Console.WriteLine("Running " + _benchmarkType.Name);
-
 			foreach (int loopCount in _benchmark.Iterations)
 			{
 				foreach (Type subjectType in _subjectTypes)
@@ -70,7 +67,7 @@ namespace Magnum.Benchmark
 				GC.Collect();
 				var subject = (T)FastActivator.Create(subjectType);
 
-				TimeSpan duration = Measure(subject, loopCount);
+				long duration = Measure(subject, loopCount);
 
 				if (subject is IDisposable)
 					((IDisposable)subject).Dispose();
@@ -78,7 +75,8 @@ namespace Magnum.Benchmark
 				metrics.Add(new RunResult
 					{
 						Description = subjectType.Name,
-						BenchmarkType = typeof(T),
+						BenchmarkType = _benchmarkType,
+						RunnerType = typeof(T),
 						SubjectType = subjectType,
 						Iterations = loopCount,
 						Duration = duration,
@@ -88,7 +86,7 @@ namespace Magnum.Benchmark
 			return metrics;
 		}
 
-		TimeSpan Measure(T subject, int iteration)
+		long Measure(T subject, int iteration)
 		{
 			_benchmark.WarmUp(subject);
 
@@ -102,7 +100,7 @@ namespace Magnum.Benchmark
 
 			long ticksTaken = (end - begin);
 
-			return TimeSpan.FromSeconds(ticksTaken*1d/Stopwatch.Frequency);
+			return ticksTaken;
 		}
 	}
 }

@@ -10,36 +10,38 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Specs.Benchmarking
+namespace Magnum.Specs.Pipeline.Benchmarks
 {
-	using System.Collections.Generic;
+	using System.Threading;
+	using Magnum.Pipeline;
+	using Magnum.Pipeline.Segments;
+	using Messages;
 
 
-	public class StringAppendFormatBenchmark :
-		Benchmark<StringRunner>
+	public class StraightThroughPipelineRunner :
+		PipelineRunner
 	{
-		public IEnumerable<int> Iterations
+		readonly Pipe _input;
+		readonly ClaimModified _message;
+		int _count;
+
+		public StraightThroughPipelineRunner()
 		{
-			get { return new[] {50, 10000}; }
+			Pipe consumer = PipeSegment.Consumer<ClaimModified>(m => Interlocked.Increment(ref _count));
+
+			_input = PipeSegment.Input(consumer);
+
+			_message = new ClaimModified();
 		}
 
-		public void WarmUp(StringRunner instance)
+		public void Reset()
 		{
-			instance.AppendFormat("{0}", "HELLO");
+			_count = 0;
 		}
 
-		public void Shutdown(StringRunner instance)
+		public void SendMessage()
 		{
-		}
-
-		public void Run(StringRunner instance, int iterationCount)
-		{
-			const string format = "{0} {1}";
-			const string first = "ABCDEFG";
-			const string second = "12345";
-
-			for (int i = 0; i < iterationCount; i++)
-				instance.AppendFormat(format, first, second);
+			_input.Send(_message);
 		}
 	}
 }

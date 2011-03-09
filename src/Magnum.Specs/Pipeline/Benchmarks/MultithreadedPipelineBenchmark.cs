@@ -12,9 +12,9 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Specs.Pipeline.Benchmarks
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Threading;
-	using Magnum.Benchmarking;
 	using Magnum.Concurrency;
 	using Magnum.Extensions;
 
@@ -31,6 +31,10 @@ namespace Magnum.Specs.Pipeline.Benchmarks
 		{
 			instance.SendMessage();
 			instance.Reset();
+		}
+
+		public void Shutdown(PipelineRunner instance)
+		{
 		}
 
 		public void Run(PipelineRunner instance, int iterationCount)

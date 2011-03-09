@@ -10,30 +10,30 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Specs.Benchmarking
+namespace Magnum.Specs.Reflection.Benchmarks
 {
-	using System.IO;
+	using Magnum.Reflection;
 
 
-	public class StringWriterRunner :
-		StringRunner
+	public class SafeGetNestedPropertyRunner :
+		GetNestedPropertyRunnerBase,
+		GetNestedPropertyRunner
 	{
-		StringWriter _sw;
+		readonly GetProperty<A, int> _accessor;
 
-		public StringWriterRunner()
+		public SafeGetNestedPropertyRunner()
 		{
-			_sw = new StringWriter();
+			_accessor = SafeProperty<A>.GetGetProperty(x => x.TheB.TheC.Value);
 		}
 
-
-		public void Append(string value)
+		public void Run(int iterations)
 		{
-			_sw.Write(value);
+			for (int i = 0; i < iterations; i++)
+				_accessor(Subject, DoSomething);
 		}
 
-		public void AppendFormat(string format, params object[] args)
+		static void DoSomething(int obj)
 		{
-			_sw.Write(format, args);
 		}
 	}
 }

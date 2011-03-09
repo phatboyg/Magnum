@@ -10,36 +10,31 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Specs.Benchmarking
+namespace Magnum.Specs.Reflection.Benchmarks
 {
 	using System.Collections.Generic;
 
 
-	public class StringAppendFormatBenchmark :
-		Benchmark<StringRunner>
+	public class GetNestedPropertyBenchmark :
+		Benchmark<GetNestedPropertyRunner>
 	{
 		public IEnumerable<int> Iterations
 		{
-			get { return new[] {50, 10000}; }
+			get { return new[] {10000000}; }
 		}
 
-		public void WarmUp(StringRunner instance)
+		public void WarmUp(GetNestedPropertyRunner instance)
 		{
-			instance.AppendFormat("{0}", "HELLO");
+			instance.Run(10);
 		}
 
-		public void Shutdown(StringRunner instance)
+		public void Shutdown(GetNestedPropertyRunner instance)
 		{
 		}
 
-		public void Run(StringRunner instance, int iterationCount)
+		public void Run(GetNestedPropertyRunner instance, int iterationCount)
 		{
-			const string format = "{0} {1}";
-			const string first = "ABCDEFG";
-			const string second = "12345";
-
-			for (int i = 0; i < iterationCount; i++)
-				instance.AppendFormat(format, first, second);
+			instance.Run(iterationCount);
 		}
 	}
 }

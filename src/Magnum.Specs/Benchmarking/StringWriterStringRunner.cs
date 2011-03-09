@@ -12,34 +12,28 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Specs.Benchmarking
 {
-	using System.Collections.Generic;
+	using System.IO;
 
 
-	public class StringAppendFormatBenchmark :
-		Benchmark<StringRunner>
+	public class StringWriterStringRunner :
+		StringRunner
 	{
-		public IEnumerable<int> Iterations
+		StringWriter _sw;
+
+		public StringWriterStringRunner()
 		{
-			get { return new[] {50, 10000}; }
+			_sw = new StringWriter();
 		}
 
-		public void WarmUp(StringRunner instance)
+
+		public void Append(string value)
 		{
-			instance.AppendFormat("{0}", "HELLO");
+			_sw.Write(value);
 		}
 
-		public void Shutdown(StringRunner instance)
+		public void AppendFormat(string format, params object[] args)
 		{
-		}
-
-		public void Run(StringRunner instance, int iterationCount)
-		{
-			const string format = "{0} {1}";
-			const string first = "ABCDEFG";
-			const string second = "12345";
-
-			for (int i = 0; i < iterationCount; i++)
-				instance.AppendFormat(format, first, second);
+			_sw.Write(format, args);
 		}
 	}
 }

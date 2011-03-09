@@ -13,7 +13,6 @@
 namespace Magnum.Specs.Reflection.Benchmarks
 {
 	using System.Collections.Generic;
-	using Magnum.Benchmarking;
 
 
 	public class GetPropertyBenchmark :
@@ -28,6 +27,10 @@ namespace Magnum.Specs.Reflection.Benchmarks
 		{
 			instance.GetValue(0);
 			instance.GetText(0);
+		}
+
+		public void Shutdown(GetPropertyRunner instance)
+		{
 		}
 
 		public void Run(GetPropertyRunner instance, int iterationCount)

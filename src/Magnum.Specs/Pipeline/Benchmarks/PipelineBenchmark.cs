@@ -13,7 +13,6 @@
 namespace Magnum.Specs.Pipeline.Benchmarks
 {
 	using System.Collections.Generic;
-	using Magnum.Benchmarking;
 
 
 	public class PipelineBenchmark :
@@ -28,6 +27,10 @@ namespace Magnum.Specs.Pipeline.Benchmarks
 		{
 			instance.SendMessage();
 			instance.Reset();
+		}
+
+		public void Shutdown(PipelineRunner instance)
+		{
 		}
 
 		public void Run(PipelineRunner instance, int iterationCount)

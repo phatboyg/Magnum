@@ -42,6 +42,7 @@
     </Compile>
     <Compile Include="BenchmarkRunner.cs" />
     <Compile Include="BenchmarkRunResult.cs" />
+    <Compile Include="DisplayResult.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="RunResult.cs" />
   </ItemGroup>
