@@ -38,9 +38,9 @@ namespace Magnum.CommandLineParser
 				return "";
 
 			if (line.Substring(0, applicationPath.Length) == applicationPath)
-				return line.Substring(applicationPath.Length + 1);
+				return line.Substring(applicationPath.Length);
 
-			string quotedApplicationPath = "\"" + applicationPath + "\" ";
+			string quotedApplicationPath = "\"" + applicationPath + "\"";
 
 			if (line.Substring(0, quotedApplicationPath.Length) == quotedApplicationPath)
 				return line.Substring(quotedApplicationPath.Length);

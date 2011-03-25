@@ -30,7 +30,7 @@ namespace Magnum.Specs.Extensions
 
 			IPEndPoint endpoint = uri.ResolveHostName().Single();
 
-			endpoint.Address.ShouldEqual(IPAddress.Parse("64.34.186.11"));
+			endpoint.Address.ShouldEqual(IPAddress.Parse("184.106.69.38"));
 			endpoint.Port.ShouldEqual(80);
 		}
 
@@ -52,7 +52,7 @@ namespace Magnum.Specs.Extensions
 
 			IPEndPoint endpoint = uri.ResolveHostName().Single();
 
-			endpoint.Address.ShouldEqual(IPAddress.Parse("64.34.186.11"));
+			endpoint.Address.ShouldEqual(IPAddress.Parse("184.106.69.38"));
 			endpoint.Port.ShouldEqual(21);
 		}
 
@@ -73,7 +73,7 @@ namespace Magnum.Specs.Extensions
 
 			IPEndPoint endpoint = uri.ResolveHostName().Single();
 
-			endpoint.Address.ShouldEqual(IPAddress.Parse("64.34.186.11"));
+			endpoint.Address.ShouldEqual(IPAddress.Parse("184.106.69.38"));
 			endpoint.Port.ShouldEqual(443);
 		}
 	}
