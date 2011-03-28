@@ -18,8 +18,8 @@ namespace Magnum.Routing
 	using Conditions;
 
 
-	public class MagnumRoutingEngine :
-		RoutingEngine
+	public class MagnumRoutingEngine<TContext> :
+		RoutingEngine<TContext>
 	{
 		RouteCondition _conditions;
 
@@ -28,9 +28,9 @@ namespace Magnum.Routing
 			_conditions = new RootRouteCondition();
 		}
 
-		public void Route<T>(T context, Uri uri, Action<RouteMatch> callback)
+		public void Route(TContext context, Uri uri, Action<RouteMatch> callback)
 		{
-			var routeContext = new RouteContextImpl<T>(context, uri);
+			var routeContext = new RouteContextImpl<TContext>(context, uri);
 
 			_conditions.Activate(routeContext, uri.PathAndQuery);
 

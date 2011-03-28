@@ -12,6 +12,8 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Routing.Specs
 {
+	using System;
+	using System.Diagnostics;
 	using System.Linq;
 	using Conditions;
 	using NUnit.Framework;
@@ -21,14 +23,14 @@ namespace Magnum.Routing.Specs
 	[TestFixture]
 	public class Matching_a_segment_condition
 	{
-		MagnumRoutingEngine _engine;
+		MagnumRoutingEngine<Uri> _engine;
 
 		[TestFixtureSetUp]
 		public void Given_an_existing_segment_condition()
 		{
-			_engine = new MagnumRoutingEngine();
+			_engine = new MagnumRoutingEngine<Uri>();
 
-			var segmentRouteCondition = new SegmentRouteCondition(0);
+			var segmentRouteCondition = new SegmentRouteCondition(1);
 			segmentRouteCondition.AddActivation(new EqualRouteCondition("version"));
 
 			_engine.AddActivation(segmentRouteCondition);
@@ -38,7 +40,7 @@ namespace Magnum.Routing.Specs
 		public void Should_find_the_existing_segment_condition()
 		{
 			_engine.Match<SegmentRouteCondition>()
-				.Where(x => x.Position == 0)
+				.Where(x => x.Position == 1)
 				.Any()
 				.ShouldBeTrue();
 		}
@@ -47,11 +49,22 @@ namespace Magnum.Routing.Specs
 		public void Should_find_the_existing_equal_condition()
 		{
 			_engine.Match<SegmentRouteCondition>()
-				.Where(x => x.Position == 0)
+				.Where(x => x.Position == 1)
 				.Match<EqualRouteCondition>()
 				.Where(x => x.Value == "version")
 				.Any()
 				.ShouldBeTrue();
+		}
+
+		[Test]
+		public void Should_route_the_url()
+		{
+			Uri uri = new Uri("http://localhost/version");
+
+			_engine.Route(uri, uri, x =>
+				{
+					Trace.WriteLine("Hello");
+				});
 		}
 	}
 }

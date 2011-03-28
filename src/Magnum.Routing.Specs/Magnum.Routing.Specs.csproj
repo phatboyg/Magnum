@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\tests\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\tests\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -39,6 +39,11 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Benchmarks\RegularExpressions\DictionaryRoutingRunner.cs" />
+    <Compile Include="Benchmarks\RegularExpressions\LargePageSetRoutingBenchmark.cs" />
+    <Compile Include="Benchmarks\RegularExpressions\SmallPageSetRoutingBenchmark.cs" />
+    <Compile Include="Benchmarks\RegularExpressions\RegularExpressionRoutingRunner.cs" />
+    <Compile Include="Benchmarks\RegularExpressions\RoutingRunner.cs" />
     <Compile Include="DelegateRoute_Specs.cs" />
     <Compile Include="Match_Specs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -52,6 +57,10 @@
     <ProjectReference Include="..\Magnum.TestFramework\Magnum.TestFramework.csproj">
       <Project>{D741FD13-08D7-4A71-916E-0D61816D8A80}</Project>
       <Name>Magnum.TestFramework</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Magnum\Magnum.csproj">
+      <Project>{C3650C32-0850-48B4-BE71-ECE9FACBD356}</Project>
+      <Name>Magnum</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

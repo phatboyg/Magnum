@@ -19,7 +19,7 @@ namespace Magnum.Routing.Specs
 	public class When_a_delegate_route_is_bound
 	{
 		bool _called;
-		RoutingEngine _router;
+		RoutingEngine<int> _router;
 
 		[Given]
 		public void A_delegate_route()

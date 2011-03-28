@@ -25,11 +25,17 @@ namespace Magnum.Benchmark
 	{
 		static void Main(string[] argv)
 		{
-			Assembly specs = Assembly.Load("Magnum.Specs");
+			if (argv.Length == 0)
+			{
+				Console.WriteLine("usage: <assembly name> [filter]");
+				return;
+			}
+
+			Assembly specs = Assembly.Load(argv[0]);
 
 			string filter = null;
-			if (argv.Length >= 1)
-				filter = argv[0];
+			if (argv.Length >= 2)
+				filter = argv[1];
 
 			specs.GetTypes()
 				.Where(type => type.Implements(typeof(Benchmark<>)) && type.IsConcrete())

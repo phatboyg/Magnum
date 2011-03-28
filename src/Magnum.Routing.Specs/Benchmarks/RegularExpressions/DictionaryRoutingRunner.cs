@@ -10,16 +10,36 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing
+namespace Magnum.Routing.Specs.Benchmarks.RegularExpressions
 {
-	public interface RouteMatch
-	{
-	}
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
 
 
-	public interface RouteMatch<out TContext> :
-		RouteMatch
+	public class DictionaryRoutingRunner :
+		RoutingRunner
 	{
-		TContext Context { get; }
+		IDictionary<string, string> _routes;
+
+		public DictionaryRoutingRunner()
+		{
+			_routes = new Dictionary<string, string>();
+		}
+
+		public void AddRoutes(IEnumerable<string> paths)
+		{
+			_routes = paths.ToDictionary(x => x, x => x);
+		}
+
+		public void Route(Uri uri)
+		{
+			string absolutePath = uri.AbsolutePath;
+
+			if (_routes.ContainsKey(absolutePath))
+				return;
+
+			throw new InvalidOperationException("Invalid match URI");
+		}
 	}
 }
