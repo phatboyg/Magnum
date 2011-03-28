@@ -37,8 +37,20 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Routing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AspNetRouting\Class1.cs" />
+    <Compile Include="Benchmarks\RegularExpressions\ExplicitWebRoutingRoutingRunner.cs" />
+    <Compile Include="Benchmarks\RegularExpressions\RoutingEngineRoutingRunner.cs" />
+    <Compile Include="Benchmarks\RegularExpressions\ParameterizedWebRoutingRoutingRunner.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="StubHttpResponseForRouting.cs" />
+    <Compile Include="StubHttpContextForRouting.cs" />
+    <Compile Include="StubHttpRequestForRouting.cs" />
     <Compile Include="Benchmarks\RegularExpressions\DictionaryRoutingRunner.cs" />
     <Compile Include="Benchmarks\RegularExpressions\LargePageSetRoutingBenchmark.cs" />
     <Compile Include="Benchmarks\RegularExpressions\SmallPageSetRoutingBenchmark.cs" />
@@ -47,6 +59,7 @@
     <Compile Include="DelegateRoute_Specs.cs" />
     <Compile Include="Match_Specs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StubRouteHandler.cs" />
     <Compile Include="UriParsing\SimpleParsing_Specs.cs" />
   </ItemGroup>
   <ItemGroup>

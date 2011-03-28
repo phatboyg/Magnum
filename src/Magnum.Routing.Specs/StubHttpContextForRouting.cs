@@ -10,41 +10,36 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing.Conditions
+namespace Magnum.Routing.Specs
 {
-	using System.Collections.Generic;
+	using System.Web;
 
 
-	public class EqualRouteCondition :
-		Condition,
-		RouteCondition
+	public class StubHttpContextForRouting :
+		HttpContextBase
 	{
-		IDictionary<string, IList<Activation>> _values;
+		StubHttpRequestForRouting _request;
+		StubHttpResponseForRouting _response;
 
-		public EqualRouteCondition(string value)
-			: this()
+		public StubHttpContextForRouting(string appPath = "/", string requestUrl = "~/")
 		{
-			Add(value);
+			_request = new StubHttpRequestForRouting(appPath, requestUrl);
+			_response = new StubHttpResponseForRouting();
 		}
 
-		public EqualRouteCondition()
+		public override HttpRequestBase Request
 		{
-			_values = new Dictionary<string, IList<Activation>>();
+			get { return _request; }
 		}
 
-		public void Activate(RouteContext context, string value)
+		public override HttpResponseBase Response
 		{
-			IList<Activation> match;
-			if (_values.TryGetValue(value, out match))
-			{
-				foreach (Activation activation in match)
-					activation.Activate(context, value);
-			}
+			get { return _response; }
 		}
 
-		public void Add(string value)
+		public void SetRequestUrl(string requestUrl)
 		{
-			_values.Add(value, new List<Activation>());
+			_request.SetRequestUrl(requestUrl);
 		}
 	}
 }

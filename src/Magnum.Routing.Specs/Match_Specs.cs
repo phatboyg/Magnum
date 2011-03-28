@@ -51,7 +51,6 @@ namespace Magnum.Routing.Specs
 			_engine.Match<SegmentRouteCondition>()
 				.Where(x => x.Position == 1)
 				.Match<EqualRouteCondition>()
-				.Where(x => x.Value == "version")
 				.Any()
 				.ShouldBeTrue();
 		}
