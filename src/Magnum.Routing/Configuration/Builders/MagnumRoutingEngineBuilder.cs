@@ -13,24 +13,34 @@
 namespace Magnum.Routing.Builders
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq.Expressions;
-	using Configuration;
 
 
 	public class MagnumRoutingEngineBuilder<TContext> :
 		RoutingEngineBuilder<TContext>
 		where TContext : class
 	{
-		Func<TContext, Uri> _getUri;
+		readonly Func<TContext, Uri> _getUri;
+		readonly IList<RouteBuilder<TContext>> _routeBuilders;
 
 		public MagnumRoutingEngineBuilder(Expression<Func<TContext, Uri>> getUri)
 		{
 			_getUri = getUri.Compile();
+			_routeBuilders = new List<RouteBuilder<TContext>>();
+		}
+
+		public void AddRouteBuilder(RouteBuilder<TContext> routeBuilder)
+		{
+			_routeBuilders.Add(routeBuilder);
 		}
 
 		public RoutingEngine<TContext> Build()
 		{
 			var engine = new MagnumRoutingEngine<TContext>(_getUri);
+
+			foreach (var routeBuilder in _routeBuilders)
+				routeBuilder.Build(engine);
 
 			return engine;
 		}

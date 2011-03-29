@@ -15,6 +15,7 @@ namespace Magnum.Routing.Specs.Benchmarks.RegularExpressions
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using Configuration;
 	using Nodes;
 
 

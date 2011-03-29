@@ -12,8 +12,13 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Routing.Configuration
 {
-	public interface Configurator
+	public class SequentialNodeIdGenerator
 	{
-		void Validate();
+		long _next = 1;
+
+		public long Next()
+		{
+			return _next++;
+		}
 	}
 }

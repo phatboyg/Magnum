@@ -28,6 +28,23 @@ namespace Magnum.Routing.Specs
 					// specify the Uri accessor from the context type
 					x.Uri(context => context.Uri);
 
+					x.Route("version").To(context => { });
+
+					//x.Route<int, int, int>((year, month, day) => "archive/{year}/{month}/{day}");
+
+					//					x.Route("archive/{year}/{month}/{day}", r =>
+					//						{
+					//							r.Default("year", DateTime.Now.Year);
+					//
+					//							r.Constrain("year").To<int>(1970, 2099);
+					//							r.Constrain("month").To<int>(1, 12);
+					//							r.Constrain("day").To<int>()
+					//								.Where(k => k >= 1)
+					//								.Where((y,m,d) => k <= )
+					//							r.Default("month", DateTime.Now.Month);
+					//							r.Default("day", DateTime.Now.Day);
+					//
+					//						});
 				});
 
 			engine.ShouldNotBeNull();

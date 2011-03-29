@@ -10,10 +10,31 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing.Configuration
+namespace Magnum.Routing
 {
-	public interface Configurator
+	using System;
+	using Builders;
+	using Configuration;
+
+
+	public static class RouteExtensions
 	{
-		void Validate();
+		public static RouteConfigurator<T> Route<T>(this RoutingEngineConfigurator<T> configurator, string path)
+			where T : class
+		{
+			var routeConfigurator = new RouteConfiguratorImpl<T>(path);
+
+			configurator.AddConfigurator(routeConfigurator);
+
+			return routeConfigurator;
+		}
+
+
+		public static RouteConfigurator<T> To<T>(this RouteConfigurator<T> configurator, Action<T> callback)
+		{
+			configurator.UseBuilder(() => new DelegateRouteBuilder<T>(callback));
+
+			return configurator;
+		}
 	}
 }

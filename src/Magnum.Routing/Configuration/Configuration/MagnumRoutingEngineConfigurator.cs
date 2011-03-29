@@ -13,6 +13,7 @@
 namespace Magnum.Routing.Configuration
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq.Expressions;
 	using System.Reflection;
 	using Builders;
@@ -22,16 +23,30 @@ namespace Magnum.Routing.Configuration
 		RoutingEngineConfigurator<TContext>
 		where TContext : class
 	{
+		IList<RoutingEngineBuilderConfigurator<TContext>> _configurators;
 		Expression<Func<TContext, Uri>> _getUri;
+
+		public MagnumRoutingEngineConfigurator()
+		{
+			_configurators = new List<RoutingEngineBuilderConfigurator<TContext>>();
+		}
 
 		public void Uri(Expression<Func<TContext, Uri>> getUri)
 		{
 			_getUri = getUri;
 		}
 
+		public void AddConfigurator(RoutingEngineBuilderConfigurator<TContext> configurator)
+		{
+			_configurators.Add(configurator);
+		}
+
 		public void Validate()
 		{
 			ValidateGetUri();
+
+			foreach (var configurator in _configurators)
+				configurator.Validate();
 		}
 
 		public RoutingEngine<TContext> Create()
@@ -39,6 +54,9 @@ namespace Magnum.Routing.Configuration
 			Validate();
 
 			var builder = new MagnumRoutingEngineBuilder<TContext>(_getUri);
+
+			foreach (var configurator in _configurators)
+				configurator.Configure(builder);
 
 			// apply configurators to the builder at this point
 
