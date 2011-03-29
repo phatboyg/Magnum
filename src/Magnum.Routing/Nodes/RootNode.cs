@@ -10,15 +10,15 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing
+namespace Magnum.Routing.Nodes
 {
-	public interface Route
+	public class RootNode<TContext> :
+		ActivationNode<TContext>,
+		Activation<TContext>
 	{
-	}
-
-
-	public interface Route<TContext> :
-		Route
-	{
+		public void Activate(RouteContext<TContext> context, string value)
+		{
+			Next(context, value);
+		}
 	}
 }

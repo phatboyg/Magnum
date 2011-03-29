@@ -14,42 +14,42 @@ namespace Magnum.Routing
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Linq;
-	using Conditions;
+	using Nodes;
 
 
 	public class MagnumRoutingEngine<TContext> :
 		RoutingEngine<TContext>
 	{
-		RouteCondition _conditions;
+		readonly Func<TContext, Uri> _getUri;
+		readonly Activation<TContext> _network;
 
-		public MagnumRoutingEngine()
+		public MagnumRoutingEngine(Func<TContext, Uri> getUri)
 		{
-			_conditions = new RootRouteCondition();
+			_getUri = getUri;
+			_network = new RootNode<TContext>();
 		}
 
-		public void Route(TContext context, Uri uri, Action<RouteMatch> callback)
+		public void Route(TContext context, Action<RouteMatch<TContext>> callback)
 		{
+			Uri uri = _getUri(context);
+
 			var routeContext = new RouteContextImpl<TContext>(context, uri);
 
-			_conditions.Activate(routeContext, uri.PathAndQuery);
+			_network.Activate(routeContext, uri.PathAndQuery);
 
-			RouteMatch matched = routeContext.Matches.FirstOrDefault();
+			routeContext.Resolve();
+
+			RouteMatch<TContext> matched = routeContext.Match;
 			if (matched == null)
 				return;
 
 			callback(matched);
 		}
 
-		public IEnumerable<T> Match<T>() 
+		public IEnumerable<T> Match<T>()
 			where T : class
 		{
-			return _conditions.Match<T>();
-		}
-
-		public void AddActivation(Activation activation)
-		{
-			_conditions.AddActivation(activation);
+			return _network.Match<T>();
 		}
 	}
 }

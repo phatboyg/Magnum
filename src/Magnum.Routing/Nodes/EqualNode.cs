@@ -10,41 +10,30 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing.Conditions
+namespace Magnum.Routing.Nodes
 {
-	using System.Collections.Generic;
+	using System;
 
 
-	public class EqualRouteCondition :
-		Condition,
-		RouteCondition
+	public class EqualNode<TContext> :
+		DictionaryNode<TContext>,
+		Activation<TContext>
 	{
-		IDictionary<string, IList<Activation>> _values;
+		readonly Func<long> _generateId;
 
-		public EqualRouteCondition(string value)
-			: this()
+		public EqualNode(Func<long> generateId)
 		{
-			Add(value);
+			_generateId = generateId;
 		}
 
-		public EqualRouteCondition()
+		public void Activate(RouteContext<TContext> context, string value)
 		{
-			_values = new Dictionary<string, IList<Activation>>();
+			Next(value, context, value);
 		}
 
-		public void Activate(RouteContext context, string value)
+		public void Add(string value, Activation<TContext> activation)
 		{
-			IList<Activation> match;
-			if (_values.TryGetValue(value, out match))
-			{
-				foreach (Activation activation in match)
-					activation.Activate(context, value);
-			}
-		}
-
-		public void Add(string value)
-		{
-			_values.Add(value, new List<Activation>());
+			Add(value, activation, _generateId);
 		}
 	}
 }

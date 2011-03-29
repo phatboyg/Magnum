@@ -12,8 +12,22 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Routing
 {
+	using System;
+
+
 	public interface RouteContext
 	{
 		string Segment(int position);
+	}
+
+
+	public interface RouteContext<TContext> :
+		RouteContext
+	{
+		TContext Context { get; }
+		void AddRightActivation(long id);
+		bool HasRightActivation(long id);
+		void AddRoute(Route<TContext> route);
+		void AddAction(Action action);
 	}
 }

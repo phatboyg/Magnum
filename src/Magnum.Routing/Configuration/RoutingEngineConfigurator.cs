@@ -1,4 +1,4 @@
-// Copyright 2007-2010 The Apache Software Foundation.
+﻿// Copyright 2007-2010 The Apache Software Foundation.
 //  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -12,13 +12,15 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Routing
 {
-	public interface Route
-	{
-	}
+	using System;
+	using System.Linq.Expressions;
+	using Configuration;
 
 
-	public interface Route<TContext> :
-		Route
+	public interface RoutingEngineConfigurator<TContext> :
+		Configurator
+		where TContext : class
 	{
+		void Uri(Expression<Func<TContext, Uri>> getUri);
 	}
 }

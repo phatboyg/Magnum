@@ -12,13 +12,31 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Routing
 {
-	public interface Route
-	{
-	}
+	using System;
+	using System.Runtime.Serialization;
 
 
-	public interface Route<TContext> :
-		Route
+	[Serializable]
+	public class RoutingConfigurationException :
+		RoutingException
 	{
+		public RoutingConfigurationException()
+		{
+		}
+
+		public RoutingConfigurationException(string message)
+			: base(message)
+		{
+		}
+
+		public RoutingConfigurationException(string message, Exception innerException)
+			: base(message, innerException)
+		{
+		}
+
+		protected RoutingConfigurationException(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+		}
 	}
 }

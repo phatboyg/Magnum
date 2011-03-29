@@ -15,7 +15,7 @@ namespace Magnum.Routing.Specs
 	using System;
 	using System.Diagnostics;
 	using System.Linq;
-	using Conditions;
+	using Nodes;
 	using NUnit.Framework;
 	using TestFramework;
 
@@ -23,34 +23,21 @@ namespace Magnum.Routing.Specs
 	[TestFixture]
 	public class Matching_a_segment_condition
 	{
-		MagnumRoutingEngine<Uri> _engine;
-
-		[TestFixtureSetUp]
-		public void Given_an_existing_segment_condition()
-		{
-			_engine = new MagnumRoutingEngine<Uri>();
-
-			var segmentRouteCondition = new SegmentRouteCondition(1);
-			segmentRouteCondition.AddActivation(new EqualRouteCondition("version"));
-
-			_engine.AddActivation(segmentRouteCondition);
-		}
-
 		[Test]
-		public void Should_find_the_existing_segment_condition()
+		public void Should_find_the_existing_equal_condition()
 		{
-			_engine.Match<SegmentRouteCondition>()
+			_engine.Match<SegmentNode<Uri>>()
 				.Where(x => x.Position == 1)
+				.Match<EqualNode<Uri>>()
 				.Any()
 				.ShouldBeTrue();
 		}
 
 		[Test]
-		public void Should_find_the_existing_equal_condition()
+		public void Should_find_the_existing_segment_condition()
 		{
-			_engine.Match<SegmentRouteCondition>()
+			_engine.Match<SegmentNode<Uri>>()
 				.Where(x => x.Position == 1)
-				.Match<EqualRouteCondition>()
 				.Any()
 				.ShouldBeTrue();
 		}
@@ -58,12 +45,26 @@ namespace Magnum.Routing.Specs
 		[Test]
 		public void Should_route_the_url()
 		{
-			Uri uri = new Uri("http://localhost/version");
+			var uri = new Uri("http://localhost/version");
 
-			_engine.Route(uri, uri, x =>
-				{
-					Trace.WriteLine("Hello");
-				});
+			_engine.Route(uri, x => { Trace.WriteLine("Hello"); });
+		}
+
+		MagnumRoutingEngine<Uri> _engine;
+		long _id = 1;
+
+		[TestFixtureSetUp]
+		public void Given_an_existing_segment_condition()
+		{
+			_engine = new MagnumRoutingEngine<Uri>(x => x);
+
+			var segmentNode = new SegmentNode<Uri>(1);
+			var equals = new EqualNode<Uri>(() => _id++);
+			equals.Add("version", new AlphaNode<Uri>(_id++));
+			segmentNode.Add(equals);
+
+
+			_engine.Add(segmentNode);
 		}
 	}
 }

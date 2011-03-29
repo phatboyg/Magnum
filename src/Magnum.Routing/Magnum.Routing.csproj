@@ -37,19 +37,36 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\DelegateBinder.cs" />
-    <Compile Include="Conditions\Activation.cs" />
-    <Compile Include="Conditions\RootRouteCondition.cs" />
-    <Compile Include="Conditions\Condition.cs" />
-    <Compile Include="Conditions\EqualRouteCondition.cs" />
-    <Compile Include="Conditions\RouteCondition.cs" />
-    <Compile Include="Conditions\SegmentRouteCondition.cs" />
+    <Compile Include="Configuration\SequentialNodeIdGenerator.cs" />
+    <Compile Include="Nodes\Activation.cs" />
+    <Compile Include="Nodes\ActivationList.cs" />
+    <Compile Include="Nodes\ActivationNode.cs" />
+    <Compile Include="Nodes\AlphaNode.cs" />
+    <Compile Include="Nodes\ConstantNode.cs" />
+    <Compile Include="Nodes\DictionaryNode.cs" />
+    <Compile Include="Nodes\JoinNode.cs" />
+    <Compile Include="Nodes\Node.cs" />
+    <Compile Include="Nodes\RightActivation.cs" />
+    <Compile Include="Nodes\RootNode.cs" />
+    <Compile Include="Nodes\EqualNode.cs" />
+    <Compile Include="Nodes\SegmentNode.cs" />
+    <Compile Include="Configuration\Builders\MagnumRoutingEngineBuilder.cs" />
+    <Compile Include="Configuration\Configuration\RoutingEngineBuilder.cs" />
+    <Compile Include="Configuration\Configuration\Configurator.cs" />
+    <Compile Include="Configuration\Configuration\MagnumRoutingEngineConfigurator.cs" />
+    <Compile Include="Configuration\RoutingEngineConfigurator.cs" />
+    <Compile Include="Configuration\RoutingEngineFactory.cs" />
+    <Compile Include="Exceptions\RoutingConfigurationException.cs" />
+    <Compile Include="Exceptions\RoutingException.cs" />
     <Compile Include="MagnumRoutingEngine.cs" />
     <Compile Include="MatchExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Route.cs" />
     <Compile Include="RouteContext.cs" />
     <Compile Include="RouteContextImpl.cs" />
+    <Compile Include="RouteImpl.cs" />
     <Compile Include="RouteMatch.cs" />
+    <Compile Include="RouteMatchImpl.cs" />
     <Compile Include="RoutingEngine.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -16,7 +16,15 @@ namespace Magnum.Routing
 	using System.Collections.Generic;
 
 
-	public interface RoutingEngine<in TContext>
+	public interface RoutingEngine
+	{
+		IEnumerable<T> Match<T>()
+			where T : class;
+	}
+
+
+	public interface RoutingEngine<TContext> :
+		RoutingEngine
 	{
 		/// <summary>
 		/// Match a URI to the route defined in the routing engine
@@ -25,9 +33,6 @@ namespace Magnum.Routing
 		/// <param name="context">The context to pass along with the routing request</param>
 		/// <param name="uri">The URI to route</param>
 		/// <param name="matchCallback">Callback called if a matching route is found</param>
-		void Route(TContext context, Uri uri, Action<RouteMatch> matchCallback);
-
-		IEnumerable<T> Match<T>()
-			where T : class;
+		void Route(TContext context, Action<RouteMatch<TContext>> matchCallback);
 	}
 }

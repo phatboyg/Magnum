@@ -12,13 +12,13 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Routing
 {
-	public interface Route
+	public class SequentialNodeIdGenerator
 	{
-	}
+		long _next = 1;
 
-
-	public interface Route<TContext> :
-		Route
-	{
+		public long Next()
+		{
+			return _next++;
+		}
 	}
 }

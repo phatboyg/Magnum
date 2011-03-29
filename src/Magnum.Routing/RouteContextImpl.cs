@@ -14,26 +14,66 @@ namespace Magnum.Routing
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 
 
-	public class RouteContextImpl<T> :
-		RouteContext
+	public class RouteContextImpl<TContext> :
+		RouteContext<TContext>
 	{
 		readonly string[] _segments;
 		readonly Uri _uri;
-		T _context;
+		IList<Action> _actions;
+		TContext _context;
 
-		public RouteContextImpl(T context, Uri uri)
+		HashSet<long> _rights;
+		IList<Route<TContext>> _routes;
+
+		public RouteContextImpl(TContext context, Uri uri)
 		{
 			_context = context;
 			_uri = uri;
 
 			_segments = _uri.Segments;
+
+			_rights = new HashSet<long>();
+			_routes = new List<Route<TContext>>();
+			_actions = new List<Action>();
 		}
 
-		public IEnumerable<RouteMatch> Matches
+		public RouteMatch<TContext> Match
 		{
-			get { yield break; }
+			get
+			{
+				if (_routes.Count == 0)
+					return null;
+
+				return new RouteMatchImpl<TContext>(_context, _routes[0]);
+			}
+		}
+
+		public TContext Context
+		{
+			get { return _context; }
+		}
+
+		public void AddRightActivation(long id)
+		{
+			_rights.Add(id);
+		}
+
+		public bool HasRightActivation(long id)
+		{
+			return _rights.Contains(id);
+		}
+
+		public void AddRoute(Route<TContext> route)
+		{
+			_routes.Add(route);
+		}
+
+		public void AddAction(Action action)
+		{
+			_actions.Add(action);
 		}
 
 		public string Segment(int position)
@@ -45,6 +85,14 @@ namespace Magnum.Routing
 				return null;
 
 			return _segments[position] ?? "";
+		}
+
+		public void Resolve()
+		{
+			for (int i = 0; i < _actions.Count; i++)
+			{
+				_actions[i]();
+			}
 		}
 	}
 }

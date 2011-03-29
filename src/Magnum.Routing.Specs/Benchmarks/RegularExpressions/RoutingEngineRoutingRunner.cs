@@ -15,36 +15,54 @@ namespace Magnum.Routing.Specs.Benchmarks.RegularExpressions
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using Conditions;
-	using Extensions;
+	using Nodes;
 
 
 	public class RoutingEngineRoutingRunner :
 		RoutingRunner
 	{
 		MagnumRoutingEngine<Uri> _engine;
-		EqualRouteCondition _equal;
-		SegmentRouteCondition _segment;
+		EqualNode<Uri> _equal;
+		long _id = 1;
+		SegmentNode<Uri> _segment;
+		SequentialNodeIdGenerator _idGenerator;
 
 		public RoutingEngineRoutingRunner()
 		{
-			_engine = new MagnumRoutingEngine<Uri>();
+			_idGenerator = new SequentialNodeIdGenerator();
 
-			_segment = new SegmentRouteCondition(1);
-			_engine.AddActivation(_segment);
+			_engine = new MagnumRoutingEngine<Uri>(x => x);
 
-			_equal = new EqualRouteCondition();
-			_segment.AddActivation(_equal);
+			_segment = new SegmentNode<Uri>(1);
+			_engine.Match<RootNode<Uri>>().Single().Add(_segment);
+
+			_equal = new EqualNode<Uri>(() => _id++);
+			_segment.Add(_equal);
 		}
 
 		public void AddRoutes(IEnumerable<string> paths)
 		{
-			paths.Select(x => x.Substring(1)).Each(x => { _equal.Add(x); });
+			foreach (string path in paths)
+			{
+				var route = new RouteImpl<Uri>();
+
+				var joinNode = new JoinNode<Uri>(_id++, new ConstantNode<Uri>());
+				joinNode.Add(route);
+
+				var alpha = new AlphaNode<Uri>(_id++);
+				alpha.Add(joinNode);
+
+				_equal.Add(path.Substring(1), alpha);
+			}
 		}
 
 		public void Route(Uri uri)
 		{
-			_engine.Route(uri, uri, x => { });
+			bool routed = false;
+			_engine.Route(uri, x => { routed = true; });
+
+			if (routed == false)
+				throw new InvalidOperationException("Unrouted message");
 		}
 	}
 }

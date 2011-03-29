@@ -14,7 +14,7 @@ namespace Magnum.Routing
 {
 	using System.Collections.Generic;
 	using System.Linq;
-	using Conditions;
+	using Nodes;
 
 
 	public static class MatchExtensions
@@ -23,6 +23,16 @@ namespace Magnum.Routing
 			where T : class
 		{
 			return activations.SelectMany(activation => activation.Match<T>());
+		}
+
+		public static void Add<T>(this RoutingEngine<T> engine, Activation<T> activation)
+			where T : class
+		{
+			RootNode<T> match = engine.Match<RootNode<T>>().FirstOrDefault();
+			if (match == null)
+				return;
+
+			match.Add(activation);
 		}
 	}
 }

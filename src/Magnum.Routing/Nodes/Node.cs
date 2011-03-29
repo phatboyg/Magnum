@@ -10,34 +10,9 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing.Conditions
+namespace Magnum.Routing.Nodes
 {
-	/// <summary>
-	/// Matches a positional segment in the URI if it exists, and passes to the next condition
-	/// </summary>
-	public class SegmentRouteCondition :
-		Condition,
-		RouteCondition
+	public abstract class Node<TContext>
 	{
-		readonly int _position;
-
-		public SegmentRouteCondition(int position)
-		{
-			_position = position;
-		}
-
-		public int Position
-		{
-			get { return _position; }
-		}
-
-		public void Activate(RouteContext context, string value)
-		{
-			string segmentValue = context.Segment(_position);
-			if (segmentValue == null)
-				return;
-
-			Next(context, segmentValue);
-		}
 	}
 }

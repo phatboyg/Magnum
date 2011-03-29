@@ -10,15 +10,29 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing
+namespace Magnum.Routing.Builders
 {
-	public interface Route
-	{
-	}
+	using System;
+	using System.Linq.Expressions;
+	using Configuration;
 
 
-	public interface Route<TContext> :
-		Route
+	public class MagnumRoutingEngineBuilder<TContext> :
+		RoutingEngineBuilder<TContext>
+		where TContext : class
 	{
+		Func<TContext, Uri> _getUri;
+
+		public MagnumRoutingEngineBuilder(Expression<Func<TContext, Uri>> getUri)
+		{
+			_getUri = getUri.Compile();
+		}
+
+		public RoutingEngine<TContext> Build()
+		{
+			var engine = new MagnumRoutingEngine<TContext>(_getUri);
+
+			return engine;
+		}
 	}
 }

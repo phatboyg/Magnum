@@ -10,19 +10,27 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing
+namespace Magnum.Routing.Nodes
 {
-	using System;
-
-
-	public interface RouteMatch
+	/// <summary>
+	/// An alpha node marks the end of a branch in the left side discrimination network
+	/// and starts the journey into the right side join network
+	/// </summary>
+	public class AlphaNode<TContext> :
+		ActivationNode<TContext>,
+		Activation<TContext>
 	{
-	}
+		readonly long _id;
 
+		public AlphaNode(long id)
+		{
+			_id = id;
+		}
 
-	public interface RouteMatch<out TContext> :
-		RouteMatch
-	{
-		TContext Context { get; }
+		public void Activate(RouteContext<TContext> context, string value)
+		{
+			context.AddRightActivation(_id);
+			context.AddAction(() => Next(context, value));
+		}
 	}
 }
