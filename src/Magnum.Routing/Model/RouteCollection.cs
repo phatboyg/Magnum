@@ -12,42 +12,44 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Routing.Model
 {
+	using System.Collections;
 	using System.Collections.Generic;
+	using Internals;
 
 
-	public class RouteDefinitionImpl :
-		RouteDefinition
+	class RouteCollection<T> :
+		IEnumerable<T>
 	{
-		readonly RouteParametersImpl _parameters;
-		readonly UriPattern _url;
-		readonly RouteVariablesImpl _variables;
+		readonly Cache<string, T> _values;
 
-		public RouteDefinitionImpl(string pattern, IEnumerable<RouteParameter> parameters,
-		                           IEnumerable<RouteVariable> variables)
+		public RouteCollection(KeySelector<string, T> keySelector, IEnumerable<T> parameters)
 		{
-			_url = new UriPattern(pattern);
-			_parameters = new RouteParametersImpl(parameters);
-			_variables = new RouteVariablesImpl(variables);
+			_values = new DictionaryCache<string, T>(keySelector, parameters);
 		}
 
-		public string Url
+		public T this[string name]
 		{
-			get { return _url.ToString(); }
+			get { return _values[name]; }
 		}
 
-		public RouteParameters Parameters
+		public string[] AllNames
 		{
-			get { return _parameters; }
+			get { return _values.GetAllKeys(); }
 		}
 
-		public RouteVariables Variables
+		public IEnumerator<T> GetEnumerator()
 		{
-			get { return _variables; }
+			return _values.GetEnumerator();
 		}
 
-		public override string ToString()
+		IEnumerator IEnumerable.GetEnumerator()
 		{
-			return _url.ToString();
+			return GetEnumerator();
+		}
+
+		public bool Has(string name)
+		{
+			return _values.Has(name);
 		}
 	}
 }

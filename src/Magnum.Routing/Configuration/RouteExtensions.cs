@@ -32,7 +32,7 @@ namespace Magnum.Routing
 
 		public static RouteConfigurator<T> To<T>(this RouteConfigurator<T> configurator, Action<T> callback)
 		{
-			configurator.UseBuilder(() => new DelegateRouteBuilder<T>(callback));
+			configurator.UseBuilder(definition => new DelegateRouteBuilder<T>(definition, callback));
 
 			return configurator;
 		}

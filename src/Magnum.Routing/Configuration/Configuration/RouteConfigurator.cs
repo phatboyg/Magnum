@@ -14,10 +14,11 @@ namespace Magnum.Routing.Configuration
 {
 	using System;
 	using Builders;
+	using Model;
 
 
 	public interface RouteConfigurator<TContext>
 	{
-		void UseBuilder(Func<RouteBuilder<TContext>> builderFactory);
+		void UseBuilder(Func<RouteDefinition,RouteBuilder<TContext>> builderFactory);
 	}
 }

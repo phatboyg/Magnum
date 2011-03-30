@@ -12,18 +12,8 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Routing.Model
 {
-	/// <summary>
-	/// The semantic model for a route definition
-	/// </summary>
-	public interface RouteDefinition
+	public interface ParameterConstraint
 	{
-		/// <summary>
-		/// Returns the Url pattern of the route
-		/// </summary>
-		string Url { get; }
-
-		RouteParameters Parameters { get; }
-
-		RouteVariables Variables { get; }
+		RouteParameter Parameter { get; }
 	}
 }

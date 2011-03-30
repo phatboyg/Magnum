@@ -13,15 +13,18 @@
 namespace Magnum.Routing.Builders
 {
 	using System;
+	using Model;
 
 
 	public class DelegateRouteBuilder<TContext> :
 		RouteBuilder<TContext>
 	{
+		readonly RouteDefinition _definition;
 		readonly Action<TContext> _callback;
 
-		public DelegateRouteBuilder(Action<TContext> callback)
+		public DelegateRouteBuilder(RouteDefinition definition, Action<TContext> callback)
 		{
+			_definition = definition;
 			_callback = callback;
 		}
 
