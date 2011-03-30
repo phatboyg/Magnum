@@ -61,8 +61,10 @@
     <Compile Include="DelegateRoute_Specs.cs" />
     <Compile Include="Match_Specs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StubRoute.cs" />
     <Compile Include="StubRouteHandler.cs" />
     <Compile Include="UriParsing\SimpleParsing_Specs.cs" />
+    <Compile Include="UriParsing\Splitting_Specs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Magnum.Routing\Magnum.Routing.csproj">

@@ -2,6 +2,7 @@ namespace Magnum.Routing.Specs
 {
 	using System;
 	using System.Linq;
+	using Model;
 	using Nodes;
 	using NUnit.Framework;
 	using TestFramework;
@@ -15,7 +16,7 @@ namespace Magnum.Routing.Specs
 		[Test]
 		public void FirstTestName()
 		{
-			var route = new RouteImpl<Uri>();
+			var route = new RouteNode<Uri>(new StubRoute<Uri>());
 
 			var joinNode = new JoinNode<Uri>(_id++, new ConstantNode<Uri>());
 			joinNode.Add(route);

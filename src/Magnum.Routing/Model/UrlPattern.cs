@@ -12,11 +12,15 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Routing.Model
 {
-	public class UriPattern
+	using System;
+
+
+	public class UrlPattern
 	{
+		static readonly Uri _segmentBase = new Uri("http://localhost/");
 		string _pattern;
 
-		public UriPattern(string pattern)
+		public UrlPattern(string pattern)
 		{
 			_pattern = pattern;
 		}
@@ -44,7 +48,7 @@ namespace Magnum.Routing.Model
 			_pattern = prefix.TrimEnd('/') + "/" + _pattern;
 		}
 
-		public bool Equals(UriPattern other)
+		public bool Equals(UrlPattern other)
 		{
 			if (ReferenceEquals(null, other))
 				return false;
@@ -59,9 +63,9 @@ namespace Magnum.Routing.Model
 				return false;
 			if (ReferenceEquals(this, obj))
 				return true;
-			if (obj.GetType() != typeof(UriPattern))
+			if (obj.GetType() != typeof(UrlPattern))
 				return false;
-			return Equals((UriPattern)obj);
+			return Equals((UrlPattern)obj);
 		}
 
 		public override int GetHashCode()
@@ -72,6 +76,11 @@ namespace Magnum.Routing.Model
 		public override string ToString()
 		{
 			return string.Format("{0}", _pattern);
+		}
+
+		public string[] GetSegments()
+		{
+			return new Uri(_segmentBase, _pattern).Segments;
 		}
 	}
 }

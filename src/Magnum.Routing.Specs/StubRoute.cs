@@ -1,4 +1,4 @@
-﻿// Copyright 2007-2010 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 //  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -10,24 +10,28 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing
+namespace Magnum.Routing.Specs
 {
-	using System.Collections.Generic;
-	using Nodes;
+	using System;
+	using Model;
 
 
-	public class RouteImpl<TContext> :
-		Route<TContext>,
-		Activation<TContext>
+	public class StubRoute<T> :
+		Route<T>
 	{
-		public void Activate(RouteContext<TContext> context, string value)
+		public string Url
 		{
-			context.AddRoute(this);
+			get { throw new NotImplementedException(); }
 		}
 
-		public IEnumerable<T> Match<T>() where T : class
+		public RouteParameters Parameters
 		{
-			yield break;
+			get { throw new NotImplementedException(); }
+		}
+
+		public RouteVariables Variables
+		{
+			get { throw new NotImplementedException(); }
 		}
 	}
 }

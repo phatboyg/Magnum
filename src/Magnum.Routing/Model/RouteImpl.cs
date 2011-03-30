@@ -15,17 +15,23 @@ namespace Magnum.Routing.Model
 	using System.Collections.Generic;
 
 
-	public class RouteDefinitionImpl :
-		RouteDefinition
+	public class RouteImpl :
+		Route
 	{
 		readonly RouteParametersImpl _parameters;
-		readonly UriPattern _url;
+		readonly UrlPattern _url;
 		readonly RouteVariablesImpl _variables;
 
-		public RouteDefinitionImpl(string pattern, IEnumerable<RouteParameter> parameters,
-		                           IEnumerable<RouteVariable> variables)
+		public RouteImpl(string pattern, IEnumerable<RouteParameter> parameters,
+		                 IEnumerable<RouteVariable> variables)
+			: this(new UrlPattern(pattern), parameters, variables)
 		{
-			_url = new UriPattern(pattern);
+		}
+
+		public RouteImpl(UrlPattern url, IEnumerable<RouteParameter> parameters,
+		                 IEnumerable<RouteVariable> variables)
+		{
+			_url = url;
 			_parameters = new RouteParametersImpl(parameters);
 			_variables = new RouteVariablesImpl(variables);
 		}
@@ -48,6 +54,22 @@ namespace Magnum.Routing.Model
 		public override string ToString()
 		{
 			return _url.ToString();
+		}
+	}
+
+
+	public class RouteImpl<TContext> :
+		RouteImpl,
+		Route<TContext>
+	{
+		public RouteImpl(string pattern, IEnumerable<RouteParameter> parameters, IEnumerable<RouteVariable> variables)
+			: base(pattern, parameters, variables)
+		{
+		}
+
+		public RouteImpl(UrlPattern url, IEnumerable<RouteParameter> parameters, IEnumerable<RouteVariable> variables)
+			: base(url, parameters, variables)
+		{
 		}
 	}
 }

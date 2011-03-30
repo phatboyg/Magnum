@@ -21,6 +21,8 @@ namespace Magnum.Routing.Model
 		RouteParameter this[string name] { get; }
 
 		string[] AllNames { get; }
+		
+		int Count { get; }
 
 		bool Has(string name);
 	}

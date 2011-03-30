@@ -24,14 +24,14 @@ namespace Magnum.Routing.Configuration
 		where TContext : class
 	{
 		readonly string _path;
-		Func<RouteDefinition, RouteBuilder<TContext>> _builderFactory;
+		Func<Route, RouteBuilder<TContext>> _builderFactory;
 
 		public RouteConfiguratorImpl(string path)
 		{
 			_path = path;
 		}
 
-		public void UseBuilder(Func<RouteDefinition, RouteBuilder<TContext>> builderFactory)
+		public void UseBuilder(Func<Route, RouteBuilder<TContext>> builderFactory)
 		{
 			_builderFactory = builderFactory;
 		}
@@ -39,10 +39,10 @@ namespace Magnum.Routing.Configuration
 		public void Configure(RoutingEngineBuilder<TContext> builder)
 		{
 			// this should build the route based on the path and configured route options
-			var routeDefinition = new RouteDefinitionImpl(_path, Enumerable.Empty<RouteParameter>(),
+			var route = new RouteImpl(_path, Enumerable.Empty<RouteParameter>(),
 			                                              Enumerable.Empty<RouteVariable>());
 
-			RouteBuilder<TContext> routeBuilder = _builderFactory(routeDefinition);
+			RouteBuilder<TContext> routeBuilder = _builderFactory(route);
 
 			// again, need to run configurators against the route for defaults, constraints, etc.
 			// depending upon the builder, many of these may be handled via types and default arguments

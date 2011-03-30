@@ -30,6 +30,11 @@ namespace Magnum.Routing
 			return parameters[expression.GetMemberName()];
 		}
 
+		public static Route ToRouteDefinition(this UrlPattern pattern)
+		{
+			return RouteFactory.Current.New(pattern);
+		}
+
 		static string GetMemberName<T>(this Expression<Func<T, object>> expression)
 		{
 			var body = expression.Body as MemberExpression;

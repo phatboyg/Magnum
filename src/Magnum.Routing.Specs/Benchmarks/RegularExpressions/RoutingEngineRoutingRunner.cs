@@ -16,6 +16,7 @@ namespace Magnum.Routing.Specs.Benchmarks.RegularExpressions
 	using System.Collections.Generic;
 	using System.Linq;
 	using Configuration;
+	using Model;
 	using Nodes;
 
 
@@ -45,7 +46,7 @@ namespace Magnum.Routing.Specs.Benchmarks.RegularExpressions
 		{
 			foreach (string path in paths)
 			{
-				var route = new RouteImpl<Uri>();
+				var route = new RouteNode<Uri>(new StubRoute<Uri>());
 
 				var joinNode = new JoinNode<Uri>(_id++, new ConstantNode<Uri>());
 				joinNode.Add(route);

@@ -12,16 +12,49 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Routing.Model
 {
+	using System.Collections;
 	using System.Collections.Generic;
+	using Internals;
 
 
 	class RouteVariablesImpl :
-		RouteCollection<RouteVariable>,
 		RouteVariables
 	{
+		Cache<string, RouteVariable> _values;
+
 		public RouteVariablesImpl(IEnumerable<RouteVariable> variables)
-			: base(x => x.Name, variables)
 		{
+			_values = new DictionaryCache<string, RouteVariable>(x => x.Name, variables);
+		}
+
+		public int Count
+		{
+			get { return _values.Count; }
+		}
+
+		public RouteVariable this[string name]
+		{
+			get { return _values[name]; }
+		}
+
+		public string[] AllNames
+		{
+			get { return _values.GetAllKeys(); }
+		}
+
+		public IEnumerator<RouteVariable> GetEnumerator()
+		{
+			return _values.GetEnumerator();
+		}
+
+		IEnumerator IEnumerable.GetEnumerator()
+		{
+			return GetEnumerator();
+		}
+
+		public bool Has(string name)
+		{
+			return _values.Has(name);
 		}
 	}
 }

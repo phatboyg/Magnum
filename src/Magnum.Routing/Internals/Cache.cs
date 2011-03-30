@@ -22,6 +22,7 @@ namespace Magnum.Routing.Internals
 		MissingValueProvider<TKey, TValue> MissingValueProvider { set; }
 		ValueAddedCallback<TKey, TValue> ValueAddedCallback { set; }
 		KeySelector<TKey, TValue> KeySelector { get; set; }
+		int Count { get; }
 
 		TValue this[TKey key] { get; set; }
 		TValue Get(TKey key);

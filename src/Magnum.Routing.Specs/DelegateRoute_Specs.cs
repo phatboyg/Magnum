@@ -12,10 +12,12 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Routing.Specs
 {
+	using NUnit.Framework;
 	using TestFramework;
 
 
 	[Scenario]
+	[Explicit("Not yet implemented")]
 	public class When_a_delegate_route_is_bound
 	{
 		bool _called;

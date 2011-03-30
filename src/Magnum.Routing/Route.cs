@@ -12,8 +12,16 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Routing
 {
+	using Model;
+
+
 	public interface Route
 	{
+		string Url { get; }
+
+		RouteParameters Parameters { get; }
+
+		RouteVariables Variables { get; }
 	}
 
 

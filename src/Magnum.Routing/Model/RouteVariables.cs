@@ -22,6 +22,8 @@ namespace Magnum.Routing.Model
 
 		string[] AllNames { get; }
 
+		int Count { get; }
+
 		bool Has(string name);
 	}
 }

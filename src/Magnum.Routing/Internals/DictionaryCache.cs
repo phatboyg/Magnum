@@ -103,6 +103,11 @@ namespace Magnum.Routing.Internals
 			set { _keySelector = value; }
 		}
 
+		public int Count
+		{
+			get { return _values.Count; }
+		}
+
 		public TValue this[TKey key]
 		{
 			get { return Get(key); }
