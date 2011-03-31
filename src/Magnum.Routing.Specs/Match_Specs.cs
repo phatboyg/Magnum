@@ -15,7 +15,8 @@ namespace Magnum.Routing.Specs
 	using System;
 	using System.Diagnostics;
 	using System.Linq;
-	using Nodes;
+	using Engine;
+	using Engine.Nodes;
 	using NUnit.Framework;
 	using TestFramework;
 

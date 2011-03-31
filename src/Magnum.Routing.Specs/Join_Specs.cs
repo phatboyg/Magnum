@@ -2,8 +2,9 @@ namespace Magnum.Routing.Specs
 {
 	using System;
 	using System.Linq;
+	using Engine;
+	using Engine.Nodes;
 	using Model;
-	using Nodes;
 	using NUnit.Framework;
 	using TestFramework;
 

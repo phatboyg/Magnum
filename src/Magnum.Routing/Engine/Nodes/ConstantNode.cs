@@ -10,28 +10,20 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing
+namespace Magnum.Routing.Engine.Nodes
 {
-	public class RouteMatchImpl<TContext> :
-		RouteMatch<TContext>
+	using System;
+
+
+	/// <summary>
+	/// A constant node is always activated and always invokes the callback on right activation
+	/// </summary>
+	public class ConstantNode<TContext> :
+		RightActivation<TContext>
 	{
-		readonly Route<TContext> _route;
-		readonly TContext _context;
-
-		public RouteMatchImpl(TContext context, Route<TContext> route)
+		public void RightActivate(RouteContext<TContext> context, Action<RouteContext> callback)
 		{
-			_context = context;
-			_route = route;
-		}
-
-		public Route<TContext> Route
-		{
-			get { return _route; }
-		}
-
-		public TContext Context
-		{
-			get { return _context; }
+			callback(context);
 		}
 	}
 }

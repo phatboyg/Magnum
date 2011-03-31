@@ -89,7 +89,7 @@
     <Reference Include="System.ServiceModel">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Threading">
+    <Reference Include="System.Threading" Condition="'$(TargetFrameworkVersion)' == 'v3.5'" >
       <HintPath>..\..\lib\Rx_Net35_SP1\System.Threading.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />

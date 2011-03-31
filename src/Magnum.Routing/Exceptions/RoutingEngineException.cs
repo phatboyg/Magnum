@@ -10,9 +10,33 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing.Nodes
+namespace Magnum.Routing
 {
-	public abstract class Node<TContext>
+	using System;
+	using System.Runtime.Serialization;
+
+
+	[Serializable]
+	public class RoutingEngineException :
+		RoutingException
 	{
+		public RoutingEngineException()
+		{
+		}
+
+		public RoutingEngineException(string message)
+			: base(message)
+		{
+		}
+
+		public RoutingEngineException(string message, Exception innerException)
+			: base(message, innerException)
+		{
+		}
+
+		protected RoutingEngineException(SerializationInfo info, StreamingContext context)
+			: base(info, context)
+		{
+		}
 	}
 }

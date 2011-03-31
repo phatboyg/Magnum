@@ -14,7 +14,8 @@ namespace Magnum.Routing
 {
 	using System.Collections.Generic;
 	using System.Linq;
-	using Nodes;
+	using Engine;
+	using Engine.Nodes;
 
 
 	public static class MatchExtensions

@@ -10,24 +10,11 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing
+namespace Magnum.Routing.Engine
 {
-	using System;
-
-
-	public interface RouteContext
+	public interface Token
 	{
-		string Segment(int position);
-	}
-
-
-	public interface RouteContext<TContext> :
-		RouteContext
-	{
-		TContext Context { get; }
-		void AddRightActivation(long id);
-		bool HasRightActivation(long id);
-		void AddRoute(Route<TContext> route);
-		void AddAction(Action action);
+		string Name { get; }
+		string Value { get; }
 	}
 }

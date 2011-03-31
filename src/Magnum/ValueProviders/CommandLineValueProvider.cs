@@ -54,10 +54,10 @@ namespace Magnum.ValueProviders
 		{
 			Dictionary<string, object> dictionary = elements.Where(x => x is IDefinitionElement)
 				.Cast<IDefinitionElement>()
-				.Select(x => new Tuple<string, object>(x.Key, x.Value))
+				.Select(x => new Magnum.Collections.Tuple<string, object>(x.Key, x.Value))
 				.Union(elements.Where(x => x is ISwitchElement)
 				       	.Cast<ISwitchElement>()
-				       	.Select(x => new Tuple<string, object>(x.Key, x.Value)))
+				       	.Select(x => new Magnum.Collections.Tuple<string, object>(x.Key, x.Value)))
 				.ToDictionary(x => x.First, x => x.Second, StringComparer.InvariantCultureIgnoreCase);
 
 			var provider = new DictionaryValueProvider(dictionary);

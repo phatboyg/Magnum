@@ -13,6 +13,7 @@
 namespace Magnum.Routing
 {
 	using System;
+	using Engine;
 
 
 	public static class DelegateBinder

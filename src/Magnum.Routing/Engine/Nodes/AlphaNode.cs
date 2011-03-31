@@ -10,34 +10,27 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing.Nodes
+namespace Magnum.Routing.Engine.Nodes
 {
 	/// <summary>
-	/// Matches a positional segment in the URI if it exists, and passes to the next condition
+	/// An alpha node marks the end of a branch in the left side discrimination network
+	/// and starts the journey into the right side join network
 	/// </summary>
-	public class SegmentNode<TContext> :
+	public class AlphaNode<TContext> :
 		ActivationNode<TContext>,
 		Activation<TContext>
 	{
-		readonly int _position;
+		readonly long _id;
 
-		public SegmentNode(int position)
+		public AlphaNode(long id)
 		{
-			_position = position;
-		}
-
-		public int Position
-		{
-			get { return _position; }
+			_id = id;
 		}
 
 		public void Activate(RouteContext<TContext> context, string value)
 		{
-			string segmentValue = context.Segment(_position);
-			if (segmentValue == null)
-				return;
-
-			Next(context, segmentValue);
+			context.AddRightActivation(_id);
+			context.AddAction(() => Next(context, value));
 		}
 	}
 }

@@ -10,13 +10,30 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing.Nodes
+namespace Magnum.Routing.Engine.Nodes
 {
 	using System;
 
 
-	public interface RightActivation<TContext>
+	public class EqualNode<TContext> :
+		DictionaryNode<TContext>,
+		Activation<TContext>
 	{
-		void RightActivate(RouteContext<TContext> context, Action<RouteContext> callback);
+		readonly Func<long> _generateId;
+
+		public EqualNode(Func<long> generateId)
+		{
+			_generateId = generateId;
+		}
+
+		public void Activate(RouteContext<TContext> context, string value)
+		{
+			Next(value, context, value);
+		}
+
+		public void Add(string value, Activation<TContext> activation)
+		{
+			Add(value, activation, _generateId);
+		}
 	}
 }

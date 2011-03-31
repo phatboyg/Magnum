@@ -10,16 +10,22 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing
+namespace Magnum.Routing.Engine
 {
-	public interface RouteMatch
+	/// <summary>
+	/// Used to pass tokens to the right in the RETE tree for use by the terminal nodes
+	/// A join node may pass a new list to the right containing multiple tokens
+	/// IE, a {controller}/{action} would join two segment alpha nodes and have a token
+	/// list with a controller and an action token
+	/// </summary>
+	public interface Tokens
 	{
-	}
+		Token this[string name] { get; }
 
+		string[] AllNames { get; }
 
-	public interface RouteMatch<out TContext> :
-		RouteMatch
-	{
-		TContext Context { get; }
+		int Count { get; }
+
+		bool Has(string name);
 	}
 }

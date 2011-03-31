@@ -10,16 +10,40 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing
+namespace Magnum.Routing.Engine
 {
-	public interface RouteMatch
-	{
-	}
+	using System.Collections.Generic;
+	using Internals;
 
 
-	public interface RouteMatch<out TContext> :
-		RouteMatch
+	class DictionaryTokens :
+		Tokens
 	{
-		TContext Context { get; }
+		readonly Cache<string, Token> _values;
+
+		public DictionaryTokens(IEnumerable<Token> parameters)
+		{
+			_values = new DictionaryCache<string, Token>(x => x.Name, parameters);
+		}
+
+		public Token this[string name]
+		{
+			get { return _values[name]; }
+		}
+
+		public string[] AllNames
+		{
+			get { return _values.GetAllKeys(); }
+		}
+
+		public int Count
+		{
+			get { return _values.Count; }
+		}
+
+		public bool Has(string name)
+		{
+			return _values.Has(name);
+		}
 	}
 }

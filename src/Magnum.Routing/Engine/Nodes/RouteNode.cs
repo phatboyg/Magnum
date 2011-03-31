@@ -10,46 +10,31 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing
+namespace Magnum.Routing.Engine.Nodes
 {
-	using System;
 	using System.Collections.Generic;
-	using Nodes;
 
 
-	public class MagnumRoutingEngine<TContext> :
-		RoutingEngine<TContext>
+	public class RouteNode<TContext> :
+		Activation<TContext>
 	{
-		readonly Func<TContext, Uri> _getUri;
-		readonly Activation<TContext> _network;
+		readonly Route<TContext> _route;
 
-		public MagnumRoutingEngine(Func<TContext, Uri> getUri)
+		public RouteNode(Route<TContext> route)
 		{
-			_getUri = getUri;
-			_network = new RootNode<TContext>();
+			_route = route;
 		}
 
-		public void Route(TContext context, Action<RouteMatch<TContext>> callback)
+		public void Activate(RouteContext<TContext> context, string value)
 		{
-			Uri uri = _getUri(context);
-
-			var routeContext = new RouteContextImpl<TContext>(context, uri);
-
-			_network.Activate(routeContext, uri.PathAndQuery);
-
-			routeContext.Resolve();
-
-			RouteMatch<TContext> matched = routeContext.Match;
-			if (matched == null)
-				return;
-
-			callback(matched);
+			context.AddRoute(_route);
 		}
 
 		public IEnumerable<T> Match<T>()
 			where T : class
 		{
-			return _network.Match<T>();
+			if (typeof(T) == GetType())
+				yield return this as T;
 		}
 	}
 }

@@ -16,8 +16,9 @@ namespace Magnum.Routing.Specs.Benchmarks.RegularExpressions
 	using System.Collections.Generic;
 	using System.Linq;
 	using Configuration;
+	using Engine;
+	using Engine.Nodes;
 	using Model;
-	using Nodes;
 
 
 	public class RoutingEngineRoutingRunner :

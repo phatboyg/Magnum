@@ -17,7 +17,7 @@ namespace Magnum.RulesEngine.ExecutionModel
 	using Reflection;
 
 	public class ConditionNormalizer :
-		ExpressionVisitor
+		Magnum.Reflection.ExpressionVisitor
 	{
 		public Expression Normalize(Expression expression)
 		{

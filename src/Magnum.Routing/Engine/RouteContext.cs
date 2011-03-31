@@ -1,4 +1,4 @@
-﻿// Copyright 2007-2010 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 //  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -10,19 +10,24 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing.Nodes
+namespace Magnum.Routing.Engine
 {
 	using System;
 
-	/// <summary>
-	/// A constant node is always activated and always invokes the callback on right activation
-	/// </summary>
-	public class ConstantNode<TContext> :
-		RightActivation<TContext>
+
+	public interface RouteContext
 	{
-		public void RightActivate(RouteContext<TContext> context, Action<RouteContext> callback)
-		{
-			callback(context);
-		}
+		string Segment(int position);
+	}
+
+
+	public interface RouteContext<TContext> :
+		RouteContext
+	{
+		TContext Context { get; }
+		void AddRightActivation(long id);
+		bool HasRightActivation(long id);
+		void AddRoute(Route<TContext> route);
+		void AddAction(Action action);
 	}
 }

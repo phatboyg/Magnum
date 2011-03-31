@@ -10,25 +10,9 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing.Nodes
+namespace Magnum.Routing.Engine.Nodes
 {
-	using System.Collections.Generic;
-
-
-	public interface Activation
+	public abstract class Node<TContext>
 	{
-		/// <summary>
-		/// Used to inspect the condition network to find matching conditions
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		IEnumerable<T> Match<T>()
-			where T : class;
-	}
-
-
-	public interface Activation<TContext> :
-		Activation
-	{
-		void Activate(RouteContext<TContext> context, string value);
 	}
 }

@@ -10,23 +10,21 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Routing
+namespace Magnum.Routing.Engine
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Linq;
 
 
 	public class RouteContextImpl<TContext> :
 		RouteContext<TContext>
 	{
+		readonly IList<Action> _actions;
+		readonly TContext _context;
+		readonly HashSet<long> _rights;
+		readonly IList<Route<TContext>> _routes;
 		readonly string[] _segments;
 		readonly Uri _uri;
-		IList<Action> _actions;
-		TContext _context;
-
-		HashSet<long> _rights;
-		IList<Route<TContext>> _routes;
 
 		public RouteContextImpl(TContext context, Uri uri)
 		{
@@ -90,9 +88,7 @@ namespace Magnum.Routing
 		public void Resolve()
 		{
 			for (int i = 0; i < _actions.Count; i++)
-			{
 				_actions[i]();
-			}
 		}
 	}
 }

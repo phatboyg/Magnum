@@ -15,6 +15,7 @@ namespace Magnum.Routing.Builders
 	using System;
 	using System.Collections.Generic;
 	using System.Linq.Expressions;
+	using Engine;
 
 
 	public class MagnumRoutingEngineBuilder<TContext> :

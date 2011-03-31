@@ -29,9 +29,7 @@ namespace Magnum.Routing
 		/// <summary>
 		/// Match a URI to the route defined in the routing engine
 		/// </summary>
-		/// <typeparam name="T">The context type to pass along with the routing request</typeparam>
 		/// <param name="context">The context to pass along with the routing request</param>
-		/// <param name="uri">The URI to route</param>
 		/// <param name="matchCallback">Callback called if a matching route is found</param>
 		void Route(TContext context, Action<RouteMatch<TContext>> matchCallback);
 	}
