@@ -99,6 +99,9 @@ task :compile => [:global_version, :build] do
 	targ = File.join(props[:output], "NHibernate")
 	copyOutputFiles File.join(props[:src], "Magnum.ForNHibernate/bin/#{BUILD_CONFIG}"), "Magnum.ForNHibernate.{dll,pdb,xml}", targ
 
+	targ = File.join(props[:output], "TestFramework")
+	copyOutputFiles File.join(props[:src], "Magnum.TestFramework/bin/#{BUILD_CONFIG}"), "Magnum.TestFramework.{dll,pdb,xml}", targ
+
 	targ = File.join(props[:output], "DebugVisualizer")
 	copyOutputFiles File.join(props[:src], "Magnum.Visualizers/bin/#{BUILD_CONFIG}"), "Magnum.Visualizers.dll", targ
 	copyOutputFiles File.join(props[:src], "Magnum.Visualizers/bin/#{BUILD_CONFIG}"), "Microsoft*dll", targ
