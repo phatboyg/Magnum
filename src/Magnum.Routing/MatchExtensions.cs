@@ -20,10 +20,11 @@ namespace Magnum.Routing
 
 	public static class MatchExtensions
 	{
-		public static IEnumerable<T> Match<T>(this IEnumerable<Activation> activations)
-			where T : class
+		public static IEnumerable<V> Match<T,V>(this IEnumerable<T> activations)
+			where V : class
+			where T : Activation
 		{
-			return activations.SelectMany(activation => activation.Match<T>());
+			return activations.SelectMany(activation => activation.Match<V>());
 		}
 
 		public static void Add<T>(this RoutingEngine<T> engine, Activation<T> activation)

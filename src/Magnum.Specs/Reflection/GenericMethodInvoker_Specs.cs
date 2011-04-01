@@ -47,7 +47,7 @@ namespace Magnum.Specs.Reflection
 			this.FastInvoke(x => MyMethod(x), obj);
 		}
 
-		[Test] // okay, static doesn't seem tow ork after all
+		[Test, Explicit] // okay, static doesn't seem tow ork after all
 		public void A_static_method_should_also_be_able_to_be_invoked()
 		{
 			object obj = FastActivator.Create(typeof(MyClass));

@@ -29,7 +29,7 @@ namespace Magnum.Routing.Specs
 		{
 			_engine.Match<SegmentNode<Uri>>()
 				.Where(x => x.Position == 1)
-				.Match<EqualNode<Uri>>()
+				.Match<SegmentNode<Uri>, EqualNode<Uri>>()
 				.Any()
 				.ShouldBeTrue();
 		}

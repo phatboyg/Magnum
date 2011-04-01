@@ -1,1 +1,2 @@
+Magnum.*
 log4net.dll

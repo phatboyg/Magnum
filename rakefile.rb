@@ -13,6 +13,7 @@ CLR_TOOLS_VERSION = 'v4.0.30319'
 
 BUILD_CONFIG = ENV['BUILD_CONFIG'] || "Release"
 BUILD_CONFIG_KEY = ENV['BUILD_CONFIG_KEY'] || 'NET40'
+BUILD_PLATFORM = ''
 TARGET_FRAMEWORK_VERSION = (BUILD_CONFIG_KEY == "NET40" ? "v4.0" : "v3.5")
 MSB_USE = (BUILD_CONFIG_KEY == "NET40" ? :net4 : :net35)
 OUTPUT_PATH = (BUILD_CONFIG_KEY == "NET40" ? 'net-4.0' : 'net-3.5')
@@ -50,10 +51,10 @@ desc "Cleans, compiles, il-merges, unit tests, prepares examples, packages zip a
 task :all => [:default, :package, :moma]
 
 desc "**Default**, compiles and runs tests"
-task :default => [:clean, :compile, :ilmerge, :tests, :prepare_examples]
+task :default => [:clean, :compile, :ilmerge, :tests]
 
 desc "**DOOES NOT CLEAR OUTPUT FOLDER**, compiles and runs tests"
-task :unclean => [:compile, :ilmerge, :tests, :prepare_examples]
+task :unclean => [:compile, :ilmerge, :tests]
 
 desc "Update the common version information for the build. You can call this task without building."
 assemblyinfo :global_version do |asm|
@@ -93,22 +94,30 @@ end
 desc "Cleans, versions, compiles the application and generates build_output/."
 task :compile => [:global_version, :build] do
 	puts 'Copying unmerged dependencies to output folder'
-#	copyOutputFiles File.join(props[:src], "Magnum/bin/#{BUILD_CONFIG}"), "log4net.{dll,pdb,xml,config}", props[:output]
 	copyOutputFiles File.join(props[:src], "Magnum.Routing/bin/#{BUILD_CONFIG}"), "Magnum.Routing.{dll,pdb,xml}", props[:output]
-#	copyOutputFiles File.join(props[:src], "Magnum/bin/#{BUILD_CONFIG}"), "Topshelf.Host.exe.config", props[:output]
+
+	targ = File.join(props[:output], "NHibernate")
+	copyOutputFiles File.join(props[:src], "Magnum.ForNHibernate/bin/#{BUILD_CONFIG}"), "Magnum.ForNHibernate.{dll,pdb,xml}", targ
+
+	targ = File.join(props[:output], "DebugVisualizer")
+	copyOutputFiles File.join(props[:src], "Magnum.Visualizers/bin/#{BUILD_CONFIG}"), "Magnum.Visualizers.dll", targ
+	copyOutputFiles File.join(props[:src], "Magnum.Visualizers/bin/#{BUILD_CONFIG}"), "Microsoft*dll", targ
+	copyOutputFiles File.join(props[:src], "Magnum.Visualizers/bin/#{BUILD_CONFIG}"), "QuickGraph*dll", targ
 end
 
 ilmerge :ilmerge do |ilm|
 	out = File.join(props[:output], 'Magnum.dll')
 	ilm.output = out
 	ilm.internalize = File.join(props[:build_support], 'internalize.txt')
-	ilm.working_directory = File.join(props[:src], "Magnum/bin/#{BUILD_CONFIG}")
+	ilm.working_directory = File.join(props[:src], "Magnum.FileSystem/bin/#{BUILD_CONFIG}")
 	ilm.target = :library
         ilm.use MSB_USE
-	ilm.log = File.join( props[:src], "Magnum","bin","#{BUILD_CONFIG}", 'ilmerge.log' )
+	ilm.log = File.join( props[:src], "Magnum.FileSystem","bin","#{BUILD_CONFIG}", 'ilmerge.log' )
 	ilm.allow_dupes = true
-	ilm.references = [ 'Magnum.dll', 'Magnum.FileSystem.dll', 'Ionic.Zip.dll', 'System.Threading.dll', 'Newtonsoft.Json.dll' ]
+	ilm.references = [ 'Magnum.dll', 'Magnum.FileSystem.dll', 'Ionic.Zip.dll', 'Newtonsoft.Json.dll' ]
+	ilm.references.push 'System.Threading.dll' unless BUILD_CONFIG_KEY == 'NET40'
 end
+
 
 #desc "Prepare examples"
 #task :prepare_examples => [:compile] do#
@@ -132,7 +141,8 @@ msbuild :build do |msb|
 	    :BuildConfigKey => BUILD_CONFIG_KEY,
 	    :TargetFrameworkVersion => TARGET_FRAMEWORK_VERSION,
 	    :Platform => 'Any CPU'
-	msb.use MSB_USE
+	msb.properties[:TargetFrameworkVersion] = TARGET_FRAMEWORK_VERSION unless BUILD_CONFIG_KEY == 'NET35'
+	msb.use :net4 #MSB_USE
 	msb.targets :Clean, :Build
 	msb.solution = 'src/Magnum.sln'
 end
@@ -144,7 +154,7 @@ def copyOutputFiles(fromDir, filePattern, outDir)
 	}
 end
 
-task :tests => [:unit_tests, :integration_tests, :perf_tests]
+task :tests => [:unit_tests]
 
 desc "Runs unit tests (integration tests?, acceptance-tests?) etc."
 task :unit_tests => [:compile] do
