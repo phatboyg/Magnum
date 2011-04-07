@@ -10,29 +10,47 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Algorithms
+namespace Magnum.Algorithms.Implementations
 {
 	using System;
 
 
-	public struct Edge<T> :
-		IComparable<Edge<T>>
-		where T : IComparable<T>
+	public class Node<T> :
+		IComparable<Node<T>>
 	{
-		public readonly Node<T> From;
-		public readonly Node<T> To;
-		public readonly int Weight;
+		public readonly T Value;
+		readonly int _index;
+		public int Index;
+		public int LowLink;
+		public bool Visited;
 
-		public Edge(Node<T> from, Node<T> to, int weight)
+		public Node(int index, T value)
 		{
-			From = from;
-			To = to;
-			Weight = weight;
+			_index = index;
+			Value = value;
+			Visited = false;
+			LowLink = -1;
+			Index = -1;
 		}
 
-		public int CompareTo(Edge<T> other)
+		public int CompareTo(Node<T> other)
 		{
-			return Weight - other.Weight;
+			return !Equals(null, this) ? 0 : -1;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj))
+				return false;
+			if (ReferenceEquals(this, obj))
+				return true;
+
+			return false;
+		}
+
+		public override int GetHashCode()
+		{
+			return _index;
 		}
 	}
 }

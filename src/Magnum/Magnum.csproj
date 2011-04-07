@@ -102,11 +102,14 @@
     <Compile Include="..\SolutionVersion.cs">
       <Link>SolutionVersion.cs</Link>
     </Compile>
-    <Compile Include="Algorithms\AdjacencyList.cs" />
-    <Compile Include="Algorithms\Edge.cs" />
-    <Compile Include="Algorithms\Node.cs" />
-    <Compile Include="Algorithms\Tarjan.cs" />
-    <Compile Include="Algorithms\TopologicalSort.cs" />
+    <Compile Include="Algorithms\DependencyGraph.cs" />
+    <Compile Include="Algorithms\Implementations\AdjacencyList.cs" />
+    <Compile Include="Algorithms\Implementations\Edge.cs" />
+    <Compile Include="Algorithms\Implementations\Node.cs" />
+    <Compile Include="Algorithms\Implementations\NodeList.cs" />
+    <Compile Include="Algorithms\Implementations\NodeTable.cs" />
+    <Compile Include="Algorithms\Implementations\Tarjan.cs" />
+    <Compile Include="Algorithms\Implementations\TopologicalSort.cs" />
     <Compile Include="Benchmark.cs" />
     <Compile Include="Extensions\ExtensionsToAction.cs" />
     <Compile Include="PerformanceCounters\CategoryConfiguration.cs" />

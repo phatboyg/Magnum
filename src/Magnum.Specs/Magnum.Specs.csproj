@@ -106,8 +106,11 @@
     <Compile Include="Activator\Benchmarks\NewActivatorRunner.cs" />
     <Compile Include="Activator\Benchmarks\SingleArgumentConstructorBenchmark.cs" />
     <Compile Include="Activator\Benchmarks\TwoArgumentConstructorBenchmark.cs" />
+    <Compile Include="Algorithms\DependencyGraph_Specs.cs" />
     <Compile Include="Algorithms\Edge_Specs.cs" />
-    <Compile Include="Algorithms\Tarjan_Specs.cs" />
+    <Compile Include="Algorithms\NodeList_Specs.cs" />
+    <Compile Include="Algorithms\NodeTable_Specs.cs" />
+    <Compile Include="Algorithms\Node_Specs.cs" />
     <Compile Include="Benchmarking\ConcatStringRunner.cs" />
     <Compile Include="Benchmarking\StringAppendBenchmark.cs" />
     <Compile Include="Benchmarking\StringAppendFormatBenchmark.cs" />

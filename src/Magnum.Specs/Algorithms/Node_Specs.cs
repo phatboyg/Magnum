@@ -12,39 +12,30 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Specs.Algorithms
 {
-	using System.Collections.Generic;
 	using Magnum.Algorithms;
 	using Magnum.Algorithms.Implementations;
 	using TestFramework;
 
 
 	[Scenario]
-	public class When_adding_two_matching_edges_to_a_hashset
+	public class When_comparing_nodes
 	{
-		HashSet<Edge<int>> _hashset;
-		NodeList<int> _nodeList;
-
-		[When]
-		public void Adding_two_matching_edges_to_a_hashset()
+		[Then]
+		public void Two_identical_references_should_match()
 		{
-			_hashset = new HashSet<Edge<int>>();
-			_nodeList = new NodeList<int>();
+			var node1 = new Node<string>(1, "A");
+			Node<string> node2 = node1;
 
-			Node<int> node1 = _nodeList[27];
-			Node<int> node2 = _nodeList[42];
-
-			var edge1 = new Edge<int>(node1, node2, 100);
-			var edge2 = new Edge<int>(node1, node2, 100);
-
-			_hashset.Add(edge1);
-			_hashset.Add(edge2);
+			node2.ShouldEqual(node1);
 		}
 
-
 		[Then]
-		public void Should_only_have_one_edge_in_the_hashset()
+		public void Two_different_references_should_not_be_equal()
 		{
-			_hashset.Count.ShouldEqual(1);
+			var node1 = new Node<string>(1, "A");
+			var node2 = new Node<string>(1, "A");
+
+			node2.ShouldNotEqual(node1);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-// Copyright 2007-2010 The Apache Software Foundation.
+﻿// Copyright 2007-2010 The Apache Software Foundation.
 //  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -10,14 +10,13 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Algorithms
+namespace Magnum.Algorithms.Implementations
 {
 	using System;
 	using System.Collections.Generic;
 
 
 	public class Tarjan<T>
-		where T : IComparable<T>
 	{
 		int _index;
 		IList<IList<Node<T>>> _scc;
@@ -30,7 +29,14 @@ namespace Magnum.Algorithms
 			_stack = new Stack<Node<T>>();
 		}
 
-		public IList<IList<Node<T>>> Run(Node<T> v, AdjacencyList<T> list)
+		public IList<IList<Node<T>>> Run(T vx, AdjacencyList<T> list)
+		{
+			Node<T> v = list.GetNode(vx);
+
+			return Run(v, list);
+		}
+
+		IList<IList<Node<T>>> Run(Node<T> v, AdjacencyList<T> list)
 		{
 			v.Index = _index;
 			v.LowLink = _index;
@@ -38,7 +44,7 @@ namespace Magnum.Algorithms
 
 			_stack.Push(v);
 
-			foreach (Edge<T> edge in list[v])
+			foreach (Edge<T> edge in list[v.Value])
 			{
 				Node<T> n = edge.To;
 				if (n.Index == -1)
@@ -59,9 +65,9 @@ namespace Magnum.Algorithms
 					n = _stack.Pop();
 					component.Add(n);
 				}
-				while (!n.Equals(v));
+				while (!v.Equals(n));
 
-				if(component.Count != 1 || !component[0].Equals(v))
+				if(component.Count != 1 || !v.Equals(component[0]))
 					_scc.Add(component);
 			}
 
