@@ -13,37 +13,57 @@
 namespace Magnum.Algorithms.Implementations
 {
 	using System.Collections.Generic;
+	using System.Linq;
 
 
-	public class TopologicalSort<T>
+	public class TopologicalSort<T, TNode>
+		where TNode : Node<T>, TopologicalSortNodeProperties
 	{
-		readonly AdjacencyList<T> _list;
-		readonly IList<T> _results;
+		readonly AdjacencyList<T, TNode> _list;
+		readonly IList<TNode> _results;
+		IEnumerable<TNode> _sourceNodes;
 
-		public TopologicalSort(AdjacencyList<T> list)
+		public TopologicalSort(AdjacencyList<T, TNode> list)
 		{
 			_list = list;
-			_results = new List<T>();
+			_results = new List<TNode>();
+			_sourceNodes = _list.SourceNodes;
+
+			Sort();
 		}
 
-		public IEnumerable<T> Sort()
+		public TopologicalSort(AdjacencyList<T, TNode> list, T source)
 		{
-			foreach (var node in _list.GetSourceNodes())
+			_list = list;
+			_results = new List<TNode>();
+
+			var sourceNode = list.GetNode(source);
+			_sourceNodes = Enumerable.Repeat(sourceNode, 1);
+
+			Sort();
+		}
+
+		public IEnumerable<TNode> Result
+		{
+			get { return _results; }
+		}
+
+		void Sort()
+		{
+			foreach (TNode node in _sourceNodes)
 			{
 				if (!node.Visited)
-					Sort(node.Value);
+					Sort(node);
 			}
-
-			return _results;
 		}
 
-		void Sort(T node)
+		void Sort(TNode node)
 		{
-			_list.GetNode(node).Visited = true;
-			foreach (var edge in _list[node])
+			node.Visited = true;
+			foreach (var edge in _list.GetEdges(node))
 			{
-				if (!edge.To.Visited)
-					Sort(edge.To.Value);
+				if (!edge.Target.Visited)
+					Sort(edge.Target);
 			}
 
 			_results.Add(node);

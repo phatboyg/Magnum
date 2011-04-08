@@ -15,16 +15,22 @@ namespace Magnum.Algorithms
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Text;
 	using Implementations;
 
 
 	public class DependencyGraph<T>
 	{
-		AdjacencyList<T> _adjacencyList;
+		readonly AdjacencyList<T, DependencyGraphNode<T>> _adjacencyList;
 
 		public DependencyGraph()
 		{
-			_adjacencyList = new AdjacencyList<T>();
+			_adjacencyList = new AdjacencyList<T, DependencyGraphNode<T>>(DefaultNodeFactory);
+		}
+
+		static DependencyGraphNode<T> DefaultNodeFactory(int index, T value)
+		{
+			return new DependencyGraphNode<T>(index, value);
 		}
 
 		public void Add(T source, T target)
@@ -36,19 +42,42 @@ namespace Magnum.Algorithms
 		{
 			EnsureGraphIsAcyclic();
 
-			var sort = new TopologicalSort<T>(_adjacencyList);
-			return sort.Sort();
+			var sort = new TopologicalSort<T, DependencyGraphNode<T>>(_adjacencyList.Clone());
+			
+			return sort.Result.Select(x => x.Value);
+		}
+
+		public IEnumerable<T> GetItemsInDependencyOrder(T source)
+		{
+			EnsureGraphIsAcyclic();
+
+			var sort = new TopologicalSort<T, DependencyGraphNode<T>>(_adjacencyList.Clone(), source);
+			
+			return sort.Result.Select(x => x.Value);
 		}
 
 		void EnsureGraphIsAcyclic()
 		{
-			var tarjan = new Tarjan<T>();
-			IList<IList<Node<T>>> cycles = tarjan.Run(_adjacencyList.GetSourceNodes().First().Value, _adjacencyList);
+			var tarjan = new Tarjan<T, DependencyGraphNode<T>>(_adjacencyList);
 
-			if (cycles.Count == 0)
+			if (tarjan.Result.Count == 0)
 				return;
 
-			throw new InvalidOperationException("The dependency graph cannot have any cycles");
+			StringBuilder message = new StringBuilder();
+			foreach (var cycle in tarjan.Result)
+			{
+				message.Append("(");
+				for (int i = 0; i < cycle.Count; i++)
+				{
+					if (i > 0)
+						message.Append(",");
+
+					message.Append(cycle[i].Value);
+				}
+				message.Append(")");
+			}
+
+			throw new InvalidOperationException("The dependency graph contains cycles: " + message);
 		}
 	}
 }

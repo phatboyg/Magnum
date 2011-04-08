@@ -13,7 +13,6 @@
 namespace Magnum.Specs.Algorithms
 {
 	using System.Collections.Generic;
-	using Magnum.Algorithms;
 	using Magnum.Algorithms.Implementations;
 	using TestFramework;
 
@@ -21,20 +20,20 @@ namespace Magnum.Specs.Algorithms
 	[Scenario]
 	public class When_adding_two_matching_edges_to_a_hashset
 	{
-		HashSet<Edge<int>> _hashset;
-		NodeList<int> _nodeList;
+		HashSet<Edge<int, Node<int>>> _hashset;
+		NodeList<int, Node<int>> _nodeList;
 
 		[When]
 		public void Adding_two_matching_edges_to_a_hashset()
 		{
-			_hashset = new HashSet<Edge<int>>();
-			_nodeList = new NodeList<int>();
+			_hashset = new HashSet<Edge<int, Node<int>>>();
+			_nodeList = new NodeList<int, Node<int>>((index, value) => new Node<int>(index, value));
 
 			Node<int> node1 = _nodeList[27];
 			Node<int> node2 = _nodeList[42];
 
-			var edge1 = new Edge<int>(node1, node2, 100);
-			var edge2 = new Edge<int>(node1, node2, 100);
+			var edge1 = new Edge<int, Node<int>>(node1, node2, 100);
+			var edge2 = new Edge<int, Node<int>>(node1, node2, 100);
 
 			_hashset.Add(edge1);
 			_hashset.Add(edge2);

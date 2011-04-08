@@ -12,63 +12,66 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Algorithms.Implementations
 {
+	using System;
 	using System.Collections.Generic;
 
 
-	public class AdjacencyList<T>
+	public class AdjacencyList<T, TNode>
+		where TNode : Node<T>
 	{
-		IDictionary<Node<T>, HashSet<Edge<T>>> _adjacencies;
-		NodeList<T> _nodeList;
-		
+		readonly Func<int, T, TNode> _nodeFactory;
+		IDictionary<TNode, HashSet<Edge<T, TNode>>> _adjacencies;
+		readonly NodeList<T, TNode> _nodeList;
 
-		public AdjacencyList()
+
+		public AdjacencyList(Func<int, T, TNode> nodeFactory)
 		{
-			_nodeList = new NodeList<T>();
-			_adjacencies = new Dictionary<Node<T>, HashSet<Edge<T>>>();
+			_nodeFactory = nodeFactory;
+			_nodeList = new NodeList<T, TNode>(nodeFactory);
+			_adjacencies = new Dictionary<TNode, HashSet<Edge<T, TNode>>>();
 		}
 
+		public HashSet<Edge<T, TNode>> GetEdges(TNode index)
+		{
+			HashSet<Edge<T, TNode>> edges;
+			if (_adjacencies.TryGetValue(index, out edges))
+				return edges;
+
+			return new HashSet<Edge<T, TNode>>();
+		}
+
+		public HashSet<Edge<T, TNode>> GetEdges(T index)
+		{
+			return GetEdges(_nodeList[index]);
+		}
 
 		public void AddEdge(T source, T target, int weight)
 		{
-			Node<T> sourceNode = _nodeList[source];
-			Node<T> targetNode = _nodeList[target];
+			TNode sourceNode = _nodeList[source];
+			TNode targetNode = _nodeList[target];
 
 			AddEdge(sourceNode, targetNode, weight);
 		}
 
-		void AddEdge(Node<T> source, Node<T> target, int weight)
+		public void AddEdge(TNode source, TNode target, int weight)
 		{
-			HashSet<Edge<T>> edges;
+			HashSet<Edge<T, TNode>> edges;
 			if (!_adjacencies.TryGetValue(source, out edges))
 			{
-				edges = new HashSet<Edge<T>>();
+				edges = new HashSet<Edge<T, TNode>>();
 				_adjacencies.Add(source, edges);
 			}
 
-			edges.Add(new Edge<T>(source, target, weight));
+			edges.Add(new Edge<T, TNode>(source, target, weight));
 		}
 
-		public HashSet<Edge<T>> this[T index]
+		public void ReverseEdge(Edge<T, TNode> edge)
 		{
-			get
-			{
-				var indexNode = _nodeList[index];
-
-				HashSet<Edge<T>> edges;
-				if (_adjacencies.TryGetValue(indexNode, out edges))
-					return edges;
-
-				return new HashSet<Edge<T>>();
-			}
-		}
-
-		public void ReverseEdge(Edge<T> edge)
-		{
-			HashSet<Edge<T>> edges;
-			if (_adjacencies.TryGetValue(edge.From, out edges))
+			HashSet<Edge<T, TNode>> edges;
+			if (_adjacencies.TryGetValue(edge.Source, out edges))
 				edges.Remove(edge);
 
-			AddEdge(edge.To, edge.From, edge.Weight);
+			AddEdge(edge.Target, edge.Source, edge.Weight);
 		}
 
 		public void ReverseList()
@@ -76,26 +79,43 @@ namespace Magnum.Algorithms.Implementations
 			_adjacencies = Reverse()._adjacencies;
 		}
 
-		public AdjacencyList<T> Reverse()
+		public AdjacencyList<T, TResultNode> Transform<TResultNode>(Func<int, T, TResultNode> nodeFactory)
+			where TResultNode : Node<T>
 		{
-			AdjacencyList<T> result = new AdjacencyList<T>();
+			var result = new AdjacencyList<T, TResultNode>(nodeFactory);
+
 			foreach (var adjacency in _adjacencies.Values)
 			{
 				foreach (var edge in adjacency)
-				{
-					result.AddEdge(edge.To, edge.From, edge.Weight);
-				}
+					result.AddEdge(edge.Source.Value, edge.Target.Value, edge.Weight);
 			}
 
 			return result;
 		}
 
-		public ICollection<Node<T>> GetSourceNodes()
+		public AdjacencyList<T, TNode> Clone()
 		{
-			return _adjacencies.Keys; 
+			return Transform(_nodeFactory);
 		}
 
-		public Node<T> GetNode(T key)
+		public AdjacencyList<T, TNode> Reverse()
+		{
+			var result = new AdjacencyList<T, TNode>(_nodeFactory);
+			foreach (var adjacency in _adjacencies.Values)
+			{
+				foreach (var edge in adjacency)
+					result.AddEdge(edge.Target.Value, edge.Source.Value, edge.Weight);
+			}
+
+			return result;
+		}
+
+		public ICollection<TNode> SourceNodes
+		{
+			get { return _adjacencies.Keys; }
+		}
+
+		public TNode GetNode(T key)
 		{
 			return _nodeList[key];
 		}

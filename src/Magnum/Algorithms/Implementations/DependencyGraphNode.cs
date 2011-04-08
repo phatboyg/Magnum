@@ -12,35 +12,44 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Algorithms.Implementations
 {
-	public class Node<T>
+	using System;
+
+
+	public class DependencyGraphNode<T> :
+		Node<T>,
+		TopologicalSortNodeProperties,
+		TarjanNodeProperties,
+		IComparable<DependencyGraphNode<T>>
 	{
-		public readonly T Value;
-		readonly int _index;
+		public int Index;
+		public int LowLink;
+		public bool Visited;
 
-		public Node(int index, T value)
+		public DependencyGraphNode(int index, T value)
+			: base(index, value)
 		{
-			_index = index;
-			Value = value;
+			Visited = false;
+			LowLink = -1;
+			Index = -1;
 		}
 
-		public int CompareTo(DependencyGraphNode<T> other)
+
+		int TarjanNodeProperties.Index
 		{
-			return !Equals(other) ? 0 : -1;
+			get { return Index; }
+			set { Index = value; }
 		}
 
-		public override bool Equals(object obj)
+		int TarjanNodeProperties.LowLink
 		{
-			if (ReferenceEquals(null, obj))
-				return false;
-			if (ReferenceEquals(this, obj))
-				return true;
-
-			return false;
+			get { return LowLink; }
+			set { LowLink = value; }
 		}
 
-		public override int GetHashCode()
+		bool TopologicalSortNodeProperties.Visited
 		{
-			return _index;
+			get { return Visited; }
+			set { Visited = value; }
 		}
 	}
 }

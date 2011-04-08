@@ -13,7 +13,6 @@
 namespace Magnum.Specs.Algorithms
 {
 	using System;
-	using Magnum.Algorithms;
 	using Magnum.Algorithms.Implementations;
 	using TestFramework;
 
@@ -29,6 +28,7 @@ namespace Magnum.Specs.Algorithms
 			NodeList = new NodeList<T>();
 		}
 	}
+
 
 	[Scenario]
 	public class Adding_the_same_node_to_a_node_list :
@@ -67,8 +67,8 @@ namespace Magnum.Specs.Algorithms
 		[Then]
 		public void Should_return_the_same_index()
 		{
-			Uri firstUri = new Uri("http://localhost/");
-			Uri secondUri = new Uri("http://localhost/");
+			var firstUri = new Uri("http://localhost/");
+			var secondUri = new Uri("http://localhost/");
 
 			Node<Uri> first = NodeList[firstUri];
 			Node<Uri> second = NodeList[secondUri];

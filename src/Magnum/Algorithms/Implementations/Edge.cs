@@ -15,21 +15,22 @@ namespace Magnum.Algorithms.Implementations
 	using System;
 
 
-	public struct Edge<T> :
-		IComparable<Edge<T>>
+	public struct Edge<T, TNode> :
+		IComparable<Edge<T, TNode>>
+		where TNode : Node<T>
 	{
-		public readonly Node<T> From;
-		public readonly Node<T> To;
+		public readonly TNode Source;
+		public readonly TNode Target;
 		public readonly int Weight;
 
-		public Edge(Node<T> from, Node<T> to, int weight)
+		public Edge(TNode source, TNode target, int weight)
 		{
-			From = from;
-			To = to;
+			Source = source;
+			Target = target;
 			Weight = weight;
 		}
 
-		public int CompareTo(Edge<T> other)
+		public int CompareTo(Edge<T, TNode> other)
 		{
 			return Weight - other.Weight;
 		}

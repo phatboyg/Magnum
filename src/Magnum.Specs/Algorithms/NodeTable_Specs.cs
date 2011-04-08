@@ -13,7 +13,6 @@
 namespace Magnum.Specs.Algorithms
 {
 	using System;
-	using Magnum.Algorithms;
 	using Magnum.Algorithms.Implementations;
 	using TestFramework;
 

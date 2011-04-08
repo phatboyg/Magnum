@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Specs.Algorithms
 {
-	using Magnum.Algorithms;
 	using Magnum.Algorithms.Implementations;
 	using TestFramework;
 
@@ -23,8 +22,8 @@ namespace Magnum.Specs.Algorithms
 		[Then]
 		public void Two_identical_references_should_match()
 		{
-			var node1 = new Node<string>(1, "A");
-			Node<string> node2 = node1;
+			var node1 = new DependencyGraphNode<string>(1, "A");
+			DependencyGraphNode<string> node2 = node1;
 
 			node2.ShouldEqual(node1);
 		}
@@ -32,8 +31,8 @@ namespace Magnum.Specs.Algorithms
 		[Then]
 		public void Two_different_references_should_not_be_equal()
 		{
-			var node1 = new Node<string>(1, "A");
-			var node2 = new Node<string>(1, "A");
+			var node1 = new DependencyGraphNode<string>(1, "A");
+			var node2 = new DependencyGraphNode<string>(1, "A");
 
 			node2.ShouldNotEqual(node1);
 		}

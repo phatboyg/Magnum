@@ -45,6 +45,67 @@ namespace Magnum.Specs.Algorithms
 	}
 
 	[Scenario]
+	public class Adding_unrelated_items_to_a_dependency_graph
+	{
+		DependencyGraph<string> _dependencyGraph;
+
+		[When]
+		public void Items_are_added_to_a_dependency_graph()
+		{
+			_dependencyGraph = new DependencyGraph<string>();
+
+			_dependencyGraph.Add("A", "B");
+			_dependencyGraph.Add("B", "C");
+			_dependencyGraph.Add("D", "E");
+		}
+
+		[Then]
+		public void Items_should_be_in_dependent_order()
+		{
+			_dependencyGraph.GetItemsInDependencyOrder("A")
+				.ShouldEqual(new[] { "C", "B", "A" });
+		}
+
+		[Then]
+		public void Other_items_should_also_be_in_order()
+		{
+			_dependencyGraph.GetItemsInDependencyOrder("D")
+				.ShouldEqual(new[] { "E", "D" });
+		}
+
+		[Then]
+		public void Items_without_dependencies_should_be_present()
+		{
+			_dependencyGraph.GetItemsInDependencyOrder("E")
+				.ShouldEqual(new[] { "E" });
+		}
+	}
+
+	[Scenario]
+	public class When_adding_a_disconnected_loop_to_the_graph
+	{
+		DependencyGraph<string> _dependencyGraph;
+
+		[When]
+		public void Adding_a_disconnected_loop_to_the_graph()
+		{
+			_dependencyGraph = new DependencyGraph<string>();
+
+			_dependencyGraph.Add("A", "B");
+			_dependencyGraph.Add("B", "C");
+			_dependencyGraph.Add("D", "E");
+			_dependencyGraph.Add("E", "F");
+			_dependencyGraph.Add("F", "D");
+		}
+
+		[Then]
+		public void An_exception_should_be_thrown()
+		{
+			Assert.Throws<InvalidOperationException>(() => _dependencyGraph.GetItemsInDependencyOrder());
+		}
+	}
+
+	[Scenario]
 	public class When_complex_items_are_added_to_a_dependency_graph
 	{
 		IEnumerable<string> _dependencyOrder;
@@ -109,7 +170,7 @@ namespace Magnum.Specs.Algorithms
 		{
 			_dependencyGraph = new DependencyGraph<int>();
 
-			for (int i = 0; i < 10000; i++)
+			for (int i = 0; i < 1000; i++)
 			{
 				_dependencyGraph.Add(i, i + 1);
 			}
@@ -118,7 +179,7 @@ namespace Magnum.Specs.Algorithms
 		[Then]
 		public void Items_should_be_in_dependent_order()
 		{
-			_dependencyGraph.GetItemsInDependencyOrder().ShouldEqual(Enumerable.Range(0,10001).Reverse());
+			_dependencyGraph.GetItemsInDependencyOrder().ShouldEqual(Enumerable.Range(0,1001).Reverse());
 		}
 	}
 }

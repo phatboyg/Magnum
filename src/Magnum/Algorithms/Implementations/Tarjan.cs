@@ -16,27 +16,36 @@ namespace Magnum.Algorithms.Implementations
 	using System.Collections.Generic;
 
 
-	public class Tarjan<T>
+	public class Tarjan<T, TNode>
+		where TNode : Node<T>, TarjanNodeProperties
 	{
+		readonly AdjacencyList<T, TNode> _list;
+		readonly IList<IList<TNode>> _result;
+		readonly Stack<TNode> _stack;
 		int _index;
-		IList<IList<Node<T>>> _scc;
-		Stack<Node<T>> _stack;
 
-		public Tarjan()
+		public Tarjan(AdjacencyList<T, TNode> list)
 		{
+			_list = list;
 			_index = 0;
-			_scc = new List<IList<Node<T>>>();
-			_stack = new Stack<Node<T>>();
+			_result = new List<IList<TNode>>();
+			_stack = new Stack<TNode>();
+
+			foreach (TNode node in _list.SourceNodes)
+			{
+				if (node.Index != -1)
+					continue;
+
+				Compute(node);
+			}
 		}
 
-		public IList<IList<Node<T>>> Run(T vx, AdjacencyList<T> list)
+		public IList<IList<TNode>> Result
 		{
-			Node<T> v = list.GetNode(vx);
-
-			return Run(v, list);
+			get { return _result; }
 		}
 
-		IList<IList<Node<T>>> Run(Node<T> v, AdjacencyList<T> list)
+		void Compute(TNode v)
 		{
 			v.Index = _index;
 			v.LowLink = _index;
@@ -44,12 +53,12 @@ namespace Magnum.Algorithms.Implementations
 
 			_stack.Push(v);
 
-			foreach (Edge<T> edge in list[v.Value])
+			foreach (var edge in _list.GetEdges(v))
 			{
-				Node<T> n = edge.To;
+				TNode n = edge.Target;
 				if (n.Index == -1)
 				{
-					Run(n, list);
+					Compute(n);
 					v.LowLink = Math.Min(v.LowLink, n.LowLink);
 				}
 				else if (_stack.Contains(n))
@@ -58,8 +67,8 @@ namespace Magnum.Algorithms.Implementations
 
 			if (v.LowLink == v.Index)
 			{
-				Node<T> n;
-				IList<Node<T>> component = new List<Node<T>>();
+				TNode n;
+				IList<TNode> component = new List<TNode>();
 				do
 				{
 					n = _stack.Pop();
@@ -67,11 +76,9 @@ namespace Magnum.Algorithms.Implementations
 				}
 				while (!v.Equals(n));
 
-				if(component.Count != 1 || !v.Equals(component[0]))
-					_scc.Add(component);
+				if (component.Count != 1 || !v.Equals(component[0]))
+					_result.Add(component);
 			}
-
-			return _scc;
 		}
 	}
 }
