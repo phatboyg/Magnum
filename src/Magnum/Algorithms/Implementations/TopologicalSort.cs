@@ -16,12 +16,13 @@ namespace Magnum.Algorithms.Implementations
 	using System.Linq;
 
 
+
 	public class TopologicalSort<T, TNode>
 		where TNode : Node<T>, TopologicalSortNodeProperties
 	{
 		readonly AdjacencyList<T, TNode> _list;
 		readonly IList<TNode> _results;
-		IEnumerable<TNode> _sourceNodes;
+		readonly IEnumerable<TNode> _sourceNodes;
 
 		public TopologicalSort(AdjacencyList<T, TNode> list)
 		{
@@ -37,7 +38,7 @@ namespace Magnum.Algorithms.Implementations
 			_list = list;
 			_results = new List<TNode>();
 
-			var sourceNode = list.GetNode(source);
+			TNode sourceNode = list.GetNode(source);
 			_sourceNodes = Enumerable.Repeat(sourceNode, 1);
 
 			Sort();
