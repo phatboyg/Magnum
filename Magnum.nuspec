@@ -10,7 +10,12 @@
     <projectUrl>https://github.com/phatboyg/Magnum</projectUrl>
   </metadata> 
   <files>
-    <file src="build_output\**\*" target="lib" />
+    <file src="build_output\net-3.5\Magnum.dll" target="lib\NET35" />
+    <file src="build_output\net-3.5\Magnum.xml" target="lib\NET35" />
+    <file src="build_output\net-3.5\Magnum.pdb" target="lib\NET35" />
+    <file src="build_output\net-4.0\Magnum.dll" target="lib\NET40" />
+    <file src="build_output\net-4.0\Magnum.xml" target="lib\NET40" />
+    <file src="build_output\net-4.0\Magnum.pdb" target="lib\NET40" />
   </files>
 </package>
 
