@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 //  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -14,9 +14,16 @@ namespace Magnum.Extensions
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Text;
+
 
 	public static class ExtensionsToTimeSpan
 	{
+		static TimeSpan _day = TimeSpan.FromDays(1);
+		static TimeSpan _hour = TimeSpan.FromHours(1);
+		static TimeSpan _month = TimeSpan.FromDays(30);
+		static TimeSpan _year = TimeSpan.FromDays(365);
+
 		/// <summary>
 		/// Creates a TimeSpan for the specified number of weeks
 		/// </summary>
@@ -66,6 +73,7 @@ namespace Magnum.Extensions
 		{
 			return TimeSpan.FromSeconds(value);
 		}
+
 		public static TimeSpan Seconds(this double value)
 		{
 			return TimeSpan.FromSeconds(value);
@@ -90,9 +98,51 @@ namespace Magnum.Extensions
 		public static IEnumerable<TimeSpan> Repeat(this TimeSpan value, int times)
 		{
 			for (int i = 0; i < times; i++)
-			{
 				yield return value;
-			}
+		}
+
+		public static string ToFriendlyString(this TimeSpan ts)
+		{
+			if (ts.Equals(_month))
+				return "1M";
+			if (ts.Equals(_year))
+				return "1y";
+			if (ts.Equals(_day))
+				return "1d";
+			if (ts.Equals(_hour))
+				return "1h";
+
+			var sb = new StringBuilder();
+
+			int years = ts.Days/365;
+			int months = (ts.Days%365)/30;
+			int weeks = ((ts.Days%365)%30)/7;
+			int days = (((ts.Days%365)%30)%7);
+
+			var parts = new List<string>();
+
+			if (years > 0)
+				sb.Append(years).Append("y");
+
+			if (months > 0)
+				sb.Append(months).Append("M");
+
+			if (weeks > 0)
+				sb.Append(weeks).Append("w");
+
+			if (days > 0)
+				sb.Append(days).Append("d");
+
+			if (ts.Hours > 0)
+				sb.Append(ts.Hours).Append("h");
+			if (ts.Minutes > 0)
+				sb.Append(ts.Minutes).Append("m");
+			if (ts.Seconds > 0)
+				sb.Append(ts.Seconds).Append("s");
+			if (ts.Milliseconds > 0)
+				sb.Append(ts.Milliseconds).Append("ms");
+
+			return sb.ToString();
 		}
 	}
 }

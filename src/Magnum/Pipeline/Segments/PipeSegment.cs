@@ -115,26 +115,6 @@ namespace Magnum.Pipeline.Segments
         	return new MessageConsumerSegment<TMessage>(typeof(TConsumer), () => getConsumer());
         }
 
-        public static AsyncMessageConsumerSegment AsyncConsumer<TConsumer, TMessage>(TConsumer consumer)
-			where TConsumer : IAsyncConsumer<TMessage>
-            where TMessage : class
-        {
-            return new AsyncMessageConsumerSegment<TConsumer, TMessage>(consumer);
-        }
-
-		public static AsyncMessageConsumerSegment AsyncConsumer<TConsumer, TMessage>(Func<TConsumer> getConsumer)
-			where TConsumer : IAsyncConsumer<TMessage>
-            where TMessage : class
-        {
-            return new AsyncMessageConsumerSegment<TConsumer, TMessage>(getConsumer);
-        }
-
-		public static IntervalMessageConsumerSegment IntervalConsumer<T>(TimeSpan interval, MessageConsumer<IList<T>> consumer) 
-			where T : class
-		{
-			return new IntervalMessageConsumerSegment<T>(interval, consumer);
-		}
-
     	public static InterceptorSegment Interceptor<T>(Pipe pipe, Action<IInterceptorConfigurator<T>> configureAction)
             where T : class
         {

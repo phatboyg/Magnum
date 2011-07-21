@@ -14,18 +14,11 @@ namespace Magnum.FileSystem
 {
     using System;
     using System.IO;
-    using Magnum.Logging;
 
     public class DotNetFileSystem :
         FileSystem
     {
-        readonly ILogger _logger = Logger.GetLogger<DotNetFileSystem>();
-
-        public DotNetFileSystem()
-        {
-        }
-
-        public bool FileExists(string filePath)
+    	public bool FileExists(string filePath)
         {
             return System.IO.File.Exists(filePath);
         }

@@ -1,5 +1,5 @@
+build_artifacts/*
 build_output/*
-code_drop/*
 
 **/*.suo
 **/**/*.suo
@@ -11,9 +11,7 @@ _ReSharper*
 
 *.csproj.user
 *.resharper.user
-*.resharper
 *.ReSharper.user
-*.ReSharper
 *.cache
 *~
 *.swp
@@ -26,4 +24,3 @@ src/tests/*
 tests/*
 doc/*
 SolutionVersion.cs
-gems/lib/**/*

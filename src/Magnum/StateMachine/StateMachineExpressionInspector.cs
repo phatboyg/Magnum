@@ -17,7 +17,7 @@ namespace Magnum.StateMachine
 	using Reflection;
 
 	public class StateMachineExpressionInspector :
-		ExpressionVisitor
+		Magnum.Reflection.ExpressionVisitor
 	{
 		private readonly StringBuilder _text = new StringBuilder();
 

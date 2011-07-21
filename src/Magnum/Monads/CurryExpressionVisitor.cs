@@ -17,7 +17,7 @@ namespace Magnum.Monads
 	using Reflection;
 
 	public class CurryExpressionVisitor<T1, T2, TResult> :
-		ExpressionVisitor
+		Magnum.Reflection.ExpressionVisitor
 	{
 		private ConstantExpression _replace;
 		private ParameterExpression _search;

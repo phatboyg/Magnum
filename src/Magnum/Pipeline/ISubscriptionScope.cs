@@ -49,16 +49,6 @@ namespace Magnum.Pipeline
 			where T : class;
 
 		/// <summary>
-		/// Subscribes a type to the pipeline. When messages are delivered to the pipeline, they are collected
-		/// until the interval timer expires and delivered as a single list to the consumer.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="interval"></param>
-		/// <param name="consumer"></param>
-		void Subscribe<T>(TimeSpan interval, MessageConsumer<IList<T>> consumer)
-			where T : class;
-
-		/// <summary>
 		/// Registers an interceptor on the pipeline, allowing actions to be performed before and after messages
 		/// are delivered on the pipeline.
 		/// </summary>

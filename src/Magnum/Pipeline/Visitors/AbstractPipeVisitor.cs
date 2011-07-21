@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 //  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -12,151 +12,120 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Pipeline.Visitors
 {
-    using System;
-    using System.Collections.Generic;
-    using Segments;
+	using System;
+	using System.Collections.Generic;
+	using Segments;
 
-    public abstract class AbstractPipeVisitor
-    {
-        protected virtual Pipe Visit(Pipe pipe)
-        {
-            if (pipe == null)
-                return pipe;
 
-            switch (pipe.SegmentType)
-            {
-                case PipeSegmentType.End:
-                    return VisitEnd((EndSegment) pipe);
+	public abstract class AbstractPipeVisitor
+	{
+		protected virtual Pipe Visit(Pipe pipe)
+		{
+			if (pipe == null)
+				return pipe;
 
-                case PipeSegmentType.Filter:
-                    return VisitFilter((FilterSegment) pipe);
+			switch (pipe.SegmentType)
+			{
+				case PipeSegmentType.End:
+					return VisitEnd((EndSegment)pipe);
 
-                case PipeSegmentType.Input:
-                    return VisitInput((InputSegment) pipe);
+				case PipeSegmentType.Filter:
+					return VisitFilter((FilterSegment)pipe);
 
-				case PipeSegmentType.AsyncMessageConsumer:
-					return VisitAsyncMessageConsumer((AsyncMessageConsumerSegment)pipe);
+				case PipeSegmentType.Input:
+					return VisitInput((InputSegment)pipe);
 
-                case PipeSegmentType.MessageConsumer:
-                    return VisitMessageConsumer((MessageConsumerSegment) pipe);
+				case PipeSegmentType.MessageConsumer:
+					return VisitMessageConsumer((MessageConsumerSegment)pipe);
 
-				case PipeSegmentType.IntervalMessageConsumer:
-            		return VisitIntervalMessageConsumer((IntervalMessageConsumerSegment) pipe);
+				case PipeSegmentType.RecipientList:
+					return VisitRecipientList((RecipientListSegment)pipe);
 
-                case PipeSegmentType.RecipientList:
-                    return VisitRecipientList((RecipientListSegment) pipe);
+				case PipeSegmentType.Interceptor:
+					return VisitInterceptor((InterceptorSegment)pipe);
 
-                case PipeSegmentType.Interceptor:
-                    return VisitInterceptor((InterceptorSegment) pipe);
+				default:
+					throw new ArgumentException("The pipe node is not a known type: " + pipe.SegmentType,
+					                            "pipeline");
+			}
+		}
 
-                default:
-                    throw new ArgumentException("The pipe node is not a known type: " + pipe.SegmentType,
-                        "pipeline");
-            }
-        }
+		protected virtual Pipe VisitEnd(EndSegment end)
+		{
+			if (end == null)
+				return null;
 
-        protected virtual Pipe VisitEnd(EndSegment end)
-        {
-            if (end == null)
-                return null;
+			return end;
+		}
 
-            return end;
-        }
+		protected virtual Pipe VisitFilter(FilterSegment filter)
+		{
+			if (filter == null)
+				return null;
 
-        protected virtual Pipe VisitFilter(FilterSegment filter)
-        {
-            if (filter == null)
-                return null;
+			Pipe output = Visit(filter.Output);
+			if (output != filter.Output)
+				return new FilterSegment(output, filter.MessageType);
 
-            Pipe output = Visit(filter.Output);
-            if (output != filter.Output)
-            {
-                return new FilterSegment(output, filter.MessageType);
-            }
+			return filter;
+		}
 
-            return filter;
-        }
+		protected virtual Pipe VisitInterceptor(InterceptorSegment interceptor)
+		{
+			if (interceptor == null)
+				return null;
 
-        protected virtual Pipe VisitInterceptor(InterceptorSegment interceptor)
-        {
-            if (interceptor == null)
-                return null;
+			Pipe output = Visit(interceptor.Output);
+			if (output != interceptor.Output)
+				return interceptor.Clone(output);
 
-            Pipe output = Visit(interceptor.Output);
-            if (output != interceptor.Output)
-            {
-                return interceptor.Clone(output);
-            }
+			return interceptor;
+		}
 
-            return interceptor;
-        }
+		protected virtual Pipe VisitInput(InputSegment input)
+		{
+			if (input == null)
+				return null;
 
-        protected virtual Pipe VisitInput(InputSegment input)
-        {
-            if (input == null)
-                return null;
+			Pipe output = input.Output;
 
-            var output = input.Output;
+			Pipe pipe = Visit(output);
+			if (pipe != output)
+				input.ReplaceOutput(output, pipe);
 
-            Pipe pipe = Visit(output);
-            if (pipe != output)
-            {
-                input.ReplaceOutput(output, pipe);
-            }
+			return input;
+		}
 
-            return input;
-        }
+		protected virtual Pipe VisitMessageConsumer(MessageConsumerSegment messageConsumer)
+		{
+			if (messageConsumer == null)
+				return null;
 
-        protected virtual Pipe VisitMessageConsumer(MessageConsumerSegment messageConsumer)
-        {
-            if (messageConsumer == null)
-                return null;
+			return messageConsumer;
+		}
 
-            return messageConsumer;
-        }
+		protected virtual Pipe VisitRecipientList(RecipientListSegment recipientList)
+		{
+			if (recipientList == null)
+				return null;
 
-        protected virtual Pipe VisitIntervalMessageConsumer(IntervalMessageConsumerSegment messageConsumer)
-        {
-            if (messageConsumer == null)
-                return null;
+			bool modified = false;
+			IList<Pipe> recipients = new List<Pipe>();
 
-            return messageConsumer;
-        }
+			foreach (Pipe recipient in recipientList.Recipients)
+			{
+				Pipe result = Visit(recipient);
+				if (result != recipient)
+					modified = true;
 
-        protected virtual Pipe VisitAsyncMessageConsumer(AsyncMessageConsumerSegment messageConsumer)
-        {
-            if (messageConsumer == null)
-                return null;
+				if (result != null)
+					recipients.Add(result);
+			}
 
-            return messageConsumer;
-        }
+			if (modified)
+				return new RecipientListSegment(recipientList.MessageType, recipients);
 
-        protected virtual Pipe VisitRecipientList(RecipientListSegment recipientList)
-        {
-            if (recipientList == null)
-                return null;
-
-            bool modified = false;
-            IList<Pipe> recipients = new List<Pipe>();
-
-            foreach (Pipe recipient in recipientList.Recipients)
-            {
-                Pipe result = Visit(recipient);
-                if (result != recipient)
-                {
-                    modified = true;
-                }
-
-                if (result != null)
-                    recipients.Add(result);
-            }
-
-            if (modified)
-            {
-                return new RecipientListSegment(recipientList.MessageType, recipients);
-            }
-
-            return recipientList;
-        }
-    }
+			return recipientList;
+		}
+	}
 }

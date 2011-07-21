@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Specs.Serialization
 {
-	using Magnum.Logging;
 	using Magnum.Serialization;
 	using NUnit.Framework;
 	using TestFramework;
@@ -25,8 +24,6 @@ namespace Magnum.Specs.Serialization
 		[SetUp]
 		public void Setup()
 		{
-			TraceLogger.Configure(LogLevel.Debug);
-
 			_serializer = new FastTextSerializer();
 		}
 

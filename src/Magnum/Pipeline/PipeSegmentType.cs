@@ -20,7 +20,5 @@ namespace Magnum.Pipeline
 		Filter,
 	    MessageConsumer,
 	    Interceptor,
-		AsyncMessageConsumer,
-		IntervalMessageConsumer
 	}
 }

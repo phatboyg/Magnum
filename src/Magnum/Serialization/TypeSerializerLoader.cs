@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 //  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -17,9 +17,9 @@ namespace Magnum.Serialization
 	using System.Linq;
 	using System.Reflection;
 	using Extensions;
-	using Logging;
 	using Reflection;
 	using TypeSerializers;
+
 
 	/// <summary>
 	///   Scans the assembly for implementations of the TypeSerializer interface for 
@@ -27,20 +27,23 @@ namespace Magnum.Serialization
 	/// </summary>
 	public class TypeSerializerLoader
 	{
-		private readonly ILogger _log = Logger.GetLogger<TypeSerializerLoader>();
-
 		public IDictionary<Type, TypeSerializer> LoadBuiltInTypeSerializers()
 		{
 			Dictionary<Type, TypeSerializer> serializers = Assembly.GetExecutingAssembly().GetTypes()
-				.Where(x => x.Namespace == typeof (StringSerializer).Namespace)
-				.Where(x => x.ImplementsGeneric(typeof (TypeSerializer<>)))
+				.Where(x => x.Namespace == typeof(StringSerializer).Namespace)
+				.Where(x => x.ImplementsGeneric(typeof(TypeSerializer<>)))
 				.Where(x => !x.ContainsGenericParameters)
-				.Select(x => new {Type = x, SerializedType = x.GetGenericTypeDeclarations(typeof (TypeSerializer<>)).First()})
-				.Select(x => new {x.SerializedType, Serializer = FastActivator.Create(x.Type) as TypeSerializer})
+				.Select(x => new
+					{
+						Type = x,
+						SerializedType = x.GetGenericTypeDeclarations(typeof(TypeSerializer<>)).First()
+					})
+				.Select(x => new
+					{
+						x.SerializedType,
+						Serializer = FastActivator.Create(x.Type) as TypeSerializer
+					})
 				.ToDictionary(x => x.SerializedType, x => x.Serializer);
-
-			_log.Debug(
-				x => serializers.Each(s => x.Write("Loaded serializer for {0} ({1})", s.Key.Name, s.Value.GetType().FullName)));
 
 			return serializers;
 		}

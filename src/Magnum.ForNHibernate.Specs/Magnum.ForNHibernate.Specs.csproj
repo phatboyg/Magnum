@@ -118,27 +118,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Auditing\Complete\AuditKey.cs" />
-    <Compile Include="Auditing\Complete\AuditKeyMap.cs" />
-    <Compile Include="Auditing\Complete\Audit_Specs.cs" />
-    <Compile Include="Auditing\Configuration_Specs.cs" />
-    <Compile Include="Auditing\NHibernateEvent_Specs.cs" />
-    <Compile Include="Auditing\PreInsert_Specs.cs" />
-    <Compile Include="Auditing\Complete\TestInstanceAudit.cs" />
-    <Compile Include="Auditing\Complete\TestInstanceAuditBinding.cs" />
-    <Compile Include="Auditing\Complete\TestInstanceAuditMap.cs" />
-    <Compile Include="Auditing\Visitor_Specs.cs" />
-    <Compile Include="Channels\InMemoryStateMachine_Specs.cs" />
-    <Compile Include="Channels\Load_Specs.cs" />
-    <Compile Include="Channels\NHibernateInstanceChannel_Specs.cs" />
-    <Compile Include="Channels\NHibernateStateMachine_Specs.cs" />
-    <Compile Include="Channels\NHibernateSubscription_Specs.cs" />
-    <Compile Include="Channels\NHibernate_Specs.cs" />
-    <Compile Include="Channels\PreviousValue.cs" />
-    <Compile Include="Channels\PreviousValueMap.cs" />
-    <Compile Include="Channels\TestInstance.cs" />
-    <Compile Include="Channels\TestInstanceMap.cs" />
-    <Compile Include="Channels\TestStateMachineInstanceMap.cs" />
     <Compile Include="Data\NHibernateTransaction_Specs.cs" />
     <Compile Include="Data\NHibernateUnitOfWork_Specs.cs" />
     <Compile Include="Data\Primitives\DatabaseBehaviour_Specs.cs" />

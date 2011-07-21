@@ -17,16 +17,13 @@ namespace Magnum.Binding
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Reflection;
-	using Channels;
 	using Extensions;
-	using Logging;
 	using Reflection;
 	using TypeBinders;
 
 	public class InstanceBinderContext :
 		BinderContext
 	{
-		private static readonly ILogger _log = Logger.GetLogger<InstanceBinderContext>();
 		private static readonly Dictionary<Type, ObjectBinder> _typeBinders;
 
 		private readonly Stack<ModelBinderContext> _contextStack;
@@ -114,11 +111,6 @@ namespace Magnum.Binding
 			}
 		}
 
-		public Channel<T> GetChannel<T>()
-		{
-			return Context.GetChannel<T>();
-		}
-
 		private static void LoadBuiltInBinders()
 		{
 			Assembly.GetExecutingAssembly()
@@ -132,8 +124,6 @@ namespace Magnum.Binding
 								{
 									Type itemType = interfaceType.GetGenericArguments().First();
 
-									_log.Debug(x => x.Write("Loading binder or {0} ({1})", itemType.Name, type.Name));
-
 									_typeBinders.Add(itemType, FastActivator.Create(type) as ObjectBinder);
 								});
 					});
@@ -141,13 +131,6 @@ namespace Magnum.Binding
 
 		private static ObjectBinder CreateBinderFor(Type type)
 		{
-			if (type.Implements<Channel>())
-			{
-				Type[] genericType = type.GetGenericArguments();
-
-				return (ObjectBinder) FastActivator.Create(typeof (ChannelBinder<>).MakeGenericType(genericType));
-			}
-
 			if (type.IsEnum)
 			{
 				return (ObjectBinder) FastActivator.Create(typeof (EnumBinder<>).MakeGenericType(type));

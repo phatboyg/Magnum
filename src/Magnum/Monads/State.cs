@@ -15,7 +15,7 @@ namespace Magnum.Monads
     using System;
     using Collections;
 
-    public delegate Tuple<STATE,CONTENT> S<STATE,CONTENT>(STATE state);
+    public delegate Magnum.Collections.Tuple<STATE,CONTENT> S<STATE,CONTENT>(STATE state);
 
     
     //state -> state, content pair
@@ -24,12 +24,12 @@ namespace Magnum.Monads
         //this guy captures the value of something and is able to apply state to it?
         public static S<STATE,CONTENT> ToStateMonad<STATE,CONTENT>(CONTENT content)
         {
-            return s => new Tuple<STATE, CONTENT>(s,content);
+            return s => new Magnum.Collections.Tuple<STATE, CONTENT>(s,content);
         }
 
         public static S<STATE,CONTENTB> ToStateMonad<STATE,CONTENTA,CONTENTB>(CONTENTA a, Func<CONTENTA,CONTENTB> convert)
         {
-            return s => new Tuple<STATE, CONTENTB>(s, convert(a));
+            return s => new Magnum.Collections.Tuple<STATE, CONTENTB>(s, convert(a));
         }
     }
 }

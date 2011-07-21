@@ -14,22 +14,16 @@ namespace Magnum.Specs.Data
 {
 	using System;
 	using System.Diagnostics;
-	using System.Security.AccessControl;
-	using System.Threading;
 	using System.Transactions;
-	using Fibers;
 	using Magnum.Extensions;
 	using NUnit.Framework;
 
-	[TestFixture]
+	[TestFixture, Explicit]
 	public class Creating_a_transaction_scope_as_part_of_an_action
 	{
 		[Test]
 		public void Should_be_passable_to_another_action_queue()
 		{
-			Fiber fiber = new ThreadPoolFiber();
-
-
 			var timer = Stopwatch.StartNew();
 
 			Stopwatch inner = new Stopwatch();
@@ -47,7 +41,7 @@ namespace Magnum.Specs.Data
 							Trace.WriteLine("Completed");		
 						};
 
-					fiber.Add(() =>
+					//fiber.Add(() =>
 						{
 							dep.Start();
 							try
@@ -68,7 +62,7 @@ namespace Magnum.Specs.Data
 								dependentClone.Dispose();
 								Trace.WriteLine("clone disposed");
 							}
-						});
+						}//);
 
 					scope.Complete();
 					Trace.WriteLine("scope complete");
