@@ -29,24 +29,6 @@ props = {
 
 puts "Building for .NET Framework #{TARGET_FRAMEWORK_VERSION} in #{BUILD_CONFIG}-mode."
 
-desc "Displays a list of tasks"
-task :help do
-
-  taskHash = Hash[*(`rake.bat -T`.split(/\n/).collect { |l| l.match(/rake (\S+)\s+\#\s(.+)/).to_a }.collect { |l| [l[1], l[2]] }).flatten]
-
-  indent = "                          "
-
-  puts "rake #{indent}#Runs the 'default' task"
-
-  taskHash.each_pair do |key, value|
-    if key.nil?
-      next
-    end
-    puts "rake #{key}#{indent.slice(0, indent.length - key.length)}##{value}"
-  end
-end
-
-
 desc "Cleans, compiles, il-merges, unit tests, prepares examples, packages zip and runs MoMA"
 task :all => [:default, :package, :moma]
 
@@ -62,13 +44,15 @@ assemblyinfo :global_version do |asm|
   commit_data = get_commit_hash_and_date
   commit = commit_data[0]
   commit_date = commit_data[1]
-  build_number = "#{BUILD_NUMBER_BASE}.#{Date.today.strftime('%y%j')}"
+  build_number = "#{BUILD_NUMBER_BASE}.0"
   tc_build_number = ENV["BUILD_NUMBER"]
-  puts "##teamcity[buildNumber '#{build_number}-#{tc_build_number}']" unless tc_build_number.nil?
+  build_number = "#{BUILD_NUMBER_BASE}.#{tc_build_number}" unless tc_build_number.nil?
+
+  puts "Setting assembly file version to #{build_number}"
 
   # Assembly file config
   asm.product_name = PRODUCT
-  asm.description = "Git commit hash: #{commit} - #{commit_date} - Magnum - A library for the larger than average developer. http://github.com/phatboyg/Magnum. magnum-project.net."
+  asm.description = "Magnum - A library for the larger than average developer. http://github.com/phatboyg/Magnum. magnum-project.net."
   asm.version = asm_version
   asm.file_version = build_number
   asm.custom_attributes :AssemblyInformationalVersion => "#{asm_version}",
