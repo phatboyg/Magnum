@@ -1,5 +1,5 @@
-﻿// Copyright 2007-2008 The Apache Software Foundation.
-//  
+﻿// Copyright 2007-2010 The Apache Software Foundation.
+// 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
@@ -14,6 +14,7 @@ namespace Magnum.Collections
 {
 	using System;
 	using System.Collections.Generic;
+
 
 	/// <summary>
 	/// Bag&lt;T&gt; is a collection that contains items of type T. 
@@ -36,20 +37,20 @@ namespace Magnum.Collections
 	///<seealso cref="OrderedBag&lt;T&gt;"/>
 	[Serializable]
 	public class Bag<T> : CollectionBase<T>,
-		ICloneable
+	                      ICloneable
 	{
 		// The comparer used to compare KeyValuePairs. Equals and GetHashCode are used.
-		private readonly IEqualityComparer<KeyValuePair<T, int>> equalityComparer;
+		readonly IEqualityComparer<KeyValuePair<T, int>> equalityComparer;
 
 		// The comparer used to compare items. Kept just for the Comparer property. 
-		private readonly IEqualityComparer<T> keyEqualityComparer;
+		readonly IEqualityComparer<T> keyEqualityComparer;
 
 		// The hash that actually does the work of storing the items. Each item is
 		// stored as a representative item, and a count.
 
 		// The total number of items stored in the bag.
-		private int count;
-		private Hash<KeyValuePair<T, int>> hash;
+		int count;
+		Hash<KeyValuePair<T, int>> hash;
 
 		/// <summary>
 		/// Helper function to create a new KeyValuePair struct with an item and a count.
@@ -57,9 +58,9 @@ namespace Magnum.Collections
 		/// <param name="item">The item.</param>
 		/// <param name="count">The number of appearances.</param>
 		/// <returns>A new KeyValuePair.</returns>
-		private static KeyValuePair<T, int> NewPair(T item, int count)
+		static KeyValuePair<T, int> NewPair(T item, int count)
 		{
-			KeyValuePair<T, int> pair = new KeyValuePair<T, int>(item, count);
+			var pair = new KeyValuePair<T, int>(item, count);
 			return pair;
 		}
 
@@ -68,9 +69,9 @@ namespace Magnum.Collections
 		/// </summary>
 		/// <param name="item">The item.</param>
 		/// <returns>A new KeyValuePair.</returns>
-		private static KeyValuePair<T, int> NewPair(T item)
+		static KeyValuePair<T, int> NewPair(T item)
 		{
-			KeyValuePair<T, int> pair = new KeyValuePair<T, int>(item, 0);
+			var pair = new KeyValuePair<T, int>(item, 0);
 			return pair;
 		}
 
@@ -98,9 +99,9 @@ namespace Magnum.Collections
 			if (equalityComparer == null)
 				throw new ArgumentNullException("equalityComparer");
 
-			this.keyEqualityComparer = equalityComparer;
+			keyEqualityComparer = equalityComparer;
 			this.equalityComparer = Comparers.EqualityComparerKeyValueFromComparerKey<T, int>(equalityComparer);
-			this.hash = new Hash<KeyValuePair<T, int>>(this.equalityComparer);
+			hash = new Hash<KeyValuePair<T, int>>(this.equalityComparer);
 		}
 
 		/// <summary>
@@ -138,7 +139,8 @@ namespace Magnum.Collections
 		/// <param name="keyEqualityComparer">IEqualityComparer for the key.</param>
 		/// <param name="hash">Data for the bag.</param>
 		/// <param name="count">Size of the bag.</param>
-		private Bag(IEqualityComparer<KeyValuePair<T, int>> equalityComparer, IEqualityComparer<T> keyEqualityComparer, Hash<KeyValuePair<T, int>> hash, int count)
+		Bag(IEqualityComparer<KeyValuePair<T, int>> equalityComparer, IEqualityComparer<T> keyEqualityComparer,
+		    Hash<KeyValuePair<T, int>> hash, int count)
 		{
 			this.equalityComparer = equalityComparer;
 			this.keyEqualityComparer = keyEqualityComparer;
@@ -159,7 +161,7 @@ namespace Magnum.Collections
 		/// <returns>The cloned bag.</returns>
 		object ICloneable.Clone()
 		{
-			return this.Clone();
+			return Clone();
 		}
 
 		/// <summary>
@@ -171,7 +173,7 @@ namespace Magnum.Collections
 		/// <returns>The cloned bag.</returns>
 		public Bag<T> Clone()
 		{
-			Bag<T> newBag = new Bag<T>(equalityComparer, keyEqualityComparer, hash.Clone(null), count);
+			var newBag = new Bag<T>(equalityComparer, keyEqualityComparer, hash.Clone(null), count);
 			return newBag;
 		}
 
@@ -188,19 +190,19 @@ namespace Magnum.Collections
 		public Bag<T> CloneContents()
 		{
 			bool itemIsValueType;
-			if (!Util.IsCloneableType(typeof (T), out itemIsValueType))
-				throw new InvalidOperationException(string.Format(Strings.TypeNotCloneable, typeof (T).FullName));
+			if (!Util.IsCloneableType(typeof(T), out itemIsValueType))
+				throw new InvalidOperationException(string.Format(Strings.TypeNotCloneable, typeof(T).FullName));
 
-			Hash<KeyValuePair<T, int>> newHash = new Hash<KeyValuePair<T, int>>(equalityComparer);
+			var newHash = new Hash<KeyValuePair<T, int>>(equalityComparer);
 
 			// Clone each item, and add it to the new ordered bag.
-			foreach (KeyValuePair<T, int> pair in hash)
+			foreach (var pair in hash)
 			{
 				KeyValuePair<T, int> newPair, dummy;
 				T newKey;
 
 				if (!itemIsValueType && pair.Key != null)
-					newKey = (T) (((ICloneable) pair.Key).Clone());
+					newKey = (T)(((ICloneable)pair.Key).Clone());
 				else
 					newKey = pair.Key;
 
@@ -292,7 +294,7 @@ namespace Magnum.Collections
 		/// <returns>An enumerator for enumerating all the items in the Bag.</returns>		
 		public override sealed IEnumerator<T> GetEnumerator()
 		{
-			foreach (KeyValuePair<T, int> pair in hash)
+			foreach (var pair in hash)
 			{
 				for (int i = 0; i < pair.Value; ++i)
 					yield return pair.Key;
@@ -321,10 +323,8 @@ namespace Magnum.Collections
 		/// <returns>An IEnumerable&lt;T&gt; that enumerates the unique items.</returns>
 		public IEnumerable<T> DistinctItems()
 		{
-			foreach (KeyValuePair<T, int> pair in hash)
-			{
+			foreach (var pair in hash)
 				yield return pair.Key;
-			}
 		}
 
 		#endregion
@@ -419,7 +419,7 @@ namespace Magnum.Collections
 			// If we're adding ourselves, we need to copy to a separate array to avoid modification
 			// during enumeration.
 			if (this == collection)
-				collection = this.ToArray();
+				collection = ToArray();
 
 			foreach (T item in collection)
 				Add(item);
@@ -550,13 +550,13 @@ namespace Magnum.Collections
 			CheckConsistentComparison(otherBag);
 
 			// Must be the same size.
-			if (otherBag.Count != this.Count)
+			if (otherBag.Count != Count)
 				return false;
 
 			// Check each item to make sure it is in this set the same number of times.
 			foreach (T item in otherBag.DistinctItems())
 			{
-				if (this.NumberOfCopies(item) != otherBag.NumberOfCopies(item))
+				if (NumberOfCopies(item) != otherBag.NumberOfCopies(item))
 					return false;
 			}
 
@@ -578,13 +578,13 @@ namespace Magnum.Collections
 		{
 			CheckConsistentComparison(otherBag);
 
-			if (otherBag.Count > this.Count)
+			if (otherBag.Count > Count)
 				return false; // Can't be a superset of a bigger set
 
 			// Check each item in the other set to make sure it is in this set.
 			foreach (T item in otherBag.DistinctItems())
 			{
-				if (this.NumberOfCopies(item) < otherBag.NumberOfCopies(item))
+				if (NumberOfCopies(item) < otherBag.NumberOfCopies(item))
 					return false;
 			}
 
@@ -606,7 +606,7 @@ namespace Magnum.Collections
 		{
 			CheckConsistentComparison(otherBag);
 
-			if (otherBag.Count >= this.Count)
+			if (otherBag.Count >= Count)
 				return false; // Can't be a proper superset of a bigger or equal set
 
 			return IsSupersetOf(otherBag);
@@ -652,7 +652,7 @@ namespace Magnum.Collections
 		{
 			CheckConsistentComparison(otherBag);
 			Bag<T> smaller, larger;
-			if (otherBag.Count > this.Count)
+			if (otherBag.Count > Count)
 			{
 				smaller = this;
 				larger = otherBag;
@@ -697,7 +697,7 @@ namespace Magnum.Collections
 			// added to this bag.
 			foreach (T item in otherBag.DistinctItems())
 			{
-				copiesInThis = this.NumberOfCopies(item);
+				copiesInThis = NumberOfCopies(item);
 				copiesInOther = otherBag.NumberOfCopies(item);
 
 				if (copiesInOther > copiesInThis)
@@ -723,7 +723,7 @@ namespace Magnum.Collections
 			CheckConsistentComparison(otherBag);
 
 			Bag<T> smaller, larger, result;
-			if (otherBag.Count > this.Count)
+			if (otherBag.Count > Count)
 			{
 				smaller = this;
 				larger = otherBag;
@@ -768,7 +768,7 @@ namespace Magnum.Collections
 			// added to this bag.
 			foreach (T item in otherBag.DistinctItems())
 			{
-				copiesInThis = this.NumberOfCopies(item);
+				copiesInThis = NumberOfCopies(item);
 				copiesInOther = otherBag.NumberOfCopies(item);
 
 				ChangeNumberOfCopies(item, copiesInThis + copiesInOther);
@@ -794,7 +794,7 @@ namespace Magnum.Collections
 			CheckConsistentComparison(otherBag);
 
 			Bag<T> smaller, larger, result;
-			if (otherBag.Count > this.Count)
+			if (otherBag.Count > Count)
 			{
 				smaller = this;
 				larger = otherBag;
@@ -830,7 +830,7 @@ namespace Magnum.Collections
 			hash.StopEnumerations();
 
 			Bag<T> smaller, larger;
-			if (otherBag.Count > this.Count)
+			if (otherBag.Count > Count)
 			{
 				smaller = this;
 				larger = otherBag;
@@ -842,7 +842,7 @@ namespace Magnum.Collections
 			}
 
 			KeyValuePair<T, int> dummy;
-			Hash<KeyValuePair<T, int>> newHash = new Hash<KeyValuePair<T, int>>(equalityComparer);
+			var newHash = new Hash<KeyValuePair<T, int>>(equalityComparer);
 			int newCount = 0;
 			int copiesInSmaller, copiesInLarger, copies;
 
@@ -884,7 +884,7 @@ namespace Magnum.Collections
 			CheckConsistentComparison(otherBag);
 
 			Bag<T> smaller, larger, result;
-			if (otherBag.Count > this.Count)
+			if (otherBag.Count > Count)
 			{
 				smaller = this;
 				larger = otherBag;
@@ -940,7 +940,7 @@ namespace Magnum.Collections
 			// removed from this bag.
 			foreach (T item in otherBag.DistinctItems())
 			{
-				copiesInThis = this.NumberOfCopies(item);
+				copiesInThis = NumberOfCopies(item);
 				copiesInOther = otherBag.NumberOfCopies(item);
 				copies = copiesInThis - copiesInOther;
 				if (copies < 0)
@@ -970,7 +970,7 @@ namespace Magnum.Collections
 
 			CheckConsistentComparison(otherBag);
 
-			result = this.Clone();
+			result = Clone();
 			result.DifferenceWith(otherBag);
 			return result;
 		}
@@ -1003,7 +1003,7 @@ namespace Magnum.Collections
 			// added to this bag.
 			foreach (T item in otherBag.DistinctItems())
 			{
-				copiesInThis = this.NumberOfCopies(item);
+				copiesInThis = NumberOfCopies(item);
 				copiesInOther = otherBag.NumberOfCopies(item);
 				copies = Math.Abs(copiesInThis - copiesInOther);
 
@@ -1031,7 +1031,7 @@ namespace Magnum.Collections
 			CheckConsistentComparison(otherBag);
 
 			Bag<T> smaller, larger, result;
-			if (otherBag.Count > this.Count)
+			if (otherBag.Count > Count)
 			{
 				smaller = this;
 				larger = otherBag;
@@ -1053,7 +1053,7 @@ namespace Magnum.Collections
 		/// </summary>
 		/// <param name="otherBag">Other bag to check comparision mechanism.</param>
 		/// <exception cref="InvalidOperationException">If otherBag and this bag don't use the same method for comparing items.</exception>
-		private void CheckConsistentComparison(Bag<T> otherBag)
+		void CheckConsistentComparison(Bag<T> otherBag)
 		{
 			if (otherBag == null)
 				throw new ArgumentNullException("otherBag");

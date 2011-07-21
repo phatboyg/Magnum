@@ -1,5 +1,5 @@
 ﻿// Copyright 2007-2010 The Apache Software Foundation.
-//  
+// 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
@@ -20,8 +20,8 @@ namespace Magnum.Algorithms.Implementations
 		where TNode : Node<T>
 	{
 		readonly Func<int, T, TNode> _nodeFactory;
-		IDictionary<TNode, HashSet<Edge<T, TNode>>> _adjacencies;
 		readonly NodeList<T, TNode> _nodeList;
+		IDictionary<TNode, HashSet<Edge<T, TNode>>> _adjacencies;
 
 
 		public AdjacencyList(Func<int, T, TNode> nodeFactory)
@@ -29,6 +29,11 @@ namespace Magnum.Algorithms.Implementations
 			_nodeFactory = nodeFactory;
 			_nodeList = new NodeList<T, TNode>(nodeFactory);
 			_adjacencies = new Dictionary<TNode, HashSet<Edge<T, TNode>>>();
+		}
+
+		public ICollection<TNode> SourceNodes
+		{
+			get { return _adjacencies.Keys; }
 		}
 
 		public HashSet<Edge<T, TNode>> GetEdges(TNode index)
@@ -108,11 +113,6 @@ namespace Magnum.Algorithms.Implementations
 			}
 
 			return result;
-		}
-
-		public ICollection<TNode> SourceNodes
-		{
-			get { return _adjacencies.Keys; }
 		}
 
 		public TNode GetNode(T key)

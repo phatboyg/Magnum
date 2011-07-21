@@ -7,7 +7,7 @@ require 'albacore'
 require File.dirname(__FILE__) + "/build_support/ilmergeconfig.rb"
 require File.dirname(__FILE__) + "/build_support/ilmerge.rb"
 
-BUILD_NUMBER_BASE = '1.1.1'
+BUILD_NUMBER_BASE = '2.0.0'
 PRODUCT = 'Magnum'
 CLR_TOOLS_VERSION = 'v4.0.30319'
 
@@ -18,7 +18,7 @@ TARGET_FRAMEWORK_VERSION = (BUILD_CONFIG_KEY == "NET40" ? "v4.0" : "v3.5")
 MSB_USE = (BUILD_CONFIG_KEY == "NET40" ? :net4 : :net35)
 OUTPUT_PATH = (BUILD_CONFIG_KEY == "NET40" ? 'net-4.0' : 'net-3.5')
 
-props = { 
+props = {
   :src => File.expand_path("src"),
   :build_support => File.expand_path("build_support"),
   :stage => File.expand_path("build_output"),
@@ -28,18 +28,18 @@ props = {
 }
 
 puts "Building for .NET Framework #{TARGET_FRAMEWORK_VERSION} in #{BUILD_CONFIG}-mode."
- 
+
 desc "Displays a list of tasks"
 task :help do
 
-  taskHash = Hash[*(`rake.bat -T`.split(/\n/).collect { |l| l.match(/rake (\S+)\s+\#\s(.+)/).to_a }.collect { |l| [l[1], l[2]] }).flatten] 
- 
+  taskHash = Hash[*(`rake.bat -T`.split(/\n/).collect { |l| l.match(/rake (\S+)\s+\#\s(.+)/).to_a }.collect { |l| [l[1], l[2]] }).flatten]
+
   indent = "                          "
-  
+
   puts "rake #{indent}#Runs the 'default' task"
-  
+
   taskHash.each_pair do |key, value|
-    if key.nil?  
+    if key.nil?
       next
     end
     puts "rake #{key}#{indent.slice(0, indent.length - key.length)}##{value}"
@@ -65,7 +65,7 @@ assemblyinfo :global_version do |asm|
   build_number = "#{BUILD_NUMBER_BASE}.#{Date.today.strftime('%y%j')}"
   tc_build_number = ENV["BUILD_NUMBER"]
   puts "##teamcity[buildNumber '#{build_number}-#{tc_build_number}']" unless tc_build_number.nil?
-  
+
   # Assembly file config
   asm.product_name = PRODUCT
   asm.description = "Git commit hash: #{commit} - #{commit_date} - Magnum - A library for the larger than average developer. http://github.com/phatboyg/Magnum. magnum-project.net."
@@ -86,7 +86,7 @@ task :clean do
 	# work around latency issue where folder still exists for a short while after it is removed
 	waitfor { !exists?(props[:stage]) }
 	waitfor { !exists?(props[:artifacts]) }
-	
+
 	Dir.mkdir props[:stage]
 	Dir.mkdir props[:artifacts]
 end
@@ -140,7 +140,7 @@ end
 
 desc "Only compiles the application."
 msbuild :build do |msb|
-	msb.properties :Configuration => BUILD_CONFIG, 
+	msb.properties :Configuration => BUILD_CONFIG,
 	    :BuildConfigKey => BUILD_CONFIG_KEY,
 	    :TargetFrameworkVersion => TARGET_FRAMEWORK_VERSION,
 	    :Platform => 'Any CPU'
@@ -211,17 +211,17 @@ def get_commit_hash_and_date
 	rescue
 		commit = "git unavailable"
 	end
-	
+
 	[commit, commit_date]
 end
 
 def waitfor(&block)
 	checks = 0
-	
-	until block.call || checks >10 
+
+	until block.call || checks >10
 		sleep 0.5
 		checks += 1
 	end
-	
+
 	raise 'Waitfor timeout expired. Make sure that you aren\'t running something from the build output folders, or that you have browsed to it through Explorer.' if checks > 10
 end
