@@ -242,6 +242,7 @@
     <Compile Include="Reflection\GenericMethodInvoker_Specs.cs" />
     <Compile Include="Reflection\GenericTypeReflection_Specs.cs" />
     <Compile Include="Reflection\Generic_AdditionalSpecs.cs" />
+    <Compile Include="Reflection\InitializeDynamicImpl_Specs.cs" />
     <Compile Include="Reflection\SafePropertySpecs\GetArray_Specs.cs" />
     <Compile Include="Reflection\SafePropertySpecs\GetList_Specs.cs" />
     <Compile Include="Reflection\SafePropertySpecs\Getter_Specs.cs" />

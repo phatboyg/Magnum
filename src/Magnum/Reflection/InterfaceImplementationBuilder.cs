@@ -1,5 +1,5 @@
-// Copyright 2007-2008 The Apache Software Foundation.
-//  
+// Copyright 2007-2010 The Apache Software Foundation.
+// 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
@@ -12,108 +12,148 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Reflection
 {
-	using System;
-	using System.Reflection;
-	using System.Reflection.Emit;
-	using Extensions;
-	using Threading;
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Reflection.Emit;
+    using Extensions;
+    using Threading;
 
 
-	public static class InterfaceImplementationBuilder
-	{
-		const MethodAttributes PropertyAccessMethodAttributes = MethodAttributes.Public | MethodAttributes.SpecialName |
-		                                                        MethodAttributes.HideBySig | MethodAttributes.Final |
-		                                                        MethodAttributes.Virtual | MethodAttributes.VtableLayoutMask;
+    public static class InterfaceImplementationBuilder
+    {
+        const MethodAttributes PropertyAccessMethodAttributes = MethodAttributes.Public
+                                                                | MethodAttributes.SpecialName
+                                                                | MethodAttributes.HideBySig
+                                                                | MethodAttributes.Final
+                                                                | MethodAttributes.Virtual
+                                                                | MethodAttributes.VtableLayoutMask;
 
-		const string ProxyNamespaceSuffix = ".DynamicImpl";
-		static readonly ReaderWriterLockedDictionary<Type, Type> _proxyTypes = new ReaderWriterLockedDictionary<Type, Type>();
+        const string ProxyNamespaceSuffix = ".DynamicImpl";
 
-		public static Type GetProxyFor(Type typeToProxy)
-		{
-			return _proxyTypes.Retrieve(typeToProxy, () =>
-				{
-					ModuleBuilder moduleBuilder = GetModuleBuilderForType(typeToProxy);
+        static readonly ReaderWriterLockedDictionary<Type, Type> _proxyTypes =
+            new ReaderWriterLockedDictionary<Type, Type>();
 
-					return BuildTypeProxy(moduleBuilder, typeToProxy);
-				});
-		}
+        public static Type GetProxyFor(Type typeToProxy)
+        {
+            return _proxyTypes.Retrieve(typeToProxy, () =>
+                {
+                    ModuleBuilder moduleBuilder = GetModuleBuilderForType(typeToProxy);
 
-		static Type BuildTypeProxy(ModuleBuilder builder, Type typeToProxy)
-		{
-			if (!typeToProxy.IsInterface)
-				throw new ArgumentException("Proxies can only be created for interfaces: " + typeToProxy.Name, "typeToProxy");
+                    return BuildTypeProxy(moduleBuilder, typeToProxy);
+                });
+        }
 
-			Type proxyType = CreateTypeFromInterface(builder, typeToProxy);
+        static Type BuildTypeProxy(ModuleBuilder builder, Type typeToProxy)
+        {
+            if (!typeToProxy.IsInterface)
+            {
+                throw new ArgumentException("Proxies can only be created for interfaces: " + typeToProxy.Name,
+                                            "typeToProxy");
+            }
 
-			return proxyType;
-		}
+            Type proxyType = CreateTypeFromInterface(builder, typeToProxy);
 
-		static Type CreateTypeFromInterface(ModuleBuilder builder, Type typeToProxy)
-		{
-			string typeName = typeToProxy.Namespace + ProxyNamespaceSuffix + "." + typeToProxy.Name;
+            return proxyType;
+        }
 
-			TypeBuilder typeBuilder = builder.DefineType(typeName, TypeAttributes.Serializable | TypeAttributes.Class |
-			                                                       TypeAttributes.Public | TypeAttributes.Sealed,
-			                                             typeof(object), new[] {typeToProxy});
+        static Type CreateTypeFromInterface(ModuleBuilder builder, Type typeToProxy)
+        {
+            string typeName = typeToProxy.Namespace + ProxyNamespaceSuffix + "." + typeToProxy.Name;
 
-			typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
+            TypeBuilder typeBuilder = builder.DefineType(typeName, TypeAttributes.Serializable | TypeAttributes.Class |
+                                                                   TypeAttributes.Public | TypeAttributes.Sealed,
+                                                         typeof(object), new[] {typeToProxy});
 
-			typeToProxy.GetAllProperties().Each(x =>
-				{
-					FieldBuilder fieldBuilder = typeBuilder.DefineField("field_" + x.Name, x.PropertyType, FieldAttributes.Private);
+            typeBuilder.DefineDefaultConstructor(MethodAttributes.Public);
 
-					PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(x.Name, x.Attributes | PropertyAttributes.HasDefault,
-					                                                             x.PropertyType, null);
+            CreateDictionaryConstructor(typeBuilder);
 
-					MethodBuilder getMethod = GetGetMethodBuilder(x, typeBuilder, fieldBuilder);
-					MethodBuilder setMethod = GetSetMethodBuilder(x, typeBuilder, fieldBuilder);
+            typeToProxy.GetAllProperties().Each(x =>
+                {
+                    FieldBuilder fieldBuilder = typeBuilder.DefineField("field_" + x.Name, x.PropertyType,
+                                                                        FieldAttributes.Private);
 
-					propertyBuilder.SetGetMethod(getMethod);
-					propertyBuilder.SetSetMethod(setMethod);
-				});
+                    PropertyBuilder propertyBuilder = typeBuilder.DefineProperty(x.Name,
+                                                                                 x.Attributes
+                                                                                 | PropertyAttributes.HasDefault,
+                                                                                 x.PropertyType, null);
 
-			return typeBuilder.CreateType();
-		}
+                    MethodBuilder getMethod = GetGetMethodBuilder(x, typeBuilder, fieldBuilder);
+                    MethodBuilder setMethod = GetSetMethodBuilder(x, typeBuilder, fieldBuilder);
 
-		static MethodBuilder GetGetMethodBuilder(PropertyInfo propertyInfo, TypeBuilder typeBuilder, FieldBuilder fieldBuilder)
-		{
-			MethodBuilder getMethodBuilder = typeBuilder.DefineMethod("get_" + propertyInfo.Name,
-			                                                          PropertyAccessMethodAttributes,
-			                                                          propertyInfo.PropertyType,
-			                                                          Type.EmptyTypes);
+                    propertyBuilder.SetGetMethod(getMethod);
+                    propertyBuilder.SetSetMethod(setMethod);
+                });
 
-			ILGenerator il = getMethodBuilder.GetILGenerator();
-			il.Emit(OpCodes.Ldarg_0);
-			il.Emit(OpCodes.Ldfld, fieldBuilder);
-			il.Emit(OpCodes.Ret);
+            return typeBuilder.CreateType();
+        }
 
-			return getMethodBuilder;
-		}
+        static void CreateDictionaryConstructor(TypeBuilder typeBuilder)
+        {
+            ConstructorBuilder builder = typeBuilder.DefineConstructor(MethodAttributes.Public,
+                                                                       CallingConventions.Standard,
+                                                                       new[] {typeof(IDictionary<string, object>)});
 
-		static MethodBuilder GetSetMethodBuilder(PropertyInfo propertyInfo, TypeBuilder typeBuilder, FieldBuilder fieldBuilder)
-		{
-			MethodBuilder setMethodBuilder = typeBuilder.DefineMethod("set_" + propertyInfo.Name,
-			                                                          PropertyAccessMethodAttributes,
-			                                                          null,
-			                                                          new[] {propertyInfo.PropertyType});
+            ILGenerator generator = builder.GetILGenerator();
 
-			ILGenerator il = setMethodBuilder.GetILGenerator();
-			il.Emit(OpCodes.Ldarg_0);
-			il.Emit(OpCodes.Ldarg_1);
-			il.Emit(OpCodes.Stfld, fieldBuilder);
-			il.Emit(OpCodes.Ret);
+            if (typeBuilder.BaseType != null)
+            {
+                ConstructorInfo baseConstructor = typeBuilder.BaseType.GetConstructor(Type.EmptyTypes);
+                if (baseConstructor != null)
+                {
+                    generator.Emit(OpCodes.Ldarg_0);
+                    generator.Emit(OpCodes.Call, baseConstructor);
+                }
 
-			return setMethodBuilder;
-		}
+                // now call static method on initializer to initialize the class instance from a dictionary
+            }
 
-		static ModuleBuilder GetModuleBuilderForType(Type typeToProxy)
-		{
-			string assemblyName = typeToProxy.Namespace + ProxyNamespaceSuffix;
+            generator.Emit(OpCodes.Ret);
+        }
 
-			AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName(assemblyName),
-			                                                                                AssemblyBuilderAccess.Run);
+        static MethodBuilder GetGetMethodBuilder(PropertyInfo propertyInfo, TypeBuilder typeBuilder,
+                                                 FieldBuilder fieldBuilder)
+        {
+            MethodBuilder getMethodBuilder = typeBuilder.DefineMethod("get_" + propertyInfo.Name,
+                                                                      PropertyAccessMethodAttributes,
+                                                                      propertyInfo.PropertyType,
+                                                                      Type.EmptyTypes);
 
-			return assemblyBuilder.DefineDynamicModule(assemblyName);
-		}
-	}
+            ILGenerator il = getMethodBuilder.GetILGenerator();
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldfld, fieldBuilder);
+            il.Emit(OpCodes.Ret);
+
+            return getMethodBuilder;
+        }
+
+        static MethodBuilder GetSetMethodBuilder(PropertyInfo propertyInfo, TypeBuilder typeBuilder,
+                                                 FieldBuilder fieldBuilder)
+        {
+            MethodBuilder setMethodBuilder = typeBuilder.DefineMethod("set_" + propertyInfo.Name,
+                                                                      PropertyAccessMethodAttributes,
+                                                                      null,
+                                                                      new[] {propertyInfo.PropertyType});
+
+            ILGenerator il = setMethodBuilder.GetILGenerator();
+            il.Emit(OpCodes.Ldarg_0);
+            il.Emit(OpCodes.Ldarg_1);
+            il.Emit(OpCodes.Stfld, fieldBuilder);
+            il.Emit(OpCodes.Ret);
+
+            return setMethodBuilder;
+        }
+
+        static ModuleBuilder GetModuleBuilderForType(Type typeToProxy)
+        {
+            string assemblyName = typeToProxy.Namespace + ProxyNamespaceSuffix;
+
+            AssemblyBuilder assemblyBuilder =
+                AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName(assemblyName),
+                                                              AssemblyBuilderAccess.Run);
+
+            return assemblyBuilder.DefineDynamicModule(assemblyName);
+        }
+    }
 }

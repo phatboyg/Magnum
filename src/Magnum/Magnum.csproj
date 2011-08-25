@@ -310,6 +310,9 @@
     <Compile Include="Reflection\ExtensionsToGet.cs" />
     <Compile Include="Reflection\GetProperty.cs" />
     <Compile Include="Reflection\GetValue.cs" />
+    <Compile Include="Reflection\InterfaceImplementationExtensions.cs" />
+    <Compile Include="Reflection\InterfaceImplementationInitializer.cs" />
+    <Compile Include="Reflection\AnonymousObjectDictionaryConverter.cs" />
     <Compile Include="Reflection\SafeGetPropertyFactory.cs" />
     <Compile Include="Reflection\SafeProperty.1.cs" />
     <Compile Include="Reflection\SafePropertyVisitor.cs" />
