@@ -23,18 +23,30 @@ namespace Magnum.Reflection
 
         public static object InitializeProxy(this Type interfaceType, object initializer)
         {
+            IDictionary<string, object> values = _converter.Convert(initializer);
+
+            return InitializeProxy(interfaceType, values);
+        }
+
+        public static object InitializeProxy(this Type interfaceType, IDictionary<string, object> values)
+        {
             Type proxyType = InterfaceImplementationBuilder.GetProxyFor(interfaceType);
 
             object proxy = FastActivator.Create(proxyType);
-
-            IDictionary<string, object> values = _converter.Convert(initializer);
 
             return _initializer.InitializeFromDictionary(proxy, values);
         }
 
         public static T InitializeProxy<T>(object initializer)
+            where T : class
         {
             return (T)InitializeProxy(typeof(T), initializer);
+        }
+
+        public static T InitializeProxy<T>(IDictionary<string, object> values)
+            where T : class
+        {
+            return (T)InitializeProxy(typeof(T), values);
         }
     }
 }
