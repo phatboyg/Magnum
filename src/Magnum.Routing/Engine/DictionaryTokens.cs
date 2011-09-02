@@ -1,5 +1,5 @@
 ﻿// Copyright 2007-2010 The Apache Software Foundation.
-//  
+// 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
@@ -12,38 +12,38 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Routing.Engine
 {
-	using System.Collections.Generic;
-	using Internals;
+    using System.Collections.Generic;
+    using Caching;
 
 
-	class DictionaryTokens :
-		Tokens
-	{
-		readonly Cache<string, Token> _values;
+    class DictionaryTokens :
+        Tokens
+    {
+        readonly Cache<string, Token> _values;
 
-		public DictionaryTokens(IEnumerable<Token> parameters)
-		{
-			_values = new DictionaryCache<string, Token>(x => x.Name, parameters);
-		}
+        public DictionaryTokens(IEnumerable<Token> parameters)
+        {
+            _values = new DictionaryCache<string, Token>(x => x.Name, parameters);
+        }
 
-		public Token this[string name]
-		{
-			get { return _values[name]; }
-		}
+        public Token this[string name]
+        {
+            get { return _values[name]; }
+        }
 
-		public string[] AllNames
-		{
-			get { return _values.GetAllKeys(); }
-		}
+        public string[] AllNames
+        {
+            get { return _values.GetAllKeys(); }
+        }
 
-		public int Count
-		{
-			get { return _values.Count; }
-		}
+        public int Count
+        {
+            get { return _values.Count; }
+        }
 
-		public bool Has(string name)
-		{
-			return _values.Has(name);
-		}
-	}
+        public bool Has(string name)
+        {
+            return _values.Has(name);
+        }
+    }
 }

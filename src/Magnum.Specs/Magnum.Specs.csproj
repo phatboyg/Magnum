@@ -120,6 +120,7 @@
     <Compile Include="Binding\Binding_Specs.cs" />
     <Compile Include="Binding\TestModelBinderContext.cs" />
     <Compile Include="Cache_Specs.cs" />
+    <Compile Include="Caching\GenericCloser_Specs.cs" />
     <Compile Include="Calendar\IsHoliday_Specs.cs" />
     <Compile Include="Calendar\MemorialDayObservedCheck.cs" />
     <Compile Include="BehaviorTest.cs" />

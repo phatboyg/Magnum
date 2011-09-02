@@ -35,7 +35,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\DelegateBinder.cs" />
@@ -49,11 +48,6 @@
     <Compile Include="Configuration\RouteFactory.cs" />
     <Compile Include="Configuration\UrlPatternParser.cs" />
     <Compile Include="Exceptions\RoutingEngineException.cs" />
-    <Compile Include="Internals\Cache.cs" />
-    <Compile Include="Internals\DictionaryCache.cs" />
-    <Compile Include="Internals\KeySelector.cs" />
-    <Compile Include="Internals\MissingValueProvider.cs" />
-    <Compile Include="Internals\ValueAddedCallback.cs" />
     <Compile Include="Model\RouteParameter.cs" />
     <Compile Include="Model\RouteConstraint.cs" />
     <Compile Include="Model\RouteParameterImpl.cs" />
@@ -100,7 +94,12 @@
     <Compile Include="Engine\RouteMatchImpl.cs" />
     <Compile Include="RoutingEngine.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Magnum\Magnum.csproj">
+      <Project>{C3650C32-0850-48B4-BE71-ECE9FACBD356}</Project>
+      <Name>Magnum</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

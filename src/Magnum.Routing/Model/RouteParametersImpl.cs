@@ -14,7 +14,7 @@ namespace Magnum.Routing.Model
 {
 	using System.Collections;
 	using System.Collections.Generic;
-	using Internals;
+	using Caching;
 
 
 	class RouteParametersImpl :

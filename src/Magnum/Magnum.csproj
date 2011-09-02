@@ -114,6 +114,15 @@
     <Compile Include="Algorithms\Implementations\TopologicalSort.cs" />
     <Compile Include="Algorithms\Implementations\TopologicalSortNodeProperties.cs" />
     <Compile Include="Benchmark.cs" />
+    <Compile Include="Caching\Cache.cs" />
+    <Compile Include="Caching\CacheItemCallback.cs" />
+    <Compile Include="Caching\ConcurrentCache.cs" />
+    <Compile Include="Caching\DictionaryCache.cs" />
+    <Compile Include="Caching\GenericTypeCache.cs" />
+    <Compile Include="Caching\KeySelector.cs" />
+    <Compile Include="Caching\MissingValueProvider.cs" />
+    <Compile Include="Caching\ReadCache.cs" />
+    <Compile Include="Caching\ReaderWriterLockedCache.cs" />
     <Compile Include="Extensions\ExtensionsToAction.cs" />
     <Compile Include="PerformanceCounters\CategoryConfiguration.cs" />
     <Compile Include="PerformanceCounters\Counter.cs" />
