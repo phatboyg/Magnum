@@ -15,6 +15,7 @@ namespace Magnum.Caching
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using Reflection;
 
 
     public class GenericTypeCache<TInterface> :
@@ -202,7 +203,7 @@ namespace Magnum.Caching
                 {
                     Type buildType = genericType.MakeGenericType(type);
 
-                    return (TInterface)Activator.CreateInstance(buildType);
+                    return (TInterface)FastActivator.Create(buildType);
                 };
         }
     }

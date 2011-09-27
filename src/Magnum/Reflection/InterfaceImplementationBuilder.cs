@@ -38,9 +38,13 @@ namespace Magnum.Reflection
         {
             return _proxyTypes.Retrieve(typeToProxy, () =>
                 {
-                    ModuleBuilder moduleBuilder = GetModuleBuilderForType(typeToProxy);
+                    Type proxyType = null;
+                    GetModuleBuilderForType(typeToProxy, moduleBuilder =>
+                        {
+                            proxyType = BuildTypeProxy(moduleBuilder, typeToProxy);
+                        });
 
-                    return BuildTypeProxy(moduleBuilder, typeToProxy);
+                    return proxyType;
                 });
         }
 
@@ -145,15 +149,20 @@ namespace Magnum.Reflection
             return setMethodBuilder;
         }
 
-        static ModuleBuilder GetModuleBuilderForType(Type typeToProxy)
+        static void GetModuleBuilderForType(Type typeToProxy, Action<ModuleBuilder> callback)
         {
             string assemblyName = typeToProxy.Namespace + ProxyNamespaceSuffix;
 
             AssemblyBuilder assemblyBuilder =
                 AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName(assemblyName),
-                                                              AssemblyBuilderAccess.Run);
+                                                              AssemblyBuilderAccess.RunAndSave);
 
-            return assemblyBuilder.DefineDynamicModule(assemblyName);
+
+            ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(assemblyName);
+
+            callback(moduleBuilder);
+
+            assemblyBuilder.Save(assemblyName + ".dll");
         }
     }
 }

@@ -14,116 +14,49 @@ namespace Magnum.Reflection
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Reflection;
-    using System.Reflection.Emit;
-    using System.Threading;
-    using Extensions;
+    using Binding;
+    using ValueProviders;
 
 
     public class InterfaceImplementationInitializer
     {
-        readonly Dictionary<Type, Func<object, IDictionary<string, object>, object>> _cache;
-        readonly ReaderWriterLockSlim _lock;
-
-        public InterfaceImplementationInitializer()
+        public object InitializeFromDictionary(Type objectType, IDictionary<string, object> values)
         {
-            _cache = new Dictionary<Type, Func<object, IDictionary<string, object>, object>>();
-            _lock = new ReaderWriterLockSlim();
-        }
+            ValueProvider dictionaryProvider = new DictionaryValueProvider(values);
 
-        public object InitializeFromDictionary(object obj, IDictionary<string, object> values)
-        {
-            if (obj == null)
-                return null;
+            ModelBinder binder = new FastModelBinder();
+            ModelBinderContext context = new InitializerModelBinderContext(dictionaryProvider);
 
-            if (values == null)
-                return obj;
-
-            GetObjectInitializer(obj, values)(values);
+            object obj = binder.Bind(objectType, context);
 
             return obj;
         }
 
 
-        Action<IDictionary<string, object>> GetObjectInitializer(object obj, IDictionary<string, object> values)
+        public class InitializerModelBinderContext :
+            ModelBinderContext
         {
-            _lock.EnterUpgradeableReadLock();
-            try
-            {
-                Func<object, IDictionary<string, object>, object> initializer;
-                if (!_cache.TryGetValue(obj.GetType(), out initializer))
-                {
-                    _lock.EnterWriteLock();
-                    try
-                    {
-                        if (!_cache.TryGetValue(obj.GetType(), out initializer))
-                        {
-                            initializer = CreateInitializer(obj.GetType(), values);
-                            _cache[obj.GetType()] = initializer;
-                        }
-                    }
-                    finally
-                    {
-                        _lock.ExitWriteLock();
-                    }
-                }
-                return dictionary => initializer(obj, dictionary);
-            }
-            finally
-            {
-                _lock.ExitUpgradeableReadLock();
-            }
-        }
+            readonly ValueProvider _provider;
 
-        static Func<object, IDictionary<string, object>, object> CreateInitializer(Type objType,
-                                                                                   IDictionary<string, object> values)
-        {
-            BindingFlags bindingFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
-            Dictionary<string, PropertyInfo> properties = objType.GetProperties(bindingFlags).ToDictionary(x => x.Name);
-
-            string[] unknown = values
-                .Where(x => !properties.ContainsKey(x.Key))
-                .Select(x => x.Key)
-                .ToArray();
-            if (unknown.Length > 0)
+            public InitializerModelBinderContext(ValueProvider provider)
             {
-                throw new ArgumentException("The dictionary has values that are not properties of the object: " +
-                                            string.Join(",", unknown));
+                _provider = provider;
             }
 
-            IEnumerable<PropertyInfo> setters = values
-                .Select(x => properties[x.Key]);
+            public bool GetValue(string key, Func<object, bool> matchingValueAction)
+            {
+                return _provider.GetValue(key, matchingValueAction);
+            }
 
+            public bool GetValue(string key, Func<object, bool> matchingValueAction, Action missingValueAction)
+            {
+                return _provider.GetValue(key, matchingValueAction, missingValueAction);
+            }
 
-            var dm = new DynamicMethod(string.Empty, typeof(object),
-                                       new[] {typeof(object), typeof(IDictionary<string, object>)}, objType);
-            ILGenerator il = dm.GetILGenerator();
-
-            Type dictType = typeof(Dictionary<string, object>);
-
-            MethodInfo getMethod = dictType.GetMethod("get_Item", new[]{typeof(string)});
-
-            setters.Each(property =>
-                {
-                    il.Emit(OpCodes.Ldarg_0); // object
-
-                    il.Emit(OpCodes.Ldarg_1); // dictionary
-                    il.Emit(OpCodes.Ldstr, property.Name); // key
-                    il.EmitCall(OpCodes.Callvirt, getMethod, null);
-
-                    if(property.PropertyType.IsValueType)
-                        il.Emit(OpCodes.Unbox_Any, property.PropertyType);
-
-                    il.EmitCall(OpCodes.Callvirt, property.GetSetMethod(true), null);
-                });
-
-            // finally load Dictionary and return
-            il.Emit(OpCodes.Ldloc_0);
-            il.Emit(OpCodes.Ret);
-
-            return (Func<object, IDictionary<string, object>, object>)
-                   dm.CreateDelegate(typeof(Func<object, IDictionary<string, object>, object>));
+            public void GetAll(Action<string, object> valueAction)
+            {
+                _provider.GetAll(valueAction);
+            }
         }
     }
 }

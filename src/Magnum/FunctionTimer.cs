@@ -129,14 +129,14 @@ namespace Magnum
 		FunctionTimer
 		where T : class, new()
 	{
-		private readonly FastProperties<T> _properties;
+		private readonly FastPropertyCache<T> _propertyCache;
 		private readonly T _values;
 
 		public FunctionTimer(string description, Action<FunctionTimerResult> action)
 			: base(description, action)
 		{
 			_values = new T();
-			_properties = new FastProperties<T>();
+			_propertyCache = new FastPropertyCache<T>();
 		}
 
 		public T Values
@@ -146,7 +146,7 @@ namespace Magnum
 
 		protected override void OutputAdditionalValues(StringBuilder sb)
 		{
-			_properties.Each(_values, x => sb.Append(' ').Append(x ?? "null"));
+			_propertyCache.Each(_values, x => sb.Append(' ').Append(x ?? "null"));
 		}
 	}
 }

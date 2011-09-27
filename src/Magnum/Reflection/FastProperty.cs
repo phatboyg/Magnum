@@ -20,8 +20,8 @@ namespace Magnum.Reflection
 
 	public class FastProperty
 	{
-		public Func<object, object> GetDelegate;
-		public Action<object, object> SetDelegate;
+		public readonly Func<object, object> GetDelegate;
+		public readonly Action<object, object> SetDelegate;
 
 		public FastProperty(PropertyInfo property)
 		{
@@ -37,7 +37,7 @@ namespace Magnum.Reflection
 			SetDelegate = GetSetMethod(Property, (bindingFlags & BindingFlags.NonPublic) == BindingFlags.NonPublic);
 		}
 
-		public PropertyInfo Property { get; set; }
+		public PropertyInfo Property { get; private set; }
 
 		public object Get(object instance)
 		{
@@ -49,7 +49,7 @@ namespace Magnum.Reflection
 			SetDelegate(instance, value);
 		}
 
-		public static Action<object, object> GetSetMethod(PropertyInfo property, bool includeNonPublic)
+	    static Action<object, object> GetSetMethod(PropertyInfo property, bool includeNonPublic)
 		{
 			var instance = Expression.Parameter(typeof (object), "instance");
 			var value = Expression.Parameter(typeof (object), "value");
@@ -72,7 +72,7 @@ namespace Magnum.Reflection
 			return Expression.Lambda<Action<object, object>>(call, new[] {instance, value}).Compile();
 		}
 
-		public static Func<object, object> GetGetMethod(PropertyInfo property)
+	    static Func<object, object> GetGetMethod(PropertyInfo property)
 		{
 			var instance = Expression.Parameter(typeof (object), "instance");
 			UnaryExpression instanceCast;
@@ -90,8 +90,8 @@ namespace Magnum.Reflection
 
 	public class FastProperty<T>
 	{
-		public Func<T, object> GetDelegate;
-		public Action<T, object> SetDelegate;
+		public readonly Func<T, object> GetDelegate;
+		public readonly Action<T, object> SetDelegate;
 
 		public FastProperty(Expression<Func<T, object>> propertyExpression)
 			: this(propertyExpression.GetMemberPropertyInfo())
@@ -112,7 +112,7 @@ namespace Magnum.Reflection
 			SetDelegate = GetSetMethod(Property, (bindingFlags & BindingFlags.NonPublic) == BindingFlags.NonPublic);
 		}
 
-		public PropertyInfo Property { get; set; }
+		public PropertyInfo Property { get; private set; }
 
 		public object Get(T instance)
 		{
@@ -124,7 +124,7 @@ namespace Magnum.Reflection
 			SetDelegate(instance, value);
 		}
 
-		public static Action<T, object> GetSetMethod(PropertyInfo property, bool includeNonPublic)
+	    static Action<T, object> GetSetMethod(PropertyInfo property, bool includeNonPublic)
 		{
 		    if (!property.CanWrite)
 		        return (x, i) => { throw new InvalidOperationException("No setter available on " + property.Name); };
@@ -143,7 +143,7 @@ namespace Magnum.Reflection
 		    return Expression.Lambda<Action<T, object>>(call, new[] { instance, value }).Compile();
 		}
 
-		public static Func<T, object> GetGetMethod(PropertyInfo property)
+	    static Func<T, object> GetGetMethod(PropertyInfo property)
 		{
 			var instance = Expression.Parameter(typeof (T), "instance");
 			var call = Expression.Call(instance, property.GetGetMethod());
@@ -152,12 +152,12 @@ namespace Magnum.Reflection
 		}
 	}
 
-	public class FastProperty<T, P>
+	public class FastProperty<T, TProperty>
 	{
-		public Func<T, P> GetDelegate;
-		public Action<T, P> SetDelegate;
+		public readonly Func<T, TProperty> GetDelegate;
+		public readonly Action<T, TProperty> SetDelegate;
 
-		public FastProperty(Expression<Func<T, P>> propertyExpression)
+		public FastProperty(Expression<Func<T, TProperty>> propertyExpression)
 			: this(propertyExpression.GetMemberPropertyInfo())
 		{
 		}
@@ -176,33 +176,33 @@ namespace Magnum.Reflection
 			SetDelegate = GetSetMethod(Property, (bindingFlags & BindingFlags.NonPublic) == BindingFlags.NonPublic);
 		}
 
-		public PropertyInfo Property { get; set; }
+		public PropertyInfo Property { get; private set; }
 
-		public P Get(T instance)
+		public TProperty Get(T instance)
 		{
 			return GetDelegate(instance);
 		}
 
-		public void Set(T instance, P value)
+		public void Set(T instance, TProperty value)
 		{
 			SetDelegate(instance, value);
 		}
 
-		public static Action<T, P> GetSetMethod(PropertyInfo property, bool includeNonPublic)
+	    static Action<T, TProperty> GetSetMethod(PropertyInfo property, bool includeNonPublic)
 		{
 			var instance = Expression.Parameter(typeof (T), "instance");
-			var value = Expression.Parameter(typeof (P), "value");
+			var value = Expression.Parameter(typeof (TProperty), "value");
 			var call = Expression.Call(instance, property.GetSetMethod(includeNonPublic), value);
 
-			return Expression.Lambda<Action<T, P>>(call, new[] {instance, value}).Compile();
+			return Expression.Lambda<Action<T, TProperty>>(call, new[] {instance, value}).Compile();
 
 			// roughly looks like Action<T,P> a = new Action<T,P>((instance,value) => instance.set_Property(value));
 		}
 
-		public static Func<T, P> GetGetMethod(PropertyInfo property)
+	    static Func<T, TProperty> GetGetMethod(PropertyInfo property)
 		{
 			var instance = Expression.Parameter(typeof (T), "instance");
-			return Expression.Lambda<Func<T, P>>(Expression.Call(instance, property.GetGetMethod()), instance).Compile();
+			return Expression.Lambda<Func<T, TProperty>>(Expression.Call(instance, property.GetGetMethod()), instance).Compile();
 
 			// roughly looks like Func<T,P> getter = instance => return instance.get_Property();
 		}

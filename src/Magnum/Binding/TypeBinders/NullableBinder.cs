@@ -12,19 +12,27 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Binding.TypeBinders
 {
-    using System.Collections.Generic;
+    using System;
 
 
-    public abstract class EnumerableBinderBase<T> :
-        ObjectBinder<T>
+    public class NullableBinder<T> :
+        ObjectBinder<Nullable<T>>
+        where T : struct
     {
-        public abstract object Bind(BinderContext context);
+        readonly ObjectBinder<T> _typeBinder;
 
-        public virtual List<T> BindList(BinderContext context)
+        public NullableBinder(ObjectBinder<T> typeBinder)
         {
-            var list = new List<T>();
+            _typeBinder = typeBinder;
+        }
 
-            return list;
+        public object Bind(BinderContext context)
+        {
+            object value = context.PropertyValue;
+            if (value == null)
+                return default(T?);
+
+            return _typeBinder.Bind(context);
         }
     }
 }

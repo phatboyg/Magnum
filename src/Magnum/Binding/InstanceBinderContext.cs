@@ -1,5 +1,5 @@
-// Copyright 2007-2008 The Apache Software Foundation.
-//  
+// Copyright 2007-2010 The Apache Software Foundation.
+// 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
 // License at 
@@ -12,166 +12,173 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Binding
 {
-	using System;
-	using System.Collections;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Reflection;
-	using Extensions;
-	using Reflection;
-	using TypeBinders;
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
+    using Extensions;
+    using Reflection;
+    using TypeBinders;
 
-	public class InstanceBinderContext :
-		BinderContext
-	{
-		private static readonly Dictionary<Type, ObjectBinder> _typeBinders;
 
-		private readonly Stack<ModelBinderContext> _contextStack;
-		private readonly Stack<ObjectPropertyBinder> _propertyStack;
+    public class InstanceBinderContext :
+        BinderContext
+    {
+        static readonly Dictionary<Type, ObjectBinder> _typeBinders;
 
-		static InstanceBinderContext()
-		{
-			_typeBinders = new Dictionary<Type, ObjectBinder>();
+        readonly Stack<ModelBinderContext> _contextStack;
+        readonly Stack<ObjectPropertyBinder> _propertyStack;
 
-			LoadBuiltInBinders();
-		}
+        static InstanceBinderContext()
+        {
+            _typeBinders = new Dictionary<Type, ObjectBinder>();
 
-		public InstanceBinderContext(ModelBinderContext context)
-		{
-			_contextStack = new Stack<ModelBinderContext>();
-			_contextStack.Push(context);
+            LoadBuiltInBinders();
+        }
 
-			_propertyStack = new Stack<ObjectPropertyBinder>();
-		}
+        public InstanceBinderContext(ModelBinderContext context)
+        {
+            _contextStack = new Stack<ModelBinderContext>();
+            _contextStack.Push(context);
 
-		public ModelBinderContext Context
-		{
-			get { return _contextStack.Count > 0 ? _contextStack.Peek() : null; }
-		}
+            _propertyStack = new Stack<ObjectPropertyBinder>();
+        }
 
-		public string PropertyKey
-		{
-			get
-			{
-				const string separator = ".";
+        public ModelBinderContext Context
+        {
+            get { return _contextStack.Count > 0 ? _contextStack.Peek() : null; }
+        }
 
-				string value = string.Join(separator,
-					_propertyStack
-						.Select(x => x.Property.Name)
-						.Reverse()
-						.ToArray());
+        public string PropertyKey
+        {
+            get
+            {
+                const string separator = ".";
 
-				return value;
-			}
-		}
+                string value = string.Join(separator,
+                                           _propertyStack
+                                               .Select(x => x.Property.Name)
+                                               .Reverse()
+                                               .ToArray());
 
-		public object PropertyValue
-		{
-			get
-			{
-				object value = null;
+                return value;
+            }
+        }
 
-				Context.GetValue(PropertyKey, x =>
-					{
-						value = x;
-						return true;
-					}, () => value = null);
+        public object PropertyValue
+        {
+            get
+            {
+                object value = null;
 
-				return value;
-			}
-		}
+                Context.GetValue(PropertyKey, x =>
+                    {
+                        value = x;
+                        return true;
+                    }, () => value = null);
 
-		public PropertyInfo Property
-		{
-			get { return _propertyStack.Count > 0 ? _propertyStack.Peek().Property : null; }
-		}
+                return value;
+            }
+        }
 
-		public object Bind(Type type)
-		{
-			ObjectBinder binder;
-			lock (_typeBinders)
-			{
-				binder = _typeBinders.Retrieve(type, () => CreateBinderFor(type));
-			}
+        public PropertyInfo Property
+        {
+            get { return _propertyStack.Count > 0 ? _propertyStack.Peek().Property : null; }
+        }
 
-			return binder.Bind(this);
-		}
+        public object Bind(ObjectPropertyBinder property)
+        {
+            _propertyStack.Push(property);
 
-		public object Bind(ObjectPropertyBinder property)
-		{
-			_propertyStack.Push(property);
+            try
+            {
+                return Bind(Property.PropertyType);
+            }
+            finally
+            {
+                _propertyStack.Pop();
+            }
+        }
 
-			try
-			{
-				return Bind(Property.PropertyType);
-			}
-			finally
-			{
-				_propertyStack.Pop();
-			}
-		}
+        public object Bind(Type type)
+        {
+            ObjectBinder binder;
+            lock (_typeBinders)
+            {
+                binder = _typeBinders.Retrieve(type, () => CreateBinderFor(type));
+            }
 
-		private static void LoadBuiltInBinders()
-		{
-			Assembly.GetExecutingAssembly()
-				.GetTypes()
-				.Where(x => !x.IsGenericType)
-				.Where(x => x.Namespace == typeof (StringBinder).Namespace)
-				.Each(type =>
-					{
-						type.GetInterfaces().Where(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof (ObjectBinder<>))
-							.Each(interfaceType =>
-								{
-									Type itemType = interfaceType.GetGenericArguments().First();
+            return binder.Bind(this);
+        }
 
-									_typeBinders.Add(itemType, FastActivator.Create(type) as ObjectBinder);
-								});
-					});
-		}
+        static void LoadBuiltInBinders()
+        {
+            Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(x => !x.IsGenericType)
+                .Where(x => x.Namespace == typeof(StringBinder).Namespace)
+                .Each(type =>
+                    {
+                        type.GetInterfaces().Where(x => x.IsGenericType
+                                                        && x.GetGenericTypeDefinition() == typeof(ObjectBinder<>))
+                            .Each(interfaceType =>
+                                {
+                                    Type itemType = interfaceType.GetGenericArguments().First();
 
-		private static ObjectBinder CreateBinderFor(Type type)
-		{
-			if (type.IsEnum)
-			{
-				return (ObjectBinder) FastActivator.Create(typeof (EnumBinder<>).MakeGenericType(type));
-			}
+                                    _typeBinders.Add(itemType, FastActivator.Create(type) as ObjectBinder);
+                                });
+                    });
+        }
 
-			if (typeof (IEnumerable).IsAssignableFrom(type) && type != typeof (string))
-			{
-				if (type.IsArray)
-				{
-					return (ObjectBinder) FastActivator.Create(typeof (ArrayBinder<>).MakeGenericType(type.GetElementType()));
-				}
-				if (type.IsGenericType)
-				{
-					Type genericTypeDefinition = type.GetGenericTypeDefinition();
-					Type[] arguments = type.GetGenericArguments();
-					if (genericTypeDefinition == typeof (IList<>) || genericTypeDefinition == typeof (List<>))
-					{
-						return (ObjectBinder) FastActivator.Create(typeof (ListBinder<>).MakeGenericType(arguments));
-					}
+        static ObjectBinder CreateBinderFor(Type type)
+        {
+            Type underlyingType = Nullable.GetUnderlyingType(type);
+            if (underlyingType != null)
+            {
+                ObjectBinder underlyingBinder = _typeBinders.Retrieve(underlyingType, () => CreateBinderFor(underlyingType));
+                return
+                    (ObjectBinder)
+                    FastActivator.Create(typeof(NullableBinder<>), new[] {underlyingType},
+                                         new object[] {underlyingBinder});
+            }
+
+            if (type.IsEnum)
+                return (ObjectBinder)FastActivator.Create(typeof(EnumBinder<>).MakeGenericType(type));
+
+            if (typeof(IEnumerable).IsAssignableFrom(type) && type != typeof(string))
+            {
+                if (type.IsArray)
+                {
+                    return
+                        (ObjectBinder)FastActivator.Create(typeof(ArrayBinder<>).MakeGenericType(type.GetElementType()));
+                }
+                if (type.IsGenericType)
+                {
+                    Type genericTypeDefinition = type.GetGenericTypeDefinition();
+                    Type[] arguments = type.GetGenericArguments();
+                    if (genericTypeDefinition == typeof(IList<>) || genericTypeDefinition == typeof(List<>))
+                        return (ObjectBinder)FastActivator.Create(typeof(ListBinder<>).MakeGenericType(arguments));
 
 //					if (genericTypeDefinition == typeof (IDictionary<,>) || genericTypeDefinition == typeof (Dictionary<,>))
 //					{
 //						return (ObjectBinder) FastActivator.Create(typeof (DictionaryBinder<,>).MakeGenericType(arguments));
 //					}
-				}
+                }
 
-				throw new NotSupportedException("Unsupported enumeration type: " + type.FullName);
-			}
+                throw new NotSupportedException("Unsupported enumeration type: " + type.FullName);
+            }
 
-			Type binderType;
-			if (type.IsInterface)
-			{
-				Type proxyType = InterfaceImplementationBuilder.GetProxyFor(type);
-				binderType = typeof (FastObjectBinder<>).MakeGenericType(proxyType);
-			}
-			else
-			{
-				binderType = typeof (FastObjectBinder<>).MakeGenericType(type);
-			}
+            Type binderType;
+            if (type.IsInterface)
+            {
+                Type proxyType = InterfaceImplementationBuilder.GetProxyFor(type);
+                binderType = typeof(FastObjectBinder<>).MakeGenericType(proxyType);
+            }
+            else
+                binderType = typeof(FastObjectBinder<>).MakeGenericType(type);
 
-			return (ObjectBinder) FastActivator.Create(binderType);
-		}
-	}
+            return (ObjectBinder)FastActivator.Create(binderType);
+        }
+    }
 }

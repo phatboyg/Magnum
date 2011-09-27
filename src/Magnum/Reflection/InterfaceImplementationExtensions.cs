@@ -32,9 +32,7 @@ namespace Magnum.Reflection
         {
             Type proxyType = InterfaceImplementationBuilder.GetProxyFor(interfaceType);
 
-            object proxy = FastActivator.Create(proxyType);
-
-            return _initializer.InitializeFromDictionary(proxy, values);
+            return _initializer.InitializeFromDictionary(proxyType, values);
         }
 
         public static T InitializeProxy<T>(object initializer)

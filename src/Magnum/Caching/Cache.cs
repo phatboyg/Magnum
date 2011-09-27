@@ -44,7 +44,7 @@ namespace Magnum.Caching
         /// Sets the callback that is called when a duplicate value is added to the cache
         /// </summary>
         CacheItemCallback<TKey, TValue> DuplicateValueAdded { set; }
-            
+
         /// <summary>
         /// Specifies a selector that returns the key from a value which is used when a value is added to the cache
         /// </summary>

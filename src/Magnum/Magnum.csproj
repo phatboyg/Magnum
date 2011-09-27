@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Magnum</RootNamespace>
     <AssemblyName>Magnum</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -31,6 +31,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -114,6 +115,8 @@
     <Compile Include="Algorithms\Implementations\TopologicalSort.cs" />
     <Compile Include="Algorithms\Implementations\TopologicalSortNodeProperties.cs" />
     <Compile Include="Benchmark.cs" />
+    <Compile Include="Binding\TypeBinders\NullableBinder.cs" />
+    <Compile Include="Caching\AbstractCacheDecorator.cs" />
     <Compile Include="Caching\Cache.cs" />
     <Compile Include="Caching\CacheItemCallback.cs" />
     <Compile Include="Caching\ConcurrentCache.cs" />
@@ -425,7 +428,7 @@
     <Compile Include="Reflection\ExpressionVisitor.cs" />
     <Compile Include="Reflection\ExtensionsForGenericArguments.cs" />
     <Compile Include="Reflection\FastCollection.cs" />
-    <Compile Include="Reflection\FastProperties.cs" />
+    <Compile Include="Reflection\FastPropertyCache.cs" />
     <Compile Include="Reflection\ReflectiveVisitorBase.cs" />
     <Compile Include="Serialization\FastText\FastTextDictionarySerializer.cs" />
     <Compile Include="Serialization\FastText\FastTextIDictionarySerializer.cs" />

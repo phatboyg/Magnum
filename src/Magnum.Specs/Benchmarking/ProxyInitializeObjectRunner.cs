@@ -10,21 +10,22 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace Magnum.Binding.TypeBinders
+namespace Magnum.Specs.Benchmarking
 {
-    using System.Collections.Generic;
+    using Magnum.Reflection;
 
 
-    public abstract class EnumerableBinderBase<T> :
-        ObjectBinder<T>
+    public class ProxyInitializeObjectRunner :
+        InitializeObjectRunner
     {
-        public abstract object Bind(BinderContext context);
-
-        public virtual List<T> BindList(BinderContext context)
+        public IObjectRunnerSubject CreateObject(string value)
         {
-            var list = new List<T>();
+            var subject = (IObjectRunnerSubject)typeof(IObjectRunnerSubject).InitializeProxy(new
+                {
+                    Value = value,
+                });
 
-            return list;
+            return subject;
         }
     }
 }
