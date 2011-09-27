@@ -17,6 +17,7 @@ namespace Magnum.Binding
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using Caching;
     using Extensions;
     using Reflection;
     using TypeBinders;
@@ -25,14 +26,14 @@ namespace Magnum.Binding
     public class InstanceBinderContext :
         BinderContext
     {
-        static readonly Dictionary<Type, ObjectBinder> _typeBinders;
+        static readonly Cache<Type, ObjectBinder> _typeBinders;
 
         readonly Stack<ModelBinderContext> _contextStack;
         readonly Stack<ObjectPropertyBinder> _propertyStack;
 
         static InstanceBinderContext()
         {
-            _typeBinders = new Dictionary<Type, ObjectBinder>();
+            _typeBinders = new GenericTypeCache<ObjectBinder>(typeof(ObjectBinder<>), CreateBinderFor);
 
             LoadBuiltInBinders();
         }
@@ -103,11 +104,7 @@ namespace Magnum.Binding
 
         public object Bind(Type type)
         {
-            ObjectBinder binder;
-            lock (_typeBinders)
-            {
-                binder = _typeBinders.Retrieve(type, () => CreateBinderFor(type));
-            }
+            ObjectBinder binder = _typeBinders[type];
 
             return binder.Bind(this);
         }
@@ -136,49 +133,40 @@ namespace Magnum.Binding
             Type underlyingType = Nullable.GetUnderlyingType(type);
             if (underlyingType != null)
             {
-                ObjectBinder underlyingBinder = _typeBinders.Retrieve(underlyingType, () => CreateBinderFor(underlyingType));
-                return
-                    (ObjectBinder)
-                    FastActivator.Create(typeof(NullableBinder<>), new[] {underlyingType},
-                                         new object[] {underlyingBinder});
+                ObjectBinder underlyingBinder = _typeBinders[underlyingType];
+                return (ObjectBinder)FastActivator.Create(typeof(NullableBinder<>), new[] {underlyingType},
+                                                          new object[] {underlyingBinder});
             }
 
             if (type.IsEnum)
-                return (ObjectBinder)FastActivator.Create(typeof(EnumBinder<>).MakeGenericType(type));
+                return (ObjectBinder)FastActivator.Create(typeof(EnumBinder<>), new[] {type});
 
             if (typeof(IEnumerable).IsAssignableFrom(type) && type != typeof(string))
             {
                 if (type.IsArray)
-                {
-                    return
-                        (ObjectBinder)FastActivator.Create(typeof(ArrayBinder<>).MakeGenericType(type.GetElementType()));
-                }
+                    return (ObjectBinder)FastActivator.Create(typeof(ArrayBinder<>), new[] {type.GetElementType()});
+
                 if (type.IsGenericType)
                 {
                     Type genericTypeDefinition = type.GetGenericTypeDefinition();
                     Type[] arguments = type.GetGenericArguments();
                     if (genericTypeDefinition == typeof(IList<>) || genericTypeDefinition == typeof(List<>))
-                        return (ObjectBinder)FastActivator.Create(typeof(ListBinder<>).MakeGenericType(arguments));
+                        return (ObjectBinder)FastActivator.Create(typeof(ListBinder<>), arguments);
 
-//					if (genericTypeDefinition == typeof (IDictionary<,>) || genericTypeDefinition == typeof (Dictionary<,>))
-//					{
-//						return (ObjectBinder) FastActivator.Create(typeof (DictionaryBinder<,>).MakeGenericType(arguments));
-//					}
+                    // TODO handle dictionary as well
                 }
 
                 throw new NotSupportedException("Unsupported enumeration type: " + type.FullName);
             }
 
-            Type binderType;
             if (type.IsInterface)
             {
                 Type proxyType = InterfaceImplementationBuilder.GetProxyFor(type);
-                binderType = typeof(FastObjectBinder<>).MakeGenericType(proxyType);
-            }
-            else
-                binderType = typeof(FastObjectBinder<>).MakeGenericType(type);
 
-            return (ObjectBinder)FastActivator.Create(binderType);
+                return (ObjectBinder)FastActivator.Create(typeof(FastObjectBinder<>), new[] {proxyType});
+            }
+
+            return (ObjectBinder)FastActivator.Create(typeof(FastObjectBinder<>), new[] {type});
         }
     }
 }
