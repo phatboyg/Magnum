@@ -22,7 +22,7 @@ namespace Magnum.Linq
 	{
 		public static IEnumerable<IEnumerable<TSource>> Batch<TSource>(this IEnumerable<TSource> source, int size)
 		{
-			return Batch(source, size, Identity<IEnumerable<TSource>>.Function);
+			return Batch(source, size, x => x);
 		}
 
 		public static IEnumerable<TResult> Batch<TSource, TResult>(this IEnumerable<TSource> source, int size, Func<IEnumerable<TSource>, TResult> resultSelector)
@@ -53,7 +53,7 @@ namespace Magnum.Linq
 				if (count != size)
 					continue;
 
-				yield return resultSelector(items.Select(Identity<TSource>.Function));
+				yield return resultSelector(items);
 
 				items = null;
 				count = 0;

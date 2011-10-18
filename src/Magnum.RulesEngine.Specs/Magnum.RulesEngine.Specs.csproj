@@ -114,10 +114,6 @@
     <Compile Include="Commands\SubmitOrder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Magnum.RulesEngine\Magnum.RulesEngine.csproj">
-      <Project>{0A39AEF0-BBF8-4183-8D8E-A9DEED8A43F3}</Project>
-      <Name>Magnum.RulesEngine</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Magnum.Specs\Magnum.Specs.csproj">
       <Project>{0BEBC5E0-BDC4-421C-971B-2C5BE3204F7C}</Project>
       <Name>Magnum.Specs</Name>

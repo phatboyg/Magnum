@@ -211,14 +211,12 @@
     <Compile Include="RangeParser_Specs.cs" />
     <Compile Include="CommandLineParser\Parser_Specs.cs" />
     <Compile Include="Cryptography\RijndaelCryptographyService_Specs.cs" />
-    <Compile Include="Data\UnitOfWork_Specs.cs" />
     <Compile Include="Extensions\DateTimeExtension_Specs.cs" />
     <Compile Include="Extensions\DictionaryExtension_Specs.cs" />
     <Compile Include="Extensions\TypeExtension_Specs.cs" />
     <Compile Include="Linq\ExpressionHelpers_Specs.cs" />
     <Compile Include="Linq\Index_Specs.cs" />
     <Compile Include="Metrics\Counter_Specs.cs" />
-    <Compile Include="Monads\WorkingMemoryParser_Specs.cs" />
     <Compile Include="Pipeline\AutoRegister_Specs.cs" />
     <Compile Include="Pipeline\Examples.cs" />
     <Compile Include="Pipeline\Messages\ClaimCreated.cs" />
@@ -280,7 +278,6 @@
     <Compile Include="StateMachine\Reflection_Specs.cs" />
     <Compile Include="StateMachine\StateVisualizer_Specs.cs" />
     <Compile Include="StateMachine\TestStateMachineInstance.cs" />
-    <Compile Include="Tree\BuildingATree.cs" />
     <Compile Include="TypedKey_Specs.cs" />
     <Compile Include="Mapping_Specs.cs" />
     <Compile Include="Metric_Specs.cs" />
@@ -290,14 +287,12 @@
     <Compile Include="Reflection\Customer.cs" />
     <Compile Include="Reflection\FastCollection_Specs.cs" />
     <Compile Include="Reflection\Visibility_Specs.cs" />
-    <Compile Include="Repository\Repository_Specs.cs" />
     <Compile Include="SpecificationBase.cs" />
     <Compile Include="StateMachine\AccountManagementWorkflow.cs" />
     <Compile Include="StateMachine\ExampleWorkflow.cs" />
     <Compile Include="StateMachine\ExampleStateMachine.cs" />
     <Compile Include="StateMachine\StateSerialization_Specs.cs" />
     <Compile Include="StateMachine\State_Specs.cs" />
-    <Compile Include="Threading\Continuation_Specs.cs" />
     <Compile Include="Threading\DeferFor_Specs.cs" />
     <Compile Include="Threading\ErlangInfluencedStyle_Specs.cs" />
     <Compile Include="Threading\LamdbaIsTheNewDisposable_Specs.cs" />
@@ -358,6 +353,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Repository\" />
     <Folder Include="Servers\" />
   </ItemGroup>
   <ItemGroup>

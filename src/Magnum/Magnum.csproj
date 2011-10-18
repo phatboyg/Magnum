@@ -277,10 +277,6 @@
     <Compile Include="Cryptography\RijndaelCryptographyService.cs" />
     <Compile Include="Cryptography\SHA1HashingService.cs" />
     <Compile Include="Cryptography\SHA512HashingService.cs" />
-    <Compile Include="Data\NullTransaction.cs" />
-    <Compile Include="Data\NullUnitOfWork.cs" />
-    <Compile Include="Data\ITransaction.cs" />
-    <Compile Include="Data\UnitOfWork.cs" />
     <Compile Include="Extensions\ExtensionsToAttributes.cs" />
     <Compile Include="Extensions\ExtensionsToDateTime.cs" />
     <Compile Include="Extensions\ExtensionsToDictionary.cs" />
@@ -317,8 +313,7 @@
     <Compile Include="Graphing\Edge.cs" />
     <Compile Include="Graphing\GraphData.cs" />
     <Compile Include="Graphing\Vertex.cs" />
-    <Compile Include="Monads\CurryExpressionVisitor.cs" />
-    <Compile Include="Monads\State.cs" />
+    <Compile Include="Reflection\CurryExpressionVisitor.cs" />
     <Compile Include="Reflection\ExtensionsToGet.cs" />
     <Compile Include="Reflection\GetProperty.cs" />
     <Compile Include="Reflection\GetValue.cs" />
@@ -347,8 +342,6 @@
     <Compile Include="Reflection\SafeProperty.cs" />
     <Compile Include="Reflection\TypeSpecializationExtensions.cs" />
     <Compile Include="Guard.cs" />
-    <Compile Include="ILocalContext.cs" />
-    <Compile Include="Data\IUnitOfWork.cs" />
     <Compile Include="Reflection\FastInvoker.1.cs" />
     <Compile Include="Reflection\FastInvokerBase.cs" />
     <Compile Include="Reflection\ExtensionsToFastActivator.cs" />
@@ -358,7 +351,6 @@
     <Compile Include="Linq\Index.cs" />
     <Compile Include="Linq\Merge.cs" />
     <Compile Include="Linq\Single.cs" />
-    <Compile Include="LocalContext.cs" />
     <Compile Include="Mail\FileMailServer.cs" />
     <Compile Include="Mail\IMailServer.cs" />
     <Compile Include="Mail\NullMailServer.cs" />
@@ -371,9 +363,6 @@
     <Compile Include="Metrics\Monitor\MonitorBase.cs" />
     <Compile Include="Metrics\Monitor\ProcessMonitor.cs" />
     <Compile Include="Metrics\Monitor\SuccessRateMonitor.cs" />
-    <Compile Include="Monads\Continuations.cs" />
-    <Compile Include="Monads\Identity.cs" />
-    <Compile Include="Monads\List.cs" />
     <Compile Include="Monads\Parser\AbstractCharacterParser.cs" />
     <Compile Include="Monads\Parser\AbstractParser.cs" />
     <Compile Include="Monads\Parser\MonadParserExtensions.cs" />
@@ -500,16 +489,11 @@
     <Compile Include="StateMachine\ExceptionAction.cs" />
     <Compile Include="StateMachine\EventActionBase.cs" />
     <Compile Include="StateMachine\StateMachine.cs" />
-    <Compile Include="Data\IAggregateRoot.cs" />
-    <Compile Include="Data\IRepositoryFactory.cs" />
     <Compile Include="LinkedComparer.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="RangeBuilder.cs" />
     <Compile Include="RangeEnumerator.cs" />
-    <Compile Include="Data\IRepository.cs" />
     <Compile Include="Reflection\FastProperty.cs" />
-    <Compile Include="Data\RepositoryBase.cs" />
-    <Compile Include="Data\InMemoryRepository.cs" />
     <Compile Include="ReverseComparer.cs" />
     <Compile Include="FunctionTimer.cs" />
     <Compile Include="Extensions\ExtensionsToTimeSpan.cs" />
@@ -531,7 +515,6 @@
     <Compile Include="Threading\UpgradeableLock.cs" />
     <Compile Include="ThreadUtil.cs" />
     <Compile Include="Context\TypedKey.cs" />
-    <Compile Include="Tree\Tree.cs" />
     <Compile Include="TypeScanning\TypeScanner.cs" />
     <Compile Include="TypeScanning\ScannerExtensions.cs" />
     <Compile Include="TypeScanning\Scanner.cs" />
