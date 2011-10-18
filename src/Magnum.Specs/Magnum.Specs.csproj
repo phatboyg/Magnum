@@ -190,7 +190,6 @@
     <Compile Include="Invoker\Classes\ClassWithSimpleMethods.cs" />
     <Compile Include="Invoker\FastInvoker_Specs.cs" />
     <Compile Include="Monads\Currying_Specs.cs" />
-    <Compile Include="Monads\Maybe_Specs.cs" />
     <Compile Include="PerformanceCounters\CreatingCountersSpecs.cs" />
     <Compile Include="PerformanceCounters\DeletingCountersSpecs.cs" />
     <Compile Include="PerformanceCounters\MagnumTestCounters.cs" />

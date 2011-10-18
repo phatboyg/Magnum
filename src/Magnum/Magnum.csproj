@@ -374,7 +374,6 @@
     <Compile Include="Monads\Continuations.cs" />
     <Compile Include="Monads\Identity.cs" />
     <Compile Include="Monads\List.cs" />
-    <Compile Include="Monads\Maybe.cs" />
     <Compile Include="Monads\Parser\AbstractCharacterParser.cs" />
     <Compile Include="Monads\Parser\AbstractParser.cs" />
     <Compile Include="Monads\Parser\MonadParserExtensions.cs" />

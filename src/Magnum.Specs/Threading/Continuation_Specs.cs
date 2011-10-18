@@ -41,14 +41,6 @@ namespace Magnum.Specs.Threading
             Assert.AreEqual(11, t.Value);
         }
 
-        [Test]
-        public void Should_propogate_nullable_values()
-        {
-            var r = from x in 5.ToMaybe() from y in Maybe<int>.Nothing select x + y;
-
-            Assert.IsFalse(r.HasValue);
-        }
-
         [Test, Explicit]
         public void Lets_pull_some_magic_juice()
         {
