@@ -155,14 +155,11 @@ namespace Magnum.Reflection
 
             AssemblyBuilder assemblyBuilder =
                 AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName(assemblyName),
-                                                              AssemblyBuilderAccess.RunAndSave);
-
+                                                              AssemblyBuilderAccess.Run);
 
             ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule(assemblyName);
 
             callback(moduleBuilder);
-
-            assemblyBuilder.Save(assemblyName + ".dll");
         }
     }
 }
