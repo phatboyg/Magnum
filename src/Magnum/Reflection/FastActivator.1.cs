@@ -17,6 +17,8 @@ namespace Magnum.Reflection
 	using System.Linq;
 	using System.Linq.Expressions;
 	using System.Reflection;
+	using System.Runtime.Serialization;
+	using System.Runtime.Serialization.Formatters.Binary;
 	using Extensions;
 
 
@@ -97,21 +99,30 @@ namespace Magnum.Reflection
 						.MatchingArguments()
 						.SingleOrDefault();
 
-					if (constructorInfo == null)
-						throw new FastActivatorException(typeof(T), "No usable constructor found");
+                    if (constructorInfo == null)
+                    {
+                        _new = CreateUsingSerialization;
+                    }
+                    else
+                    {
+                        Func<T> lambda = Expression.Lambda<Func<T>>(Expression.New(constructorInfo)).Compile();
 
-					Func<T> lambda = Expression.Lambda<Func<T>>(Expression.New(constructorInfo)).Compile();
+                        _new = lambda;
+                    }
 
-					_new = lambda;
-
-					return lambda();
+				    return _new();
 				};
 		}
 
+        T CreateUsingSerialization()
+        {
+            return (T)FormatterServices.GetUninitializedObject(typeof(T));
+        }
+
 		T CreateFromArgs(object[] args)
 		{
-			if (args == null)
-				args = new object[] {};
+            if (args == null || args.Length == 0)
+                return _new();
 
 			int offset = 0;
 			int key = args.Aggregate(0, (x, o) => x ^ (o == null ? offset : o.GetType().GetHashCode() << offset++));
