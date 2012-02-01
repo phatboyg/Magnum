@@ -142,5 +142,26 @@ namespace Magnum.Specs.CommandLineParser
 			elements[1].ShouldBeAnInstanceOf<SwitchElement>();
 			elements[2].ShouldBeAnInstanceOf<ArgumentElement>();
 		}
+
+        [Test]
+        public void A_path_with_spaces_in_double_quotes_should_be_kept_together()
+        {
+            string commandLine = "\"c:\\Folder With Spaces\\run.exe\" "
+               + "-f \"c:\\Folder With Spaces\\file.txt\" "
+               + "-l:\"c:\\Folder With Spaces\\file.txt\" ";
+
+            Trace.WriteLine("Command Line: " + commandLine);
+
+            ICommandLineParser parser = new MonadicCommandLineParser();
+
+            var elements = parser.Parse(commandLine).ToArray();
+
+            Trace.WriteLine(string.Join(Environment.NewLine, elements.Select(x => x.ToString()).ToArray()));
+
+            elements.Count().ShouldEqual(3);
+            elements[0].ShouldBeAnInstanceOf<ArgumentElement>();
+            elements[1].ShouldBeAnInstanceOf<DefinitionElement>();
+            elements[2].ShouldBeAnInstanceOf<DefinitionElement>();
+        }
     }
 }

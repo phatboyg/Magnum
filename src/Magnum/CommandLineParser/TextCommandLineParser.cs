@@ -41,12 +41,21 @@ namespace Magnum.CommandLineParser
 			Value = (from symbol in Rep(Char(char.IsLetterOrDigit).Or(Char(char.IsPunctuation)))
 			         select symbol.Aggregate("", (s, ch) => s + ch));
 
-			Definition = (from w in Whitespace
-			              from c in Char('-').Or(Char('/'))
-			              from key in Id
-			              from eq in Char(':').Or(Char('='))
-			              from value in Value
-			              select DefinitionElement.New(key, value))
+			Definition = 
+                   (from w in Whitespace
+				    from c in Char('-').Or(Char('/'))
+				    from key in Id
+                    from eq in Char(':').Or(Char('='))
+                    from oq in Char('"')
+                    from value in Rep(EscChar)
+                    from cq in Char('"')
+                    select DefinitionElement.New(key, value.Aggregate("", (s, ch) => s + ch)))
+                .Or(from w in Whitespace
+			        from c in Char('-').Or(Char('/'))
+			        from key in Id
+			        from eq in Char(':').Or(Char('='))
+			        from value in Value
+			        select DefinitionElement.New(key, value))
 				.Or(from w in Whitespace
 				    from c in Char('-').Or(Char('/'))
 				    from key in Id
@@ -62,10 +71,15 @@ namespace Magnum.CommandLineParser
 			                   from ws in Whitespace
 			                   select DefinitionElement.New(key, ""));
 
-			Argument = from w in Whitespace
-			           from c in Char(char.IsLetterOrDigit).Or(Char(char.IsPunctuation))
-			           from cs in Rep(Char(char.IsLetterOrDigit).Or(Char(char.IsPunctuation)))
-			           select ArgumentElement.New(cs.Aggregate(c.ToString(), (s, ch) => s + ch));
+            Argument = (from w in Whitespace
+                        from oq in Char('"')
+                        from value in Rep(EscChar)
+                        from cq in Char('"')
+                        select ArgumentElement.New(value.Aggregate("", (s, ch) => s + ch)))
+                .Or(from w in Whitespace
+                    from c in Char(char.IsLetterOrDigit).Or(Char(char.IsPunctuation))
+                    from cs in Rep(Char(char.IsLetterOrDigit).Or(Char(char.IsPunctuation)))
+                    select ArgumentElement.New(cs.Aggregate(c.ToString(), (s, ch) => s + ch)));
 
 			Switch = (from w in Whitespace
 			          from c in Char('-').Or(Char('/'))
