@@ -1,16 +1,4 @@
-﻿// Copyright 2007-2008 The Apache Software Foundation.
-//  
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
-// this file except in compliance with the License. You may obtain a copy of the 
-// License at 
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software distributed 
-// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
-// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
-// specific language governing permissions and limitations under the License.
-namespace Magnum.FileSystem
+﻿namespace Magnum.FileSystem
 {
     using System;
     using System.Collections.Generic;
@@ -22,7 +10,6 @@ namespace Magnum.FileSystem
     using Extensions;
     using Fibers;
     using Internal;
-
 
     public class PollingFileSystemEventProducer :
         IDisposable
@@ -46,10 +33,13 @@ namespace Magnum.FileSystem
         /// <param name="scheduler">Event scheduler</param>
         /// <param name="fiber">Fiber to schedule on</param>
         /// <param name="checkInterval">The maximal time between events or polls on a given file</param>
-        public PollingFileSystemEventProducer(string directory, UntypedChannel channel, Scheduler scheduler, Fiber fiber,
+        public PollingFileSystemEventProducer(string directory,
+                                              UntypedChannel channel,
+                                              Scheduler scheduler,
+                                              Fiber fiber,
                                               TimeSpan checkInterval) :
-            this(directory, channel, scheduler, fiber, checkInterval, true)
-            
+                                                  this(directory, channel, scheduler, fiber, checkInterval, true)
+
         {
         }
 
@@ -61,9 +51,13 @@ namespace Magnum.FileSystem
         /// <param name="scheduler">Event scheduler</param>
         /// <param name="fiber">Fiber to schedule on</param>
         /// <param name="checkInterval">The maximal time between events or polls on a given file</param>
-        /// <param name="checkSubDirectory">Indicates if subdirectorys will be checked or ignored</param>
-        public PollingFileSystemEventProducer(string directory, UntypedChannel channel, Scheduler scheduler, Fiber fiber,
-                                              TimeSpan checkInterval, bool checkSubDirectory)
+        /// <param name="checkSubDirectory">Indicates if subdirectories will be checked or ignored</param>
+        public PollingFileSystemEventProducer(string directory,
+                                              UntypedChannel channel,
+                                              Scheduler scheduler,
+                                              Fiber fiber,
+                                              TimeSpan checkInterval,
+                                              bool checkSubDirectory)
         {
             _directory = directory;
             _channel = channel;
@@ -72,17 +66,25 @@ namespace Magnum.FileSystem
             _scheduler = scheduler;
             _checkInterval = checkInterval;
 
-            _scheduledAction = scheduler.Schedule(3.Seconds(), _fiber, HashFileSystem);
+            _fiber.Add(HashFileSystem);
 
-            ChannelAdapter myChannel = new ChannelAdapter();
+            var myChannel = new ChannelAdapter();
 
-            _connection = myChannel.Connect(connectionConfigurator =>
-            {
-                connectionConfigurator.AddConsumerOf<FileSystemChanged>().UsingConsumer(HandleFileSystemChangedAndCreated);
-                connectionConfigurator.AddConsumerOf<FileSystemCreated>().UsingConsumer(HandleFileSystemChangedAndCreated);
-                connectionConfigurator.AddConsumerOf<FileSystemRenamed>().UsingConsumer(HandleFileSystemRenamed);
-                connectionConfigurator.AddConsumerOf<FileSystemDeleted>().UsingConsumer(HandleFileSystemDeleted);
-            });
+            _connection = myChannel.Connect(x =>
+                {
+                    x.AddConsumerOf<FileSystemChanged>()
+                        .UsingConsumer(HandleFileSystemChangedAndCreated)
+                        .HandleOnFiber(_fiber);
+                    x.AddConsumerOf<FileSystemCreated>()
+                        .UsingConsumer(HandleFileSystemChangedAndCreated)
+                        .HandleOnFiber(_fiber);
+                    x.AddConsumerOf<FileSystemRenamed>()
+                        .UsingConsumer(HandleFileSystemRenamed)
+                        .HandleOnFiber(_fiber);
+                    x.AddConsumerOf<FileSystemDeleted>()
+                        .UsingConsumer(HandleFileSystemDeleted)
+                        .HandleOnFiber(_fiber);
+                });
 
             _fileSystemEventProducer = new FileSystemEventProducer(directory, myChannel, checkSubDirectory);
         }
@@ -114,40 +116,68 @@ namespace Magnum.FileSystem
             if (string.IsNullOrEmpty(key))
                 return;
 
-            if (_hashes.ContainsKey(key))
+            try
             {
-                if (_hashes[key] != newHash)
+                if (_hashes.ContainsKey(key))
                 {
-                    _hashes[key] = newHash;
-                    _channel.Send(new FileChangedImpl(Path.GetFileName(key), key));
+                    if (_hashes[key] != newHash)
+                    {
+                        _hashes[key] = newHash;
+                        _channel.Send(new FileChangedImpl(Path.GetFileName(key), key));
+                    }
+                }
+                else
+                {
+                    _hashes.Add(key, newHash);
+                    _channel.Send(new FileCreatedImpl(Path.GetFileName(key), key));
                 }
             }
-            else
+            catch
             {
-                _hashes.Add(key, newHash);
-                _channel.Send(new FileCreatedImpl(Path.GetFileName(key), key));
             }
         }
 
         void RemoveHash(string key)
         {
-            _hashes.Remove(key);
-            _channel.Send(new FileSystemDeletedImpl(Path.GetFileName(key), key));
+            if (string.IsNullOrEmpty(key))
+                return;
+
+            try
+            {
+                _hashes.Remove(key);
+                _channel.Send(new FileSystemDeletedImpl(Path.GetFileName(key), key));
+            }
+            catch
+            {
+            }
         }
 
         void HashFileSystem()
         {
             try
             {
-                Dictionary<string, Guid> newHashes = new Dictionary<string, Guid>();
+                var newHashes = new Dictionary<string, Guid>();
 
                 ProcessDirectory(newHashes, _directory);
 
+                List<KeyValuePair<string, Guid>> existing = _hashes
+                    .Where(x => !string.IsNullOrEmpty(x.Key))
+                    .ToList();
+
                 // process all the new hashes found
-                newHashes.ToList().ForEach(x => HandleHash(x.Key, x.Value));
+                newHashes.Each(x => HandleHash(x.Key, x.Value));
+
+                List<string> removed = existing
+                    .Where(x => !newHashes.ContainsKey(x.Key))
+                    .Select(x => x.Key)
+                    .ToList();
 
                 // remove any hashes we couldn't process
-                _hashes.Where(x => !newHashes.ContainsKey(x.Key)).ToList().ConvertAll(x => x.Key).ForEach(RemoveHash);
+                removed.Each(RemoveHash);
+            }
+            catch
+            {
+                // while bad, we really don't care we'll do this again
             }
             finally
             {
@@ -162,10 +192,14 @@ namespace Magnum.FileSystem
             foreach (string file in files)
             {
                 string fullFileName = Path.Combine(baseDirectory, file);
+                if (string.IsNullOrEmpty(fullFileName))
+                    continue;
+
                 hashes.Add(fullFileName, GenerateHashForFile(fullFileName));
             }
 
-            Directory.GetDirectories(baseDirectory).ToList().Each(dir => ProcessDirectory(hashes, dir));
+            Directory.GetDirectories(baseDirectory)
+                .Each(directory => ProcessDirectory(hashes, directory));
         }
 
         static Guid GenerateHashForFile(string file)
@@ -174,7 +208,7 @@ namespace Magnum.FileSystem
             {
                 string hashValue;
                 using (FileStream f = File.OpenRead(file))
-                using (MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider())
+                using (var md5 = new MD5CryptoServiceProvider())
                 {
                     byte[] fileHash = md5.ComputeHash(f);
 

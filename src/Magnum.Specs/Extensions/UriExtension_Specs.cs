@@ -20,7 +20,7 @@ namespace Magnum.Specs.Extensions
 	using TestFramework;
 
 
-	[TestFixture]
+	[TestFixture, Explicit]
 	public class UriExtension_Specs
 	{
 		[Test]

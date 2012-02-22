@@ -55,7 +55,7 @@ namespace Magnum.FileSystem
 				{
 					EnableRaisingEvents = true,
 					IncludeSubdirectories = checkSubDirectory,
-					InternalBufferSize = 8 * 4 * 1024, // 8x the default size
+					InternalBufferSize = 32 * 4 * 1024, // 8x the default size
 				};
 
 			_watcher.Changed += OnChanged;
