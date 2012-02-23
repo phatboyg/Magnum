@@ -24,6 +24,8 @@ namespace Magnum.FileSystem
 	public class FileSystemEventProducer :
 		IDisposable
 	{
+		private const int MaxBufferSize = 32 * 4;	// 8x the default size
+		private int _bufferSize = MaxBufferSize;
 		private readonly UntypedChannel _channel;
 		private readonly string _directory;
 
@@ -46,22 +48,53 @@ namespace Magnum.FileSystem
 		/// <param name="directory">The directory to watch</param>
 		/// <param name="channel">The channel where events should be sent</param>
         /// <param name="checkSubDirectory">Indicates if subdirectories will be included</param>
-		public FileSystemEventProducer(string directory, UntypedChannel channel, bool checkSubDirectory)
+		public FileSystemEventProducer(string directory, UntypedChannel channel, bool checkSubDirectory):
+			this(directory, channel, checkSubDirectory, MaxBufferSize)
+		{
+		}
+
+		/// <summary>
+		/// Set up FileSystemWatcher for directory.
+		/// </summary>
+		/// <param name="directory"></param>
+		/// <param name="channel"></param>
+		/// <param name="checkSubDirectory"></param>
+		/// <param name="bufferSize">Buffer Size in kilobytes. (Max = 128K)</param>
+		public FileSystemEventProducer(string directory, UntypedChannel channel, bool checkSubDirectory, int bufferSize)
 		{
 			_directory = directory;
 			_channel = channel;
+			SetBufferSize(bufferSize);
+			SetWatcher(checkSubDirectory);
+		}
+
+		private void SetBufferSize(int bufferSize)
+		{
+			if (bufferSize > MaxBufferSize)
+				_bufferSize = MaxBufferSize;
+		}
+
+		private void SetWatcher(bool checkSubDirectory)
+		{
+			if (_watcher != null)
+			{
+				_watcher.EnableRaisingEvents = false;
+				_watcher.Dispose();
+			}
 
 			_watcher = new FileSystemWatcher(_directory)
-				{
-					EnableRaisingEvents = true,
-					IncludeSubdirectories = checkSubDirectory,
-					InternalBufferSize = 32 * 4 * 1024, // 8x the default size
-				};
+			           	{
+			           		IncludeSubdirectories = checkSubDirectory,
+			           		InternalBufferSize = _bufferSize*1024,
+			           	};
 
 			_watcher.Changed += OnChanged;
 			_watcher.Created += OnCreated;
 			_watcher.Deleted += OnDeleted;
 			_watcher.Renamed += OnRenamed;
+			_watcher.Error += OnError;
+
+			_watcher.EnableRaisingEvents = true;
 		}
 
 		public void Dispose()
@@ -99,6 +132,16 @@ namespace Magnum.FileSystem
 				_channel.Send(new DirectoryRenamedImpl(e.Name, e.FullPath, e.OldName, e.OldFullPath));
 		}
 
+		private void OnError(object sender, ErrorEventArgs e)
+		{
+			if (e.GetException().GetType() == typeof (InternalBufferOverflowException))
+			{
+				var fileSystemWatcher = (FileSystemWatcher) sender;
+				var checkSubDirectory = fileSystemWatcher.IncludeSubdirectories;
+				SetWatcher(checkSubDirectory);
+			}
+		}
+
 		~FileSystemEventProducer()
 		{
 			Dispose(false);
@@ -115,6 +158,7 @@ namespace Magnum.FileSystem
 					_watcher.Created -= OnCreated;
 					_watcher.Deleted -= OnDeleted;
 					_watcher.Renamed -= OnRenamed;
+					_watcher.Error -= OnError;
 
 					_watcher.Dispose();
 					_watcher = null;
