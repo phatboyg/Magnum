@@ -61,28 +61,8 @@ namespace Magnum.Reflection
             il.Emit(OpCodes.Stloc_0);
 
             BindingFlags attributes = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
-            foreach (PropertyInfo property in itemType.GetProperties(attributes).Where(info => info.CanRead))
-            {
-                // load Dictionary (prepare for call later)
-                il.Emit(OpCodes.Ldloc_0);
-                // load key, i.e. name of the property
-                il.Emit(OpCodes.Ldstr, property.Name);
 
-                // load value of property to stack
-                il.Emit(OpCodes.Ldarg_0);
-                il.EmitCall(OpCodes.Callvirt, property.GetGetMethod(), null);
-                // perform boxing if necessary
-                if (property.PropertyType.IsValueType)
-                    il.Emit(OpCodes.Box, property.PropertyType);
-
-                // stack at this point
-                // 1. string or null (value)
-                // 2. string (key)
-                // 3. dictionary
-
-                // ready to call dict.Add(key, value)
-                il.EmitCall(OpCodes.Callvirt, addMethod, null);
-            }
+            EmitProperties(itemType, il, addMethod, attributes);
             // finally load Dictionary and return
             il.Emit(OpCodes.Ldloc_0);
             il.Emit(OpCodes.Ret);
@@ -91,5 +71,45 @@ namespace Magnum.Reflection
                 (Func<object, IDictionary<string, object>>)
                 dm.CreateDelegate(typeof(Func<object, IDictionary<string, object>>));
         }
+
+    	static void EmitProperties(Type itemType, ILGenerator il, MethodInfo addMethod, BindingFlags attributes, string prefix = "")
+    	{
+    		foreach (PropertyInfo property in itemType.GetProperties(attributes).Where(info => info.CanRead))
+    		{
+    			var propName = property.PropertyType.Name;
+
+    			if ((propName.StartsWith("<>") || propName.Contains("VB$"))
+					&& propName.Contains("AnonymousType"))
+    			{
+    				EmitProperties(property.PropertyType, il, addMethod, attributes,
+						prefix == ""
+							? property.Name + "."
+							: string.Join(".", prefix, property.Name));
+
+					continue;
+    			}
+
+    			// load Dictionary (prepare for call later)
+    			il.Emit(OpCodes.Ldloc_0);
+    			// load key, i.e. name of the property
+    			il.Emit(OpCodes.Ldstr, prefix + property.Name);
+
+    			// load value of property to stack
+    			il.Emit(OpCodes.Ldarg_0);
+    			il.EmitCall(OpCodes.Callvirt, property.GetGetMethod(), null);
+
+    			// perform boxing if necessary
+    			if (property.PropertyType.IsValueType)
+    				il.Emit(OpCodes.Box, property.PropertyType);
+
+    			// stack at this point
+    			// 1. string or null (value)
+    			// 2. string (key)
+    			// 3. dictionary
+
+    			// ready to call dict.Add(key, value)
+    			il.EmitCall(OpCodes.Callvirt, addMethod, null);
+    		}
+    	}
     }
 }

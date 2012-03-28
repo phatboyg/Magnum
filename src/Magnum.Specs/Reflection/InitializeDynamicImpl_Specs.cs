@@ -14,6 +14,7 @@ namespace Magnum.Specs.Reflection
 {
     using System;
     using System.Collections.Generic;
+    using Magnum.Extensions;
     using Magnum.Reflection;
     using TestFramework;
 
@@ -175,6 +176,82 @@ namespace Magnum.Specs.Reflection
 		public class DarkHoles
 		{
 			public uint Mystery { get; set; }
+		}
+	}
+
+
+	[Scenario(Description = "Testing AnonymousObjectDictionaryConverter")]
+	public class When_converting_anonymous_classes_to_dictionary
+	{
+		IDictionary<string, object> _subject;
+
+		[When]
+		public void converting()
+		{
+			var converter = new AnonymousObjectDictionaryConverter();
+
+			_subject = converter.Convert(new
+				{
+					// really short lived
+					Age = 1.Milliseconds(),
+
+					// this is the hold
+					DarkHole = new
+						{
+							// really high density in kg m^-3
+							Density = ulong.MaxValue,
+							Pressure = int.MaxValue,
+							MyString = "Hello World"
+						},
+
+					Temperature = long.MinValue
+				});
+		}
+
+		[Then]
+		public void should_have_age_property()
+		{
+			_subject["Age"].ShouldEqual(1.Milliseconds());
+		}
+
+		[Then]
+		public void should_have_correct_temperature()
+		{
+			_subject["Temperature"].ShouldEqual(long.MinValue);
+		}
+
+		[Then]
+		public void should_contain_both_darkhole_properties()
+		{
+			_subject.ContainsKey("DarkHole.Density")
+				.ShouldBeTrue();
+
+			_subject.ContainsKey("DarkHole.Pressure")
+				.ShouldBeTrue();
+		}
+
+		[Then]
+		public void should_have_non_null_darkhole_density()
+		{
+			_subject["DarkHole.Density"].ShouldNotBeNull();
+		}
+
+		[Then]
+		public void should_have_correct_darkhole_densitys()
+		{
+			_subject["DarkHole.Density"].ShouldEqual(ulong.MaxValue);
+		}
+
+		[Then]
+		public void should_have_correct_darkhole_pressure()
+		{
+			_subject["DarkHole.Pressure"].ShouldEqual(int.MaxValue);
+		}
+
+		[Then]
+		public void should_have_correct_string()
+		{
+			_subject["DarkHole.MyString"].ShouldEqual("Hello World");
 		}
 	}
 }
