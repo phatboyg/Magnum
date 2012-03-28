@@ -13,6 +13,7 @@
 namespace Magnum.Specs.Reflection
 {
     using System;
+    using System.Collections.Generic;
     using Magnum.Reflection;
     using TestFramework;
 
@@ -71,4 +72,56 @@ namespace Magnum.Specs.Reflection
             DateTime? DateTimeValue { get; }
         }
     }
+
+	[Scenario]
+	public class When_initializing_a_dynamic_object_with_subclass_in_property
+	{
+		ulong _ulongVal = 34ul;
+		uint _uintVal = 56u;
+
+		ISubject _subject;
+
+		[When]
+		public void Initializing_a_dynamic_object_proxy()
+		{
+			_subject = (ISubject)typeof(ISubject).InitializeProxy(new
+				{
+					Val = _ulongVal,
+					Classy = new
+						{
+							Vally = _uintVal
+						}
+				});
+		}
+
+		[Then]
+		public void Should_set_value_val()
+		{
+			_subject.Val.ShouldEqual(_ulongVal);
+		}
+
+		[Then]
+		public void Should_not_set_null_subclass()
+		{
+			_subject.Classy.ShouldNotBeNull();
+		}
+
+		[Then]
+		public void Should_set_subclass_value_vally()
+		{
+			_subject.Classy.Vally
+				.ShouldBeEqualTo(_uintVal);
+		}
+
+		public interface ISubject
+		{
+			ulong Val { get; }
+			Subclass Classy { get; }
+		}
+
+		public class Subclass
+		{
+			public uint Vally { get; set; }
+		}
+	}
 }
