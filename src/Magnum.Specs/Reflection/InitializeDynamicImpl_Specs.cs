@@ -74,10 +74,62 @@ namespace Magnum.Specs.Reflection
     }
 
 	[Scenario]
+	public class When_initializing_with_dictionary_with_subclass_in_property
+	{
+		const string SoundOfSilence = "";
+		const int Age = 24;
+
+		ISubject _subject;
+
+		[When]
+		public void Initializing_a_dynamic_object_proxy()
+		{
+			_subject = (ISubject)typeof(ISubject).InitializeProxy(new Dictionary<string, object>
+				{
+					{"SoundOfSilence", SoundOfSilence},
+					{"SpokenBy.Age", Age}
+				});
+		}
+
+		[Then]
+		public void Should_set_value_val()
+		{
+			_subject
+				.SoundOfSilence
+				.ShouldEqual("");
+		}
+
+		[Then]
+		public void Should_set_SpokenBy()
+		{
+			_subject.SpokenBy.ShouldNotBeNull();
+		}
+
+		[Then]
+		public void Should_set_age()
+		{
+			_subject.SpokenBy.Age
+				.ShouldBeEqualTo(Age);
+		}
+
+		public interface ISubject
+		{
+			string SoundOfSilence { get; }
+			Person SpokenBy { get; }
+		}
+
+
+		public class Person
+		{
+			public int Age { get; set; }
+		}
+	}
+
+	[Scenario]
 	public class When_initializing_a_dynamic_object_with_subclass_in_property
 	{
-		ulong _ulongVal = 34ul;
-		uint _uintVal = 56u;
+		const ulong AnswerToEverything = 42ul;
+		const uint Mystery = uint.MaxValue;
 
 		ISubject _subject;
 
@@ -86,42 +138,43 @@ namespace Magnum.Specs.Reflection
 		{
 			_subject = (ISubject)typeof(ISubject).InitializeProxy(new
 				{
-					Val = _ulongVal,
-					Classy = new
-						{
-							Vally = _uintVal
-						}
+					AnswerToEverything,
+					DarkHole = new { Mystery }
 				});
 		}
 
 		[Then]
 		public void Should_set_value_val()
 		{
-			_subject.Val.ShouldEqual(_ulongVal);
+			_subject
+				.AnswerToEverything
+				.ShouldEqual(AnswerToEverything);
 		}
 
 		[Then]
 		public void Should_not_set_null_subclass()
 		{
-			_subject.Classy.ShouldNotBeNull();
+			_subject
+				.DarkHole.ShouldNotBeNull();
 		}
 
 		[Then]
 		public void Should_set_subclass_value_vally()
 		{
-			_subject.Classy.Vally
-				.ShouldBeEqualTo(_uintVal);
+			_subject
+				.DarkHole.Mystery
+				.ShouldBeEqualTo(Mystery);
 		}
 
 		public interface ISubject
 		{
-			ulong Val { get; }
-			Subclass Classy { get; }
+			ulong AnswerToEverything { get; }
+			DarkHoles DarkHole { get; }
 		}
 
-		public class Subclass
+		public class DarkHoles
 		{
-			public uint Vally { get; set; }
+			public uint Mystery { get; set; }
 		}
 	}
 }
