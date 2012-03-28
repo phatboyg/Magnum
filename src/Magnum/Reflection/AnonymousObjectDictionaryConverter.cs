@@ -55,21 +55,20 @@ namespace Magnum.Reflection
             // Dictionary.Add(object key, object value)
             MethodInfo addMethod = dictType.GetMethod("Add");
 
-            // create the Dictionary and store it in a local variable
-            il.DeclareLocal(dictType);
-            il.Emit(OpCodes.Newobj, dictType.GetConstructor(Type.EmptyTypes));
-            il.Emit(OpCodes.Stloc_0);
+        	BindingFlags attributes = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
 
-            BindingFlags attributes = BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy;
+        	// create the Dictionary and store it in a local variable
+        	il.DeclareLocal(dictType);
+        	il.Emit(OpCodes.Newobj, dictType.GetConstructor(Type.EmptyTypes));
+			il.Emit(OpCodes.Stloc_0);
 
-            EmitProperties(itemType, il, addMethod, attributes);
+        	EmitProperties(itemType, il, addMethod, attributes);
+
             // finally load Dictionary and return
             il.Emit(OpCodes.Ldloc_0);
             il.Emit(OpCodes.Ret);
 
-            return
-                (Func<object, IDictionary<string, object>>)
-                dm.CreateDelegate(typeof(Func<object, IDictionary<string, object>>));
+            return (Func<object, IDictionary<string, object>>) dm.CreateDelegate(typeof(Func<object, IDictionary<string, object>>));
         }
 
     	static void EmitProperties(Type itemType, ILGenerator il, MethodInfo addMethod, BindingFlags attributes, string prefix = "")
@@ -79,7 +78,7 @@ namespace Magnum.Reflection
     			var propName = property.PropertyType.Name;
 
     			if ((propName.StartsWith("<>") || propName.Contains("VB$"))
-					&& propName.Contains("AnonymousType"))
+					&& propName.Contains("AnonymousType")) // or property.PropertyType.IsClass?
     			{
     				EmitProperties(property.PropertyType, il, addMethod, attributes,
 						prefix == ""
@@ -87,13 +86,14 @@ namespace Magnum.Reflection
 							: string.Join(".", prefix, property.Name));
 
 					continue;
-    			}
+				}
 
-    			// load Dictionary (prepare for call later)
-    			il.Emit(OpCodes.Ldloc_0);
+				// load Dictionary (prepare for call later)
+				il.Emit(OpCodes.Ldloc_0);
+
     			// load key, i.e. name of the property
     			il.Emit(OpCodes.Ldstr, prefix + property.Name);
-
+				
     			// load value of property to stack
     			il.Emit(OpCodes.Ldarg_0);
     			il.EmitCall(OpCodes.Callvirt, property.GetGetMethod(), null);
