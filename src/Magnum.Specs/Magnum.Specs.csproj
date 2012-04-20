@@ -80,7 +80,7 @@
     <Reference Include="Newtonsoft.Json" Condition="'$(TargetFrameworkVersion)' == 'v4.0'">
       <HintPath>..\..\lib\Newtonsoft.Json\Net\Newtonsoft.Json.dll</HintPath>
     </Reference>
-     <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+    <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nunit\net-2.0\nunit.framework.dll</HintPath>
     </Reference>
@@ -281,6 +281,7 @@
     <Compile Include="StateMachine\OrderStateMachine.cs" />
     <Compile Include="StateMachine\Reflection_Specs.cs" />
     <Compile Include="StateMachine\StateVisualizer_Specs.cs" />
+    <Compile Include="StateMachine\GeneralizedStateMachine.cs" />
     <Compile Include="StateMachine\TestStateMachineInstance.cs" />
     <Compile Include="TypedKey_Specs.cs" />
     <Compile Include="Mapping_Specs.cs" />
