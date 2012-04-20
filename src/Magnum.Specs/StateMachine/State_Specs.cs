@@ -87,5 +87,19 @@ namespace Magnum.Specs.StateMachine
             Assert.AreEqual(ExampleStateMachine.Completed, example.CurrentState);
         }
 
+        [Test]
+        public void Generalized_subclassed_state_machines_should_initialize_states_and_events_in_the_superclass()
+        {
+            new SubclassedStateMachine();
+
+            Assert.IsNotNull(SubclassedStateMachine.Initial);
+            Assert.IsNotNull(SubclassedStateMachine.Intermediary);
+            Assert.IsNotNull(SubclassedStateMachine.Completed);
+            Assert.IsNotNull(SubclassedStateMachine.AnEvent);
+            Assert.IsNotNull(SubclassedStateMachine.TheFinalEvent);
+
+            Assert.IsNotNull(SubclassedStateMachine.SubclassState);
+            Assert.IsNotNull(SubclassedStateMachine.SubclassEvent);
+        }
     }
 }
