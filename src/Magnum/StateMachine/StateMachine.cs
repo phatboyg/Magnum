@@ -257,7 +257,7 @@ namespace Magnum.StateMachine
 		private static void InitializeEvents()
 		{
 			Type machineType = typeof (T);
-			foreach (PropertyInfo propertyInfo in machineType.GetProperties(BindingFlags.Static | BindingFlags.Public))
+			foreach (PropertyInfo propertyInfo in machineType.GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy))
 			{
 				if (IsPropertyABasicEvent(propertyInfo))
 				{
@@ -285,7 +285,7 @@ namespace Magnum.StateMachine
 		private static void InitializeStates()
 		{
 			Type machineType = typeof (T);
-			foreach (PropertyInfo propertyInfo in machineType.GetProperties(BindingFlags.Static | BindingFlags.Public))
+            foreach (PropertyInfo propertyInfo in machineType.GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.FlattenHierarchy))
 			{
 				if (!IsPropertyAState(propertyInfo)) continue;
 
