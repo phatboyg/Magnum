@@ -12,14 +12,11 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.Specs
 {
-    using log4net;
     using NUnit.Framework;
 
     [TestFixture]
     public class When_tracking_metrics_on_a_function
     {
-        private static readonly ILog _log = LogManager.GetLogger("Default");
-
         private static void VerifyCalled(FunctionTimerResult result)
         {
             Assert.AreEqual(5, result.Text.Split(' ').Length, "Expected two values and the description past the date/time");
