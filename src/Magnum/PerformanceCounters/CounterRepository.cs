@@ -143,7 +143,7 @@ namespace Magnum.PerformanceCounters
 
                 return instancePerformanceCounter;
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
                 return new NullPerformanceCounter();
             }
