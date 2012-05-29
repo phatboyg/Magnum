@@ -24,3 +24,4 @@ src/tests/*
 tests/*
 doc/*
 SolutionVersion.cs
+packages/

@@ -21,14 +21,14 @@ namespace Magnum.Routing.Specs
 	public class When_a_delegate_route_is_bound
 	{
 		bool _called;
-		RoutingEngine<int> _router;
+		//RoutingEngine<int> _router;
 
 		[Given]
 		public void A_delegate_route()
 		{
 			_called = false;
 
-			_router.Bind("/version", x => _called = true);
+			//_router.Bind("/version", x => _called = true);
 		}
 
 		[Then]
