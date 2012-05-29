@@ -651,11 +651,11 @@ namespace Magnum.Collections
 
 		/// <summary>
 		/// Adds multiple key-value pairs to a dictionary. If a key exists in both the current instance and dictionaryToAdd,
-		/// then the value is updated with the value from <paramref name="keysAndValues>"/> (no exception is thrown).
+		/// then the value is updated with the value from <paramref name="keysAndValues"/> (no exception is thrown).
 		/// Since IDictionary&lt;TKey,TValue&gt; inherits from IEnumerable&lt;KeyValuePair&lt;TKey,TValue&gt;&gt;, this
 		/// method can be used to merge one dictionary into another.
 		/// </summary>
-		/// <remarks>AddMany takes time O(M log (N+M)), where M is the size of <paramref name="keysAndValues>"/>, and N is the size of
+		/// <remarks>AddMany takes time O(M log (N+M)), where M is the size of <paramref name="keysAndValues"/>, and N is the size of
 		/// this dictionary.</remarks>
 		/// <param name="keysAndValues">A collection of keys and values whose contents are added to the current dictionary.</param>
 		public void AddMany(IEnumerable<KeyValuePair<TKey, TValue>> keysAndValues)

@@ -28,7 +28,7 @@ namespace Magnum.Extensions
 			{
 				return StringifyInternal(value, RecursionLimit);
 			}
-			catch (InvalidOperationException ex)
+			catch (InvalidOperationException)
 			{
 				return value.ToString();
 			}

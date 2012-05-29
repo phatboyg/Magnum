@@ -34,7 +34,6 @@ namespace Magnum.Configuration
         /// Creates an instance of the specified type and sets the properties
         /// to the configuration settings that match
         /// </summary>
-        /// <typeparam name="T">The configuration object type</typeparam>
         /// <returns>An initialize configuration object</returns>
         object Bind(Type typeToBindTo);
 
