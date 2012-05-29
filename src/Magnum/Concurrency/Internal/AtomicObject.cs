@@ -20,7 +20,6 @@ namespace Magnum.Concurrency.Internal
 	/// Maintains a reference to an immutable object, allowing a mutator function to 
 	/// change the reference pointed to in an atomic fashion
 	/// </summary>
-	/// <typeparam name="T"></typeparam>
 	public class AtomicObject :
 		Atomic<object>
 	{
