@@ -194,7 +194,6 @@ namespace Magnum.StateMachine
 		/// </summary>
 		/// <param name="raised">The event that would be raised</param>
 		protected static DataEventAction<T, TData> When<TData>(Event<TData> raised)
-			where TData : class
 		{
 			DataEvent<T, TData> eevent = DataEvent<T, TData>.GetEvent(raised);
 

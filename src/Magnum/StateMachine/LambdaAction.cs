@@ -34,7 +34,6 @@ namespace Magnum.StateMachine
 	public class LambdaAction<T, TData> :
 		EventAction<T>
 		where T : StateMachine<T>
-		where TData : class
 	{
 		private readonly Action<T, DataEvent<T, TData>, TData> _action;
 
@@ -45,7 +44,7 @@ namespace Magnum.StateMachine
 
 		public void Execute(T instance, Event @event, object parameter)
 		{
-			_action(instance, @event as DataEvent<T, TData>, parameter as TData);
+			_action(instance, @event as DataEvent<T, TData>, (parameter is TData) ? ((TData) parameter) : default(TData));
 		}
 	}
 }

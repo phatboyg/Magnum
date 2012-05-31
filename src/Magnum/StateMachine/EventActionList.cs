@@ -47,7 +47,6 @@ namespace Magnum.StateMachine
 		}
 
 		public void Add<TData>(Action<T, TData> action, params ExceptionAction<T>[] exceptionActions)
-			where TData : class
 		{
 			_actions.Add(new ActionItem
 				{
@@ -57,7 +56,6 @@ namespace Magnum.StateMachine
 		}
 
 		public void Add<TData>(Action<T, DataEvent<T, TData>, TData> action, params ExceptionAction<T>[] exceptionActions)
-			where TData : class
 		{
 			_actions.Add(new ActionItem
 				{
@@ -76,7 +74,6 @@ namespace Magnum.StateMachine
 		}
 
 		public void Add<TData>(Expression<Action<T, TData>> expression, params ExceptionAction<T>[] exceptionActions)
-			where TData : class
 		{
 			_actions.Add(new ActionItem
 				{

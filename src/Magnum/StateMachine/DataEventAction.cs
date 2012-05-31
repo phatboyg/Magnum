@@ -18,7 +18,6 @@ namespace Magnum.StateMachine
 	public class DataEventAction<T, TData> :
 		EventActionBase<T>
 		where T : StateMachine<T>
-		where TData : class
 	{
 		private Func<TData, bool> _checkCondition = x => true;
 
@@ -80,7 +79,9 @@ namespace Magnum.StateMachine
 
 		protected override bool ParameterMeetsCondition(object parameter)
 		{
-			var eventData = parameter as TData;
+            if (!(parameter is TData))
+                return false;
+			var eventData = (TData) parameter;
 			if (eventData == null)
 				return false;
 

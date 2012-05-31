@@ -39,7 +39,6 @@ namespace Magnum.StateMachine
 	public class ExpressionAction<T, TData> :
 		EventAction<T>
 		where T : StateMachine<T>
-		where TData : class
 	{
 		private readonly Action<T, TData> _action;
 
@@ -53,7 +52,7 @@ namespace Magnum.StateMachine
 
 		public void Execute(T instance, Event @event, object parameter)
 		{
-			_action(instance, parameter as TData);
+            _action(instance, (parameter is TData) ? ((TData)parameter) : default(TData));
 		}
 	}
 }
