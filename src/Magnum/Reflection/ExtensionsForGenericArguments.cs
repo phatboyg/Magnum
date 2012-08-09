@@ -14,6 +14,7 @@ namespace Magnum.Reflection
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Reflection;
 
 	public static class ExtensionsForGenericArguments
@@ -77,12 +78,10 @@ namespace Magnum.Reflection
 
 			if (type.IsInterface)
 			{
-				foreach (Type interfaceType in type.GetInterfaces())
+				foreach (PropertyInfo propertyInfo in type.GetInterfaces()
+					.SelectMany(interfaceType => interfaceType.GetProperties(bindingFlags)))
 				{
-					foreach (PropertyInfo propertyInfo in interfaceType.GetAllProperties())
-					{
-						yield return propertyInfo;
-					}
+					yield return propertyInfo;
 				}
 			}
 		}
