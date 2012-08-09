@@ -80,7 +80,7 @@
     <Reference Include="Newtonsoft.Json" Condition="'$(TargetFrameworkVersion)' == 'v4.0'">
       <HintPath>..\..\lib\Newtonsoft.Json\Net\Newtonsoft.Json.dll</HintPath>
     </Reference>
-     <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+    <Reference Include="nunit.framework, Version=2.5.2.9222, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nunit\net-2.0\nunit.framework.dll</HintPath>
     </Reference>
@@ -249,6 +249,7 @@
     <Compile Include="Reflection\Benchmarks\ReflectionGetPropertyRunner.cs" />
     <Compile Include="Reflection\Benchmarks\GetNestedPropertyRunnerBase.cs" />
     <Compile Include="Reflection\Benchmarks\SafeGetNestedPropertyRunner.cs" />
+    <Compile Include="Reflection\ExtensionsToGenericArguments_Specs.cs" />
     <Compile Include="Reflection\ExtensionsToGenericTypes.cs" />
     <Compile Include="Reflection\FastProperty_Specs.cs" />
     <Compile Include="Reflection\GenericMethodInvoker_Specs.cs" />
