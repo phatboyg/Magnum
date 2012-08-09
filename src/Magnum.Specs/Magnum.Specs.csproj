@@ -249,6 +249,7 @@
     <Compile Include="Reflection\Benchmarks\ReflectionGetPropertyRunner.cs" />
     <Compile Include="Reflection\Benchmarks\GetNestedPropertyRunnerBase.cs" />
     <Compile Include="Reflection\Benchmarks\SafeGetNestedPropertyRunner.cs" />
+    <Compile Include="Reflection\ExtensionsToGenericArguments_Specs.cs" />
     <Compile Include="Reflection\ExtensionsToGenericTypes.cs" />
     <Compile Include="Reflection\FastProperty_Specs.cs" />
     <Compile Include="Reflection\GenericMethodInvoker_Specs.cs" />
