@@ -9,6 +9,7 @@ bin
 obj
 _ReSharper*
 
+*.DotSettings.user
 *.csproj.user
 *.resharper.user
 *.ReSharper.user
