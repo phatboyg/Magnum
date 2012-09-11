@@ -17,8 +17,10 @@ BUILD_PLATFORM = ''
 TARGET_FRAMEWORK_VERSION = (BUILD_CONFIG_KEY == "NET40" ? "v4.0" : "v3.5")
 MSB_USE = (BUILD_CONFIG_KEY == "NET40" ? :net4 : :net35)
 OUTPUT_PATH = (BUILD_CONFIG_KEY == "NET40" ? 'net-4.0' : 'net-3.5')
+SN = ENV['SN'] || 'false'
 
 props = {
+  :basedir => File.expand_path(""),
   :src => File.expand_path("src"),
   :build_support => File.expand_path("build_support"),
   :stage => File.expand_path("build_output"),
@@ -129,6 +131,8 @@ msbuild :build do |msb|
 	    :TargetFrameworkVersion => TARGET_FRAMEWORK_VERSION,
 	    :Platform => 'Any CPU'
 	msb.properties[:TargetFrameworkVersion] = TARGET_FRAMEWORK_VERSION unless BUILD_CONFIG_KEY == 'NET35'
+	msb.properties[:SignAssembly] = 'true' if SN == 'true'
+	msb.properties[:AssemblyOriginatorKeyFile] = File.join(props[:basedir], "Magnum.snk") if SN == 'true'
 	msb.use :net4 #MSB_USE
 	msb.targets :Clean, :Build
 	msb.solution = 'src/Magnum.sln'
