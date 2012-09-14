@@ -17,7 +17,6 @@ namespace Magnum.Specs.Serialization
 	using Magnum.Serialization;
 	using TestFramework;
 
-	[Scenario]
 	public class With_the_fast_text_serializer
 	{
 		protected Serializer Subject { get; set; }

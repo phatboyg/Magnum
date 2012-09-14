@@ -16,7 +16,6 @@ namespace Magnum.Specs.Serialization
 	using Magnum.Extensions;
 	using TestFramework;
 
-	[Scenario]
 	public class Given_a_property_on_an_object_of_type<T> :
 		With_the_fast_text_serializer
 	{
@@ -31,17 +30,12 @@ namespace Magnum.Specs.Serialization
 			_expected = expected;
 		}
 
-		[Given]
-		public void A_property_on_an_object_of_type()
+		[When]
+        public void An_object_is_serialized()
 		{
 			_target = new TargetClass<T>(_value);
-		}
-
-		[When]
-		public void An_object_is_serialized()
-		{
-			_body = Subject.Serialize(_target);
-		}
+            _body = Subject.Serialize(_target);
+        }
 
 		[Then]
 		public void Should_create_the_proper_serialized_body()
@@ -81,33 +75,28 @@ namespace Magnum.Specs.Serialization
 		private string _body;
 		private TargetClass _value;
 
-		[Given]
-		public void A_fully_loaded_object()
-		{
-			
-			_value = new TargetClass
-				{
-					Boolean = true,
-					Byte = 127,
-					Char = 'A',
-					DateTime = new DateTime(2010, 12, 1, 15, 12, 19, 27, DateTimeKind.Utc),
-					DateTimeOffset = new DateTimeOffset(2010, 4, 15, 12, 34, 56, 123, 0.Hours()),
-					Decimal = 123.45m,
-					Double = 123.45,
-					Float = 123.45f,
-					Guid = new Guid("71949725b986495db59bafc4e2d288b3"),
-					Int = 47,
-					Long = 8675309,
-					String = "There was a time in 1942, an early 8:43 AM response, with 123.72 responses",
-					TimeSpan = new TimeSpan(12, 4, 5, 6, 7),
-					Uri = new Uri("http://www.google.com")
-				};
-		}
-
 		[When]
-		public void An_object_is_serialized()
+		public void A_fully_loaded_object_is_serialized()
 		{
-			_body = Subject.Serialize(_value);
+            _value = new TargetClass
+            {
+                Boolean = true,
+                Byte = 127,
+                Char = 'A',
+                DateTime = new DateTime(2010, 12, 1, 15, 12, 19, 27, DateTimeKind.Utc),
+                DateTimeOffset = new DateTimeOffset(2010, 4, 15, 12, 34, 56, 123, 0.Hours()),
+                Decimal = 123.45m,
+                Double = 123.45,
+                Float = 123.45f,
+                Guid = new Guid("71949725b986495db59bafc4e2d288b3"),
+                Int = 47,
+                Long = 8675309,
+                String = "There was a time in 1942, an early 8:43 AM response, with 123.72 responses",
+                TimeSpan = new TimeSpan(12, 4, 5, 6, 7),
+                Uri = new Uri("http://www.google.com")
+            };
+
+            _body = Subject.Serialize(_value);
 		}
 
 		[Then]

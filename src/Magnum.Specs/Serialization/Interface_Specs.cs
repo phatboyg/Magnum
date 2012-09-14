@@ -3,7 +3,6 @@ namespace Magnum.Specs.Serialization
 	using System;
 	using TestFramework;
 
-	[Scenario]
 	public class Given_an_interface_with_a_property_of_type<T> :
 		With_the_fast_text_serializer
 	{
@@ -18,16 +17,11 @@ namespace Magnum.Specs.Serialization
 			_expected = expected;
 		}
 
-		[Given]
-		public void A_property_on_an_object_of_type()
-		{
-			_target = new TargetClass<T>(_value);
-		}
-
 		[When]
 		public void An_object_is_serialized()
 		{
-			_body = Subject.Serialize(_target);
+            _target = new TargetClass<T>(_value);
+            _body = Subject.Serialize(_target);
 		}
 
 		[Then]
