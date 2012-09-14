@@ -17,6 +17,7 @@ BUILD_PLATFORM = ''
 TARGET_FRAMEWORK_VERSION = (BUILD_CONFIG_KEY == "NET40" ? "v4.0" : "v3.5")
 MSB_USE = (BUILD_CONFIG_KEY == "NET40" ? :net4 : :net35)
 OUTPUT_PATH = (BUILD_CONFIG_KEY == "NET40" ? 'net-4.0' : 'net-3.5')
+SN = ENV['SN'] || 'false'
 
 props = {
   :src => File.expand_path("src"),
@@ -24,7 +25,10 @@ props = {
   :stage => File.expand_path("build_output"),
   :output => File.join( File.expand_path("build_output"), OUTPUT_PATH ),
   :artifacts => File.expand_path("build_artifacts"),
-  :projects => ["Topshelf", "Topshelf.Host"]
+  :projects => ["Topshelf", "Topshelf.Host"],
+  :keyfile => File.expand_path("Magnum.snk"),
+  :nuspecfile => SN == 'true' ? File.expand_path("Magnum.Signed.nuspec") : File.expand_path("Magnum.nuspec"),
+  :zipfile => SN == 'true' ? "Magnum.Signed-#{BUILD_NUMBER_BASE}.zip" : "Magnum-#{BUILD_NUMBER_BASE}.zip"
 }
 
 puts "Building for .NET Framework #{TARGET_FRAMEWORK_VERSION} in #{BUILD_CONFIG}-mode."
@@ -103,6 +107,7 @@ ilmerge :ilmerge do |ilm|
 	ilm.allow_dupes = true
 	ilm.references = [ 'Magnum.dll', 'Magnum.FileSystem.dll', 'Ionic.Zip.dll', 'Newtonsoft.Json.dll' ]
 	ilm.references.push 'System.Threading.dll' unless BUILD_CONFIG_KEY == 'NET40'
+	ilm.keyfile = props[:keyfile] if SN == 'true'
 end
 
 
@@ -129,6 +134,9 @@ msbuild :build do |msb|
 	    :TargetFrameworkVersion => TARGET_FRAMEWORK_VERSION,
 	    :Platform => 'Any CPU'
 	msb.properties[:TargetFrameworkVersion] = TARGET_FRAMEWORK_VERSION unless BUILD_CONFIG_KEY == 'NET35'
+	msb.properties[:SignAssembly] = 'true' if SN == 'true'
+	msb.properties[:AssemblyOriginatorKeyFile] = props[:keyfile] if SN == 'true'
+	#msb.verbosity = 'diag'
 	msb.use :net4 #MSB_USE
 	msb.targets :Clean, :Build
 	msb.solution = 'src/Magnum.sln'
@@ -163,7 +171,7 @@ task :package => [:zip_output, :nuget]
 desc "ZIPs up the build results and runs the MoMA analyzer."
 zip :zip_output do |zip|
 	zip.directories_to_zip = [props[:stage]]
-	zip.output_file = "Magnum-#{BUILD_NUMBER_BASE}.zip"
+	zip.output_file = props[:zipfile]
 	zip.output_path = [props[:artifacts]]
 end
 
@@ -178,7 +186,7 @@ end
 
 desc "Builds the nuget package"
 task :nuget do
-	sh "lib/nuget pack magnum.nuspec /OutputDirectory build_artifacts"
+	sh "lib/nuget pack -Symbols #{props[:nuspecfile]} /OutputDirectory build_artifacts"
 end
 
 def project_outputs(props)

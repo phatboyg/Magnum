@@ -17,7 +17,6 @@ namespace Magnum.Specs.Algorithms
 	using TestFramework;
 
 
-	[Scenario]
 	public class Given_a_node_list<T>
 	{
 		protected NodeList<T> NodeList;
