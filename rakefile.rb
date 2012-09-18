@@ -48,7 +48,7 @@ assemblyinfo :global_version do |asm|
   commit_data = get_commit_hash_and_date
   commit = commit_data[0]
   commit_date = commit_data[1]
-  build_number = "#{BUILD_NUMBER_BASE}.0"
+  build_number = "#{BUILD_NUMBER_BASE}.1"
   tc_build_number = ENV["BUILD_NUMBER"]
   build_number = "#{BUILD_NUMBER_BASE}.#{tc_build_number}" unless tc_build_number.nil?
 
