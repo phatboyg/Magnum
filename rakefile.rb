@@ -1,4 +1,4 @@
-COPYRIGHT = "Copyright 2007-2011 Chris Patterson, Dru Sellers, et al. All rights reserved."
+COPYRIGHT = "Copyright 2007-2012 Chris Patterson, Dru Sellers, et al. All rights reserved."
 
 require File.dirname(__FILE__) + "/build_support/BuildUtils.rb"
 
@@ -17,7 +17,6 @@ BUILD_PLATFORM = ''
 TARGET_FRAMEWORK_VERSION = (BUILD_CONFIG_KEY == "NET40" ? "v4.0" : "v3.5")
 MSB_USE = (BUILD_CONFIG_KEY == "NET40" ? :net4 : :net35)
 OUTPUT_PATH = (BUILD_CONFIG_KEY == "NET40" ? 'net-4.0' : 'net-3.5')
-SN = ENV['SN'] || 'false'
 
 props = {
   :src => File.expand_path("src"),
@@ -27,8 +26,8 @@ props = {
   :artifacts => File.expand_path("build_artifacts"),
   :projects => ["Topshelf", "Topshelf.Host"],
   :keyfile => File.expand_path("Magnum.snk"),
-  :nuspecfile => SN == 'true' ? File.expand_path("Magnum.Signed.nuspec") : File.expand_path("Magnum.nuspec"),
-  :zipfile => SN == 'true' ? "Magnum.Signed-#{BUILD_NUMBER_BASE}.zip" : "Magnum-#{BUILD_NUMBER_BASE}.zip"
+  :nuspecfile => File.expand_path("Magnum.nuspec"),
+  :zipfile => "Magnum-#{BUILD_NUMBER_BASE}.zip"
 }
 
 puts "Building for .NET Framework #{TARGET_FRAMEWORK_VERSION} in #{BUILD_CONFIG}-mode."
@@ -107,7 +106,7 @@ ilmerge :ilmerge do |ilm|
 	ilm.allow_dupes = true
 	ilm.references = [ 'Magnum.dll', 'Magnum.FileSystem.dll', 'Ionic.Zip.dll', 'Newtonsoft.Json.dll' ]
 	ilm.references.push 'System.Threading.dll' unless BUILD_CONFIG_KEY == 'NET40'
-	ilm.keyfile = props[:keyfile] if SN == 'true'
+	ilm.keyfile = props[:keyfile]
 end
 
 
@@ -134,8 +133,8 @@ msbuild :build do |msb|
 	    :TargetFrameworkVersion => TARGET_FRAMEWORK_VERSION,
 	    :Platform => 'Any CPU'
 	msb.properties[:TargetFrameworkVersion] = TARGET_FRAMEWORK_VERSION unless BUILD_CONFIG_KEY == 'NET35'
-	msb.properties[:SignAssembly] = 'true' if SN == 'true'
-	msb.properties[:AssemblyOriginatorKeyFile] = props[:keyfile] if SN == 'true'
+	msb.properties[:SignAssembly] = 'true'
+	msb.properties[:AssemblyOriginatorKeyFile] = props[:keyfile]
 	#msb.verbosity = 'diag'
 	msb.use :net4 #MSB_USE
 	msb.targets :Clean, :Build
