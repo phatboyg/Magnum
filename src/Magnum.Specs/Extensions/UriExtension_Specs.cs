@@ -13,8 +13,10 @@
 namespace Magnum.Specs.Extensions
 {
 	using System;
+	using System.Diagnostics;
 	using System.Linq;
 	using System.Net;
+	using System.Text.RegularExpressions;
 	using Magnum.Extensions;
 	using NUnit.Framework;
 	using TestFramework;
@@ -30,7 +32,7 @@ namespace Magnum.Specs.Extensions
 
 			IPEndPoint endpoint = uri.ResolveHostName().Single();
 
-			endpoint.Address.ShouldEqual(IPAddress.Parse("184.106.69.38"));
+			endpoint.Address.ShouldEqual(RetrieveCodeBetterIpAddress());
 			endpoint.Port.ShouldEqual(80);
 		}
 
@@ -52,7 +54,7 @@ namespace Magnum.Specs.Extensions
 
 			IPEndPoint endpoint = uri.ResolveHostName().Single();
 
-			endpoint.Address.ShouldEqual(IPAddress.Parse("184.106.69.38"));
+			endpoint.Address.ShouldEqual(RetrieveCodeBetterIpAddress());
 			endpoint.Port.ShouldEqual(21);
 		}
 
@@ -73,8 +75,37 @@ namespace Magnum.Specs.Extensions
 
 			IPEndPoint endpoint = uri.ResolveHostName().Single();
 
-			endpoint.Address.ShouldEqual(IPAddress.Parse("184.106.69.38"));
+			endpoint.Address.ShouldEqual(RetrieveCodeBetterIpAddress());
 			endpoint.Port.ShouldEqual(443);
 		}
+
+	    static IPAddress CodebetterIPAddress;
+
+        static IPAddress RetrieveCodeBetterIpAddress()
+        {
+            if (CodebetterIPAddress != null)
+                return CodebetterIPAddress;
+
+            var rgx = new Regex(@"Address: *(?<ipaddress>[0-9.]*)");
+            
+            var startInfo = new ProcessStartInfo("nslookup.exe", "www.codebetter.com");
+		    startInfo.UseShellExecute = false;
+		    startInfo.RedirectStandardOutput = true;
+		    startInfo.RedirectStandardError = true;
+		    startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+		    var p = Process.Start(startInfo);
+
+		    var output = p.StandardOutput.ReadToEnd();
+		    p.WaitForExit(60000);
+
+            var matches = rgx.Matches(output);
+
+            if (matches.Count <= 1)
+                Assert.Fail("Failed to perform a DNS lookup for www.codebetter.com");
+
+            CodebetterIPAddress = IPAddress.Parse(matches.Cast<Match>().Select(x => x.Groups["ipaddress"]).Last().Value);
+            return CodebetterIPAddress;
+        }
 	}
 }
