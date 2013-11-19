@@ -131,18 +131,13 @@ def copyOutputFiles(fromDir, filePattern, outDir)
 	}
 end
 
-task :tests => [:unit_tests]
 
-desc "Runs unit tests (integration tests?, acceptance-tests?) etc."
-task :unit_tests => [:compile] do
-	Dir.mkdir props[:artifacts] unless exists?(props[:artifacts])
+desc "Runs unit tests"
+nunit :tests => [:compile] do |nunit|
 
-	runner = NUnitRunner.new(File.join('src', 'packages', 'nunit.Runners.2.6.3', 'tools',  "nunit-console#{(BUILD_PLATFORM.empty? ? '' : "-#{BUILD_PLATFORM}")}.exe"),
-		'tests',
-		TARGET_FRAMEWORK_VERSION,
-		['/nothread', '/nologo', '/labels', "\"/xml=#{File.join(props[:artifacts], 'nunit-test-results.xml')}\""])
-
-	runner.run ['Magnum.Specs'].map{ |assem| "#{assem}.dll" }
+          nunit.command = File.join('src', 'packages','NUnit.Runners.2.6.3', 'tools', 'nunit-console.exe')
+          nunit.options = "/framework=#{CLR_TOOLS_VERSION}", '/nothread', '/nologo', '/labels', "\"/xml=#{File.join(props[:artifacts], 'nunit-test-results.xml')}\""
+          nunit.assemblies = FileList[File.join("tests", "Magnum.Specs.dll")]
 end
 
 desc "Target used for the CI server. It both builds, tests and packages."
