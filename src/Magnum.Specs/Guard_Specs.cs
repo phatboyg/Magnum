@@ -22,24 +22,24 @@ namespace Magnum.Specs
 		{
 			public void TargetMethod(string value)
 			{
-				Guard.AgainstNull(value);
+				Magnum.Guard.AgainstNull(value);
 			}
 
 			public void GreaterThanMethod(int value)
 			{
-				Guard.GreaterThan(27, value);
+				Magnum.Guard.GreaterThan(27, value);
 			}
 
 			public void LessThanMethod(int value)
 			{
-				Guard.LessThan(100, value);
+				Magnum.Guard.LessThan(100, value);
 			}
 		}
 
 		[Test]
 		public void Should_evaluate_the_delegate_and_throw_if_not_true()
 		{
-			Assert.Throws<ArgumentException>(() => Guard.IsTrue(x => x.Length > 0, ""));
+			Assert.Throws<ArgumentException>(() => Magnum.Guard.IsTrue(x => x.Length > 0, ""));
 		}
 
 		[Test]

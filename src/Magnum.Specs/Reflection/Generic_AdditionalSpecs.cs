@@ -17,7 +17,8 @@ namespace Magnum.Specs.Reflection
 	using NUnit.Framework;
 	using Rhino.Mocks;
 
-	[TestFixture]
+
+    [TestFixture]
 	public class ObjectSendExtensionTests
 	{
 		public interface IUniqueMethodWithoutArgs

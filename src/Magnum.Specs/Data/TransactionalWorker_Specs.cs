@@ -86,7 +86,7 @@ namespace Magnum.Specs.Data
 		{
 			var transaction = state as DependentTransaction;
 
-			Guard.AgainstNull(transaction, "transaction");
+			Magnum.Guard.AgainstNull(transaction, "transaction");
 			using (transaction)
 			{
 				ThreadUtil.Sleep(100.Milliseconds());

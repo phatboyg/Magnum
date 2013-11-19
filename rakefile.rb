@@ -7,7 +7,7 @@ require 'albacore'
 require File.dirname(__FILE__) + "/build_support/ilmergeconfig.rb"
 require File.dirname(__FILE__) + "/build_support/ilmerge.rb"
 
-BUILD_NUMBER_BASE = '2.1.0'
+BUILD_NUMBER_BASE = '2.1.1'
 PRODUCT = 'Magnum'
 CLR_TOOLS_VERSION = 'v4.0.30319'
 
@@ -24,9 +24,9 @@ props = {
   :stage => File.expand_path("build_output"),
   :output => File.join( File.expand_path("build_output"), OUTPUT_PATH ),
   :artifacts => File.expand_path("build_artifacts"),
-  :projects => ["Topshelf", "Topshelf.Host"],
   :keyfile => File.expand_path("Magnum.snk"),
   :nuspecfile => File.expand_path("Magnum.nuspec"),
+  :nuspecfileTF => File.expand_path("Magnum.TestFramework.nuspec"),
   :zipfile => "Magnum-#{BUILD_NUMBER_BASE}.zip"
 }
 
@@ -81,18 +81,18 @@ end
 desc "Cleans, versions, compiles the application and generates build_output/."
 task :compile => [:global_version, :build] do
 	puts 'Copying unmerged dependencies to output folder'
-	copyOutputFiles File.join(props[:src], "Magnum.Routing/bin/#{BUILD_CONFIG}"), "Magnum.Routing.{dll,pdb,xml}", props[:output]
+#	copyOutputFiles File.join(props[:src], "Magnum.Routing/bin/#{BUILD_CONFIG}"), "Magnum.Routing.{dll,pdb,xml}", props[:output]
 
-	targ = File.join(props[:output], "NHibernate")
-	copyOutputFiles File.join(props[:src], "Magnum.ForNHibernate/bin/#{BUILD_CONFIG}"), "Magnum.ForNHibernate.{dll,pdb,xml}", targ
+#	targ = File.join(props[:output], "NHibernate")
+#	copyOutputFiles File.join(props[:src], "Magnum.ForNHibernate/bin/#{BUILD_CONFIG}"), "Magnum.ForNHibernate.{dll,pdb,xml}", targ
 
 	targ = File.join(props[:output], "TestFramework")
 	copyOutputFiles File.join(props[:src], "Magnum.TestFramework/bin/#{BUILD_CONFIG}"), "Magnum.TestFramework.{dll,pdb,xml}", targ
 
-	targ = File.join(props[:output], "DebugVisualizer")
-	copyOutputFiles File.join(props[:src], "Magnum.Visualizers/bin/#{BUILD_CONFIG}"), "Magnum.Visualizers.dll", targ
-	copyOutputFiles File.join(props[:src], "Magnum.Visualizers/bin/#{BUILD_CONFIG}"), "Microsoft*dll", targ
-	copyOutputFiles File.join(props[:src], "Magnum.Visualizers/bin/#{BUILD_CONFIG}"), "QuickGraph*dll", targ
+#	targ = File.join(props[:output], "DebugVisualizer")
+#	copyOutputFiles File.join(props[:src], "Magnum.Visualizers/bin/#{BUILD_CONFIG}"), "Magnum.Visualizers.dll", targ
+#	copyOutputFiles File.join(props[:src], "Magnum.Visualizers/bin/#{BUILD_CONFIG}"), "Microsoft*dll", targ
+#	copyOutputFiles File.join(props[:src], "Magnum.Visualizers/bin/#{BUILD_CONFIG}"), "QuickGraph*dll", targ
 end
 
 ilmerge :ilmerge do |ilm|
@@ -104,27 +104,10 @@ ilmerge :ilmerge do |ilm|
         ilm.use MSB_USE
 	ilm.log = File.join( props[:src], "Magnum.FileSystem","bin","#{BUILD_CONFIG}", 'ilmerge.log' )
 	ilm.allow_dupes = true
-	ilm.references = [ 'Magnum.dll', 'Magnum.FileSystem.dll', 'Ionic.Zip.dll', 'Newtonsoft.Json.dll' ]
+	ilm.references = [ 'Magnum.dll', 'Magnum.FileSystem.dll', 'Ionic.Zip.dll' ]
 	ilm.references.push 'System.Threading.dll' unless BUILD_CONFIG_KEY == 'NET40'
 	ilm.keyfile = props[:keyfile]
 end
-
-
-#desc "Prepare examples"
-#task :prepare_examples => [:compile] do#
-#	puts "Preparing samples"
-#	targ = File.join(props[:output], 'Services', 'clock' )
-#	copyOutputFiles File.join(props[:src], "Samples/StuffOnAShelf/bin/#{BUILD_CONFIG}"), "clock.*", targ
-#	copyOutputFiles File.join(props[:src], "Samples/StuffOnAShelf/bin/#{BUILD_CONFIG}"), "StuffOnAShelf.{dll}", targ
-#	copyOutputFiles props[:output], "Topshelf.{dll}", targ
-#	copyOutputFiles props[:output], "log4net.{dll,pdb}", targ
-#	copy('doc/Using Shelving.txt', props[:output])
-#	copy('doc/log4net.config.example', props[:output])
-#	commit_data = get_commit_hash_and_date
-#	what_commit = File.new File.join(props[:output], "#{commit_data[0]} - #{commit_data[1]}.txt"), "w"
-#	what_commit.puts "The file name denotes what commit these files were built off of. You can also find that information in the assembly info accessible through code."
-#	what_commit.close
-#end
 
 desc "Only compiles the application."
 msbuild :build do |msb|
@@ -154,7 +137,7 @@ desc "Runs unit tests (integration tests?, acceptance-tests?) etc."
 task :unit_tests => [:compile] do
 	Dir.mkdir props[:artifacts] unless exists?(props[:artifacts])
 
-	runner = NUnitRunner.new(File.join('lib', 'nunit', 'net-2.0',  "nunit-console#{(BUILD_PLATFORM.empty? ? '' : "-#{BUILD_PLATFORM}")}.exe"),
+	runner = NUnitRunner.new(File.join('src', 'packages', 'nunit.Runners.2.6.3', 'tools',  "nunit-console#{(BUILD_PLATFORM.empty? ? '' : "-#{BUILD_PLATFORM}")}.exe"),
 		'tests',
 		TARGET_FRAMEWORK_VERSION,
 		['/nothread', '/nologo', '/labels', "\"/xml=#{File.join(props[:artifacts], 'nunit-test-results.xml')}\""])
@@ -185,7 +168,8 @@ end
 
 desc "Builds the nuget package"
 task :nuget do
-	sh "lib/nuget pack -Symbols #{props[:nuspecfile]} /OutputDirectory build_artifacts"
+	sh "src/.nuget/nuget pack -Symbols #{props[:nuspecfile]} /OutputDirectory build_artifacts"
+	sh "src/.nuget/nuget pack -Symbols #{props[:nuspecfileTF]} /OutputDirectory build_artifacts"
 end
 
 def project_outputs(props)
