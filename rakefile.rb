@@ -136,7 +136,7 @@ desc "Runs unit tests"
 nunit :tests => [:compile] do |nunit|
 
           nunit.command = File.join('src', 'packages','NUnit.Runners.2.6.3', 'tools', 'nunit-console.exe')
-          nunit.options = "/framework=#{CLR_TOOLS_VERSION}", '/nothread', '/nologo', '/labels', "\"/xml=#{File.join(props[:artifacts], 'nunit-test-results.xml')}\""
+          nunit.parameters = "/framework=#{CLR_TOOLS_VERSION}", '/nothread', '/nologo', '/labels', "\"/xml=#{File.join(props[:artifacts], 'nunit-test-results.xml')}\""
           nunit.assemblies = FileList[File.join("tests", "Magnum.Specs.dll")]
 end
 
@@ -147,9 +147,8 @@ task :package => [:zip_output, :nuget]
 
 desc "ZIPs up the build results and runs the MoMA analyzer."
 zip :zip_output do |zip|
-	zip.directories_to_zip = [props[:stage]]
-	zip.output_file = props[:zipfile]
-	zip.output_path = [props[:artifacts]]
+	zip.dirs = [props[:stage]]
+	zip.output_path = File.join(props[:artifacts], props[:zipfile])
 end
 
 desc "Runs the MoMA mono analyzer on the project files. Start the executable manually without --nogui to update the profiles once in a while though, or you'll always get the same report from the analyzer."
