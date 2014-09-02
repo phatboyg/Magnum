@@ -19,6 +19,8 @@
     <file src="build_output\net-4.0\Magnum.dll" target="lib\NET40" />
     <file src="build_output\net-4.0\Magnum.xml" target="lib\NET40" />
     <file src="build_output\net-4.0\Magnum.pdb" target="lib\NET40" />
+    <file src="src\Magnum\**\*.cs" target="src" />
+    <file src="src\Magnum.FileSystem\**\*.cs" target="src" />
   </files>
 </package>
 

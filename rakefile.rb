@@ -163,7 +163,7 @@ end
 
 desc "Builds the nuget package"
 task :nuget do
-	sh "src/.nuget/nuget pack -Symbols #{props[:nuspecfile]} /OutputDirectory build_artifacts"
+	sh "src/.nuget/nuget pack -Verbose -Symbols #{props[:nuspecfile]} /OutputDirectory build_artifacts"
 	sh "src/.nuget/nuget pack -Symbols #{props[:nuspecfileTF]} /OutputDirectory build_artifacts"
 end
 

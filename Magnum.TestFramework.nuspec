@@ -19,6 +19,7 @@
     <file src="build_output\net-4.0\TestFramework\Magnum.TestFramework.dll" target="lib\NET40" />
     <file src="build_output\net-4.0\TestFramework\Magnum.TestFramework.xml" target="lib\NET40" />
     <file src="build_output\net-4.0\TestFramework\Magnum.TestFramework.pdb" target="lib\NET40" />
+    <file src='src\Magnum.TestFramework\**\*.cs' target='src'/>
   </files>
 </package>
 
