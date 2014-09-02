@@ -120,7 +120,7 @@ msbuild :build do |msb|
 	msb.properties[:AssemblyOriginatorKeyFile] = props[:keyfile]
 	#msb.verbosity = 'diag'
 	msb.use :net4 #MSB_USE
-	msb.targets :Clean, :Build
+	msb.targets :Rebuild
 	msb.solution = 'src/Magnum.sln'
 end
 
