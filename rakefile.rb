@@ -7,7 +7,7 @@ require 'albacore'
 require File.dirname(__FILE__) + "/build_support/ilmergeconfig.rb"
 require File.dirname(__FILE__) + "/build_support/ilmerge.rb"
 
-BUILD_NUMBER_BASE = '2.1.2'
+BUILD_NUMBER_BASE = '2.1.3'
 PRODUCT = 'Magnum'
 CLR_TOOLS_VERSION = 'v4.0.30319'
 
