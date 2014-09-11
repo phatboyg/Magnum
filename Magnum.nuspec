@@ -9,7 +9,7 @@
     <licenseUrl>https://github.com/phatboyg/Magnum/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/phatboyg/Magnum</projectUrl>
     <dependencies>
-      <dependency id="Newtonsoft.Json" version="6.0.4" />
+      <dependency id="Newtonsoft.Json" version="6.0.5" />
     </dependencies>
   </metadata>
   <files>
