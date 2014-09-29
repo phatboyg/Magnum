@@ -13,6 +13,8 @@
 namespace Magnum.Specs.Reflection
 {
     using System;
+    using System.Collections.Generic;
+    using Magnum.Extensions;
     using Magnum.Reflection;
     using TestFramework;
 
@@ -71,4 +73,185 @@ namespace Magnum.Specs.Reflection
             DateTime? DateTimeValue { get; }
         }
     }
+
+	[Scenario]
+	public class When_initializing_with_dictionary_with_subclass_in_property
+	{
+		const string SoundOfSilence = "";
+		const int Age = 24;
+
+		ISubject _subject;
+
+		[When]
+		public void Initializing_a_dynamic_object_proxy()
+		{
+			_subject = (ISubject)typeof(ISubject).InitializeProxy(new Dictionary<string, object>
+				{
+					{"SoundOfSilence", SoundOfSilence},
+					{"SpokenBy.Age", Age}
+				});
+		}
+
+		[Then]
+		public void Should_set_value_val()
+		{
+			_subject
+				.SoundOfSilence
+				.ShouldEqual("");
+		}
+
+		[Then]
+		public void Should_set_SpokenBy()
+		{
+			_subject.SpokenBy.ShouldNotBeNull();
+		}
+
+		[Then]
+		public void Should_set_age()
+		{
+			_subject.SpokenBy.Age
+				.ShouldBeEqualTo(Age);
+		}
+
+		public interface ISubject
+		{
+			string SoundOfSilence { get; }
+			Person SpokenBy { get; }
+		}
+
+
+		public class Person
+		{
+			public int Age { get; set; }
+		}
+	}
+
+	[Scenario]
+	public class When_initializing_a_dynamic_object_with_subclass_in_property
+	{
+		const ulong AnswerToEverything = 42ul;
+		const uint Mystery = uint.MaxValue;
+
+		ISubject _subject;
+
+		[When]
+		public void Initializing_a_dynamic_object_proxy()
+		{
+			_subject = (ISubject)typeof(ISubject).InitializeProxy(new
+				{
+					AnswerToEverything,
+					DarkHole = new { Mystery }
+				});
+		}
+
+		[Then]
+		public void Should_set_value_val()
+		{
+			_subject
+				.AnswerToEverything
+				.ShouldEqual(AnswerToEverything);
+		}
+
+		[Then]
+		public void Should_not_set_null_subclass()
+		{
+			_subject
+				.DarkHole.ShouldNotBeNull();
+		}
+
+		[Then]
+		public void Should_set_subclass_value_vally()
+		{
+			_subject
+				.DarkHole.Mystery
+				.ShouldBeEqualTo(Mystery);
+		}
+
+		public interface ISubject
+		{
+			ulong AnswerToEverything { get; }
+			DarkHoles DarkHole { get; }
+		}
+
+		public class DarkHoles
+		{
+			public uint Mystery { get; set; }
+		}
+	}
+
+
+	[Scenario(Description = "Testing AnonymousObjectDictionaryConverter")]
+	public class When_converting_anonymous_classes_to_dictionary
+	{
+		IDictionary<string, object> _subject;
+
+		[When]
+		public void converting()
+		{
+			var converter = new AnonymousObjectDictionaryConverter();
+
+			_subject = converter.Convert(new
+				{
+					// really short lived
+					Age = 1.Milliseconds(),
+
+					// this is the hold
+					DarkHole = new
+						{
+							// really high density in kg m^-3
+							Density = ulong.MaxValue,
+							Pressure = int.MaxValue,
+							MyString = "Hello World"
+						},
+
+					Temperature = long.MinValue
+				});
+		}
+
+		[Then]
+		public void should_have_age_property()
+		{
+			_subject["Age"].ShouldEqual(1.Milliseconds());
+		}
+
+		[Then]
+		public void should_have_correct_temperature()
+		{
+			_subject["Temperature"].ShouldEqual(long.MinValue);
+		}
+
+		[Then]
+		public void should_contain_both_darkhole_properties()
+		{
+			_subject.ContainsKey("DarkHole.Density")
+				.ShouldBeTrue();
+
+			_subject.ContainsKey("DarkHole.Pressure")
+				.ShouldBeTrue();
+		}
+
+		[Then]
+		public void should_have_non_null_darkhole_density()
+		{
+			_subject["DarkHole.Density"].ShouldNotBeNull();
+		}
+
+		[Then]
+		public void should_have_correct_darkhole_densitys()
+		{
+			_subject["DarkHole.Density"].ShouldEqual(ulong.MaxValue);
+		}
+
+		[Then]
+		public void should_have_correct_darkhole_pressure()
+		{
+			_subject["DarkHole.Pressure"].ShouldEqual(int.MaxValue);
+		}
+
+		[Then]
+		public void should_have_correct_string()
+		{
+			_subject["DarkHole.MyString"].ShouldEqual("Hello World");
+		}
+	}
 }
