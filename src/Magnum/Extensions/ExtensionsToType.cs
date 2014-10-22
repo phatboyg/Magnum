@@ -43,7 +43,7 @@ namespace Magnum.Extensions
 			if (type.IsGenericType)
 			{
 				string name = type.GetGenericTypeDefinition().Name;
-				name = name.Substring(0, name.IndexOf('`'));
+			    name = name.Contains('`') ? name.Substring(0, name.IndexOf('`')) : name;
 
 				Type[] arguments = type.GetGenericArguments();
 				string innerTypeName = string.Join(",", arguments.Select(x => x.ToShortTypeName()).ToArray());
