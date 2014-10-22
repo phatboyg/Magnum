@@ -99,6 +99,17 @@ namespace Magnum.Specs.Extensions
             typeof(NonGenericSubClass).ToShortTypeName().ShouldNotBeNull();
         }
 
+        [Test]
+        public void Should_return_short_type_name_for_generic_class_with_no_backtick()
+        {
+            typeof(Outer<int>.Inner).ToShortTypeName().ShouldNotBeNull();
+        }
+
+        static class Outer<T>
+        {
+            public class Inner { }
+        }
+
         interface INotGeneric
         {
         }
