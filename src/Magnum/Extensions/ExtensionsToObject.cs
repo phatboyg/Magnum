@@ -70,6 +70,7 @@ namespace Magnum.Extensions
 			string[] elements = value
 				.GetType()
 				.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+				.Where(x=>!x.GetIndexParameters().Any())
 				.Select(x => "{0} = {1}".FormatWith(x.Name, StringifyInternal(x.GetValue(value, null), recursionLevel - 1)))
 				.ToArray();
 
