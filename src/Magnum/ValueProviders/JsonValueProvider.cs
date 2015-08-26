@@ -12,69 +12,69 @@
 // specific language governing permissions and limitations under the License.
 namespace Magnum.ValueProviders
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Globalization;
-	using System.IO;
-	using Extensions;
-	using Newtonsoft.Json;
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using Extensions;
+    using Newtonsoft.Json;
 
 
-	public class JsonValueProvider :
-		ValueProvider
-	{
-		readonly IDictionary<string, object> _dictionary = new Dictionary<string, object>();
-		readonly ValueProvider _provider;
+    public class JsonValueProvider :
+        ValueProvider
+    {
+        readonly IDictionary<string, object> _dictionary = new Dictionary<string, object>();
+        readonly ValueProvider _provider;
 
-		public JsonValueProvider(Stream bodyStream)
-		{
-			LoadJsonObject(bodyStream);
+        public JsonValueProvider(Stream bodyStream)
+        {
+            LoadJsonObject(bodyStream);
 
-			_provider = new DictionaryValueProvider(_dictionary);
-		}
+            _provider = new DictionaryValueProvider(_dictionary);
+        }
 
-		public JsonValueProvider(string text)
-		{
-			LoadJsonObject(text);
+        public JsonValueProvider(string text)
+        {
+            LoadJsonObject(text);
 
-			_provider = new DictionaryValueProvider(_dictionary);
-		}
+            _provider = new DictionaryValueProvider(_dictionary);
+        }
 
-		public bool GetValue(string key, Func<object, bool> matchingValueAction)
-		{
-			return _provider.GetValue(key, matchingValueAction);
-		}
+        public bool GetValue(string key, Func<object, bool> matchingValueAction)
+        {
+            return _provider.GetValue(key, matchingValueAction);
+        }
 
-		public bool GetValue(string key, Func<object, bool> matchingValueAction, Action missingValueAction)
-		{
-			return _provider.GetValue(key, matchingValueAction, missingValueAction);
-		}
+        public bool GetValue(string key, Func<object, bool> matchingValueAction, Action missingValueAction)
+        {
+            return _provider.GetValue(key, matchingValueAction, missingValueAction);
+        }
 
-		public void GetAll(Action<string, object> valueAction)
-		{
-			_provider.GetAll(valueAction);
-		}
+        public void GetAll(Action<string, object> valueAction)
+        {
+            _provider.GetAll(valueAction);
+        }
 
-		void LoadJsonObject(string text)
-		{
-			using (var stringReader = new StringReader(text))
-				LoadJsonObject(stringReader);
-		}
+        void LoadJsonObject(string text)
+        {
+            using (var stringReader = new StringReader(text))
+                LoadJsonObject(stringReader);
+        }
 
-		void LoadJsonObject(Stream stream)
-		{
-			using (var reader = new StreamReader(stream))
-				LoadJsonObject(reader);
-		}
+        void LoadJsonObject(Stream stream)
+        {
+            using (var reader = new StreamReader(stream))
+                LoadJsonObject(reader);
+        }
 
-		void LoadJsonObject(TextReader textReader)
-		{
-			using (var jsonReader = new JsonTextReader(textReader))
-				ReadObject(jsonReader, (k, i) => k);
-		}
+        void LoadJsonObject(TextReader textReader)
+        {
+            using (var jsonReader = new JsonTextReader(textReader))
+                ReadObject(jsonReader, (k, i) => k);
+        }
 
-		void ReadObject(JsonReader reader, Func<string, int, string> keyFormatter)
-		{
+        void ReadObject(JsonReader reader, Func<string, int, string> keyFormatter, List<String> listUnderConstruction = null)
+		{//Quick & Dirty workaround for list type to fix issues with DropkicK, should be generic.
 			int index = 0;
 			while (reader.Read())
 			{
@@ -102,6 +102,8 @@ namespace Magnum.ValueProviders
 				}
 				else if (reader.TokenType == JsonToken.StartArray)
 				{
+                    var recursiveList = new List<String>();//List Type should be generic, quick&dirty workaround.
+                    _dictionary.Add(keyFormatter(key, index), recursiveList);
 					ReadObject(reader, (k, i) =>
 						{
 							string prefix = keyFormatter(key, index);
@@ -114,13 +116,16 @@ namespace Magnum.ValueProviders
 								prefix = prefix + "." + k;
 
 							return prefix;
-						});
+						}, recursiveList);
 				}
+                else if (listUnderConstruction != null && reader.TokenType != JsonToken.EndArray) {
+                    listUnderConstruction.Add(reader.Value.ToString());
+                }
 				else
 					_dictionary.Add(keyFormatter(key, index), reader.Value);
 
 				index++;
 			}
 		}
-	}
+    }
 }
