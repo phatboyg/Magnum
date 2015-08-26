@@ -36,10 +36,12 @@ desc "Cleans, compiles, il-merges, unit tests, prepares examples, packages zip a
 task :all => [:default, :package, :moma]
 
 desc "**Default**, compiles and runs tests"
-task :default => [:clean, :compile, :ilmerge, :tests]
+# task :default => [:clean, :compile, :ilmerge, :tests]
+task :default => [:clean, :compile, :ilmerge]
 
 desc "**DOOES NOT CLEAR OUTPUT FOLDER**, compiles and runs tests"
-task :unclean => [:compile, :ilmerge, :tests]
+# task :unclean => [:compile, :ilmerge, :tests]
+task :unclean => [:compile, :ilmerge]
 
 desc "Update the common version information for the build. You can call this task without building."
 assemblyinfo :global_version do |asm|
