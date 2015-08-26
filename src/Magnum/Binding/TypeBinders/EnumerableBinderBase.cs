@@ -23,7 +23,7 @@ namespace Magnum.Binding.TypeBinders
         public virtual List<T> BindList(BinderContext context)
         {
             var list = new List<T>();
-
+            list.AddRange((List<T>)context.PropertyValue);
             return list;
         }
     }
