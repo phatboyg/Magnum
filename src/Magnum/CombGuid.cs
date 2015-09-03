@@ -23,7 +23,7 @@ namespace Magnum
 		{
 			byte[] guidArray = Guid.NewGuid().ToByteArray();
 
-			DateTime now = DateTime.Now;
+			DateTime now = DateTime.UtcNow;
 
 			// Get the days and milliseconds which will be used to build the byte string 
 			var days = new TimeSpan(now.Ticks - _baseDate.Ticks);
